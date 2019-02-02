@@ -2,8 +2,6 @@
 
 namespace AvtoDev\RoadRunnerWorkerLaravel\Tests\Bootstrap;
 
-use Illuminate\Contracts\Console\Kernel;
-
 class TestsBootstrapper extends AbstractTestsBootstrapper
 {
     /**

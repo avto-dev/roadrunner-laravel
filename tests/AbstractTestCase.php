@@ -2,8 +2,8 @@
 
 namespace AvtoDev\RoadRunnerWorkerLaravel\Tests;
 
-use AvtoDev\RoadRunnerWorkerLaravel\LaravelPackageServiceProvider;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use AvtoDev\RoadRunnerWorkerLaravel\LaravelPackageServiceProvider;
 
 abstract class AbstractTestCase extends BaseTestCase
 {
