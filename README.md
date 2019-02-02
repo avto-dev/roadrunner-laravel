@@ -26,29 +26,6 @@ $ composer require avto-dev/roadrunner-worker-laravel "^1.0"
 
 > You need to fix the major version of package.
 
-Laravel 5.5 and above uses Package Auto-Discovery, so doesn't require you to manually register the service-provider. Otherwise you must add the service provider to the `providers` array in `./config/app.php`:
-
-```php
-'providers' => [
-    // ...
-    AvtoDev\RoadRunnerWorkerLaravel\LaravelPackageServiceProvider::class,
-]
-```
-
-If you wants to disable package service-provider auto discover, just add into your `composer.json` next lines:
-
-```json
-{
-    "extra": {
-        "laravel": {
-            "dont-discover": [
-                "avto-dev/roadrunner-worker-laravel"
-            ]
-        }
-    }
-}
-```
-
 ## Usage
 
 {% Usage descriptions goes here %}
@@ -59,8 +36,8 @@ For package testing we use `phpunit` framework. Just write into your terminal:
 
 ```shell
 $ git clone git@github.com:avto-dev/roadrunner-worker-laravel.git ./roadrunner-worker-laravel && cd $_
-$ composer install
-$ composer test
+$ make install
+$ make test
 ```
 
 ## Changes log

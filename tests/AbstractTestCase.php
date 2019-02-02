@@ -18,4 +18,12 @@ abstract class AbstractTestCase extends BaseTestCase
 
         $this->app->register(LaravelPackageServiceProvider::class);
     }
+
+    /**
+     * @return void
+     */
+    public function testFoo()
+    {
+        $this->assertTrue(true);
+    }
 }
