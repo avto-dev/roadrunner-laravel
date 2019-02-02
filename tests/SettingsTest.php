@@ -30,7 +30,7 @@ class SettingsTest extends AbstractTestCase
     public function testHasOption()
     {
         $settings = new Settings([
-            '--foo', '--not-bar', 'baz', '--123', '--321-not'
+            '--foo', '--not-bar', 'baz', '--123', '--321-not',
         ]);
 
         $this->assertTrue($settings->hasOption('foo'));
