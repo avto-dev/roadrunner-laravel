@@ -1,11 +1,9 @@
 {
     "name": "avto-dev/roadrunner-worker-laravel",
-    "description": "Some package description goes here",
+    "description": "RoadRunner worker for Laravel applications",
     "keywords": [
-        "some",
-        "keywords",
-        "goes",
-        "here"
+        "laravel",
+        "roadrunner"
     ],
     "type": "library",
     "license": "MIT",
@@ -17,7 +15,6 @@
     ],
     "require": {
         "php": ">=7.0",
-        "ext-json": "*",
         "ext-mbstring": "*",
         "illuminate/support": ">=5.5.0 <5.8.0"
     },
@@ -38,6 +35,9 @@
             "AvtoDev\\RoadRunnerWorkerLaravel\\Tests\\": "tests"
         }
     },
+    "bin": [
+        "rr-worker"
+    ],
     "scripts": {
         "test": "@php ./vendor/bin/phpunit --no-coverage",
         "test-cover": "@php ./vendor/bin/phpunit --coverage-html='./coverage/html'",
