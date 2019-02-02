@@ -36,21 +36,21 @@ class SettingsTest extends AbstractTestCase
         $settings = new Settings(\array_merge(...$cases));
 
         foreach ($valid_options as $valid_option) {
-            $this->assertTrue($settings->hasOption(\substr($valid_option, 2)));
+            $this->assertTrue($settings->hasOption(\mb_substr($valid_option, 2)));
         }
 
         foreach ($valid_negative_options as $valid_negative_option) {
-            $this->assertTrue($settings->hasOption(\substr($valid_negative_option, 6)));
+            $this->assertTrue($settings->hasOption(\mb_substr($valid_negative_option, 6)));
         }
 
         foreach ($invalid_options as $invalid_option) {
-            $this->assertFalse($settings->hasOption(\substr($invalid_option, 2)));
+            $this->assertFalse($settings->hasOption(\mb_substr($invalid_option, 2)));
             $this->assertFalse($settings->hasOption($invalid_option));
         }
 
         foreach ($invalid_negative_options as $invalid_negative_option) {
-            $this->assertFalse($settings->hasOption(\substr($invalid_negative_option, 6)));
-            $this->assertFalse($settings->hasOption(\substr($invalid_negative_option, 4)));
+            $this->assertFalse($settings->hasOption(\mb_substr($invalid_negative_option, 6)));
+            $this->assertFalse($settings->hasOption(\mb_substr($invalid_negative_option, 4)));
             $this->assertFalse($settings->hasOption($invalid_negative_option));
         }
     }
