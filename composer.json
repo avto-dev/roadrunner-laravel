@@ -15,8 +15,9 @@
     ],
     "require": {
         "php": ">=7.0",
-        "ext-mbstring": "*",
-        "illuminate/support": ">=5.5.0 <5.8.0"
+        "spiral/roadrunner": "^1.3",
+        "illuminate/contracts": ">=5.5.0 <5.8.0",
+        "symfony/psr-http-message-bridge": "^1.1"
     },
     "require-dev": {
         "laravel/laravel": ">=5.5.0 <5.8.0",
@@ -42,13 +43,6 @@
         "test": "@php ./vendor/bin/phpunit --no-coverage",
         "test-cover": "@php ./vendor/bin/phpunit --coverage-html='./coverage/html'",
         "phpstan": "@php ./vendor/bin/phpstan analyze --no-progress --ansi --level=max ./src"
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "AvtoDev\\RoadRunnerWorkerLaravel\\LaravelPackageServiceProvider"
-            ]
-        }
     },
     "support": {
         "issues": "https://github.com/avto-dev/roadrunner-worker-laravel/issues",

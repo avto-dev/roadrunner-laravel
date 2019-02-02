@@ -12,8 +12,6 @@ use AvtoDev\RoadRunnerWorkerLaravel\Settings;
 class SettingsTest extends AbstractTestCase
 {
     /**
-     * @coversNothing
-     *
      * @return void
      */
     public function testConstants()
@@ -23,20 +21,37 @@ class SettingsTest extends AbstractTestCase
     }
 
     /**
-     * @covers ::hasOption
-     *
      * @return void
      */
     public function testHasOption()
     {
-        $settings = new Settings([
-            '--foo', '--not-bar', 'baz', '--123', '--321-not'
-        ]);
+        $cases = [
+            $valid_options = ['--foo', '--123', '--321-not'],
+            $valid_negative_options = ['--not-bar'],
 
-        $this->assertTrue($settings->hasOption('foo'));
-        $this->assertTrue($settings->hasOption('bar'));
-        $this->assertTrue($settings->hasOption('123'));
-        $this->assertTrue($settings->hasOption('321-not'));
-        $this->assertFalse($settings->hasOption('baz'));
+            $invalid_options = ['baz', '666', 'foo123'],
+            $invalid_negative_options = ['not-bzz', 'not123', 'not-678'],
+        ];
+
+        $settings = new Settings(\array_merge(...$cases));
+
+        foreach ($valid_options as $valid_option) {
+            $this->assertTrue($settings->hasOption(\substr($valid_option, 2)));
+        }
+
+        foreach ($valid_negative_options as $valid_negative_option) {
+            $this->assertTrue($settings->hasOption(\substr($valid_negative_option, 6)));
+        }
+
+        foreach ($invalid_options as $invalid_option) {
+            $this->assertFalse($settings->hasOption(\substr($invalid_option, 2)));
+            $this->assertFalse($settings->hasOption($invalid_option));
+        }
+
+        foreach ($invalid_negative_options as $invalid_negative_option) {
+            $this->assertFalse($settings->hasOption(\substr($invalid_negative_option, 6)));
+            $this->assertFalse($settings->hasOption(\substr($invalid_negative_option, 4)));
+            $this->assertFalse($settings->hasOption($invalid_negative_option));
+        }
     }
 }
