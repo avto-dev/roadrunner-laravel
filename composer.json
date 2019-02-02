@@ -1,0 +1,61 @@
+{
+    "name": "avto-dev/roadrunner-worker-laravel",
+    "description": "Some package description goes here",
+    "keywords": [
+        "some",
+        "keywords",
+        "goes",
+        "here"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "avto-dev",
+            "homepage": "https://github.com/avto-dev"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "illuminate/support": ">=5.5.0 <5.8.0"
+    },
+    "require-dev": {
+        "laravel/laravel": ">=5.5.0 <5.8.0",
+        "phpunit/phpunit": "~5.7.10 || ^6.4 || ~7.0",
+        "mockery/mockery": "0.9.* || ~1.0",
+        "symfony/var-dumper": "~3.2 || ^4.0",
+        "phpstan/phpstan": "~0.9 || ^0.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "AvtoDev\\RoadRunnerWorkerLaravel\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AvtoDev\\RoadRunnerWorkerLaravel\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "@php ./vendor/bin/phpunit --no-coverage",
+        "test-cover": "@php ./vendor/bin/phpunit --coverage-html='./coverage/html'",
+        "phpstan": "@php ./vendor/bin/phpstan analyze --no-progress --ansi --level=max ./src"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AvtoDev\\RoadRunnerWorkerLaravel\\LaravelPackageServiceProvider"
+            ]
+        }
+    },
+    "support": {
+        "issues": "https://github.com/avto-dev/roadrunner-worker-laravel/issues",
+        "source": "https://github.com/avto-dev/roadrunner-worker-laravel"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "prefer-stable": true
+}
