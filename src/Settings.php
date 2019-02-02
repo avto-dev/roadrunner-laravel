@@ -97,29 +97,29 @@ class Settings
      */
     protected function parseBooleanArgumentsList(array $arguments): array
     {
-        $options_prefix_length         = \strlen(static::OPTIONS_PREFIX);
-        $logic_inversion_prefix_length = \strlen(static::BOOL_OPTION_INVERT_LOGIC_NAME_PREFIX);
+        $options_prefix_length         = \mb_strlen(static::OPTIONS_PREFIX);
+        $logic_inversion_prefix_length = \mb_strlen(static::BOOL_OPTION_INVERT_LOGIC_NAME_PREFIX);
         $result                        = [];
 
         foreach ($arguments as $argument) {
             // Works only with prefixed arguments
-            if (\is_string($argument) && \strpos($argument, static::OPTIONS_PREFIX) === 0) {
+            if (\is_string($argument) && \mb_strpos($argument, static::OPTIONS_PREFIX) === 0) {
                 // Skip arguments with wrong characters
                 if (! $this->validateOptionName($argument)) {
                     continue;
                 }
 
                 // Remove option prefix from argument
-                $argument = \substr($argument, $options_prefix_length);
+                $argument = \mb_substr($argument, $options_prefix_length);
                 // By default - value is "true"
                 $value = true;
 
                 // Try to detect logic inversion prefix
-                if (\strpos($argument, static::BOOL_OPTION_INVERT_LOGIC_NAME_PREFIX) === 0) {
+                if (\mb_strpos($argument, static::BOOL_OPTION_INVERT_LOGIC_NAME_PREFIX) === 0) {
                     $value = false;
 
                     // Remove logic inversion prefix from argument
-                    $argument = \substr($argument, $logic_inversion_prefix_length);
+                    $argument = \mb_substr($argument, $logic_inversion_prefix_length);
                 }
 
                 $result[$argument] = $value;
