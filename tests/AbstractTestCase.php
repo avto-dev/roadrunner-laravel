@@ -1,6 +1,6 @@
 <?php
 
-namespace AvtoDev\RoadRunnerWorkerLaravel\Tests;
+namespace AvtoDev\RoadRunnerLaravel\Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 

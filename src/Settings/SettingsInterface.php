@@ -1,6 +1,6 @@
 <?php
 
-namespace AvtoDev\RoadRunnerWorkerLaravel\Settings;
+namespace AvtoDev\RoadRunnerLaravel\Settings;
 
 interface SettingsInterface
 {

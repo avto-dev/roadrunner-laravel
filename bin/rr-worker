@@ -28,5 +28,5 @@ if ($loaded !== true) {
     );
 }
 
-$worker = new \AvtoDev\RoadRunnerWorkerLaravel\Worker;
+$worker = new \AvtoDev\RoadRunnerLaravel\Worker;
 $worker->start();

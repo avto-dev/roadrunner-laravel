@@ -15,7 +15,7 @@ Fixes # (issue)
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I wrote unit tests for my code
-- [ ] I have made changes in [CHANGELOG.md](https://github.com/avto-dev/roadrunner-worker-laravel/blob/master/CHANGELOG.md) file
+- [ ] I have made changes in [CHANGELOG.md](https://github.com/avto-dev/roadrunner-laravel/blob/master/CHANGELOG.md) file
 
 > About your changes in `CHANGELOG.md`:
 >

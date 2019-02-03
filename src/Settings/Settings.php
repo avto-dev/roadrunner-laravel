@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerWorkerLaravel\Settings;
+namespace AvtoDev\RoadRunnerLaravel\Settings;
 
 class Settings implements SettingsInterface
 {

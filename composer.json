@@ -1,5 +1,5 @@
 {
-    "name": "avto-dev/roadrunner-worker-laravel",
+    "name": "avto-dev/roadrunner-laravel",
     "description": "RoadRunner worker for Laravel applications",
     "keywords": [
         "laravel",
@@ -30,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "AvtoDev\\RoadRunnerWorkerLaravel\\": "src"
+            "AvtoDev\\RoadRunnerLaravel\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AvtoDev\\RoadRunnerWorkerLaravel\\Tests\\": "tests"
+            "AvtoDev\\RoadRunnerLaravel\\Tests\\": "tests"
         }
     },
     "bin": [
@@ -47,8 +47,8 @@
         "phpstan": "@php ./vendor/bin/phpstan analyze --no-progress --ansi --level=max ./src"
     },
     "support": {
-        "issues": "https://github.com/avto-dev/roadrunner-worker-laravel/issues",
-        "source": "https://github.com/avto-dev/roadrunner-worker-laravel"
+        "issues": "https://github.com/avto-dev/roadrunner-laravel/issues",
+        "source": "https://github.com/avto-dev/roadrunner-laravel"
     },
     "config": {
         "sort-packages": true

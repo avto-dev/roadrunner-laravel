@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerWorkerLaravel\Stacks;
+namespace AvtoDev\RoadRunnerLaravel\Stacks;
 
 use ArrayIterator;
 use Illuminate\Support\Traits\Macroable;

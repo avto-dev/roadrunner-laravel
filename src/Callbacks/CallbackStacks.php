@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerWorkerLaravel\Callbacks;
+namespace AvtoDev\RoadRunnerLaravel\Callbacks;
 
-use AvtoDev\RoadRunnerWorkerLaravel\Stacks\CallbacksStack;
+use AvtoDev\RoadRunnerLaravel\Stacks\CallbacksStack;
 
 class CallbackStacks
 {

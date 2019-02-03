@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerWorkerLaravel;
+namespace AvtoDev\RoadRunnerLaravel;
 
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -10,10 +10,10 @@ use Spiral\RoadRunner\PSR7Client;
 use Spiral\Goridge\RelayInterface;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Contracts\Foundation\Application;
-use AvtoDev\RoadRunnerWorkerLaravel\Settings\Settings;
+use AvtoDev\RoadRunnerLaravel\Settings\Settings;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
-use AvtoDev\RoadRunnerWorkerLaravel\Settings\SettingsInterface;
+use AvtoDev\RoadRunnerLaravel\Settings\SettingsInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 
