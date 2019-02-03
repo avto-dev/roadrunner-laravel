@@ -2,15 +2,15 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerLaravel\Tests\Stacks;
+namespace AvtoDev\RoadRunnerLaravel\Tests\Support\Stacks;
 
 use Illuminate\Contracts\Support\Arrayable;
-use AvtoDev\RoadRunnerLaravel\Stacks\AbstractStack;
-use AvtoDev\RoadRunnerLaravel\Stacks\StackInterface;
+use AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack;
+use AvtoDev\RoadRunnerLaravel\Support\Stacks\StackInterface;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 
 /**
- * @covers \AvtoDev\RoadRunnerLaravel\Stacks\AbstractStack
+ * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack
  *
  * @group  stacks
  */

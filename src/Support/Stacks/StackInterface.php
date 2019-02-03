@@ -1,6 +1,6 @@
 <?php
 
-namespace AvtoDev\RoadRunnerLaravel\Stacks;
+namespace AvtoDev\RoadRunnerLaravel\Support\Stacks;
 
 use Countable;
 use IteratorAggregate;

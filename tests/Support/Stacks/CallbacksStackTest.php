@@ -2,12 +2,12 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerLaravel\Tests\Stacks;
+namespace AvtoDev\RoadRunnerLaravel\Tests\Support\Stacks;
 
-use AvtoDev\RoadRunnerLaravel\Stacks\CallbacksStack;
+use AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack;
 
 /**
- * @covers \AvtoDev\RoadRunnerLaravel\Stacks\CallbacksStack
+ * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack
  *
  * @group stacks
  */

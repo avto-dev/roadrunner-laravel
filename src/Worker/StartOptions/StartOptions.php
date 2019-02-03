@@ -2,9 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerLaravel\Settings;
+namespace AvtoDev\RoadRunnerLaravel\Worker\StartOptions;
 
-class Settings implements SettingsInterface
+use InvalidArgumentException;
+
+class StartOptions implements StartOptionsInterface
 {
     /**
      * Options this this prefix will invert own logic (true -> false).
@@ -24,13 +26,13 @@ class Settings implements SettingsInterface
     protected $options = [];
 
     /**
-     * Settings constructor.
+     * Constructor.
      *
-     * @param array $arguments
+     * @param array $raw_options
      */
-    public function __construct(array $arguments = [])
+    public function __construct(array $raw_options = [])
     {
-        $this->options = $this->parseBooleanArgumentsList($arguments);
+        $this->options = $this->parseBooleanArgumentsList($raw_options);
     }
 
     /**
@@ -53,6 +55,20 @@ class Settings implements SettingsInterface
         }
 
         return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws InvalidArgumentException
+     */
+    public function getOption(string $option_name)
+    {
+        if ($this->hasOption($option_name)) {
+            return $this->options[$option_name];
+        }
+
+        throw new InvalidArgumentException("Option with name [$option_name] does not exists.");
     }
 
     /**

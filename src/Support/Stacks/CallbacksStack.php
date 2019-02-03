@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerLaravel\Stacks;
+namespace AvtoDev\RoadRunnerLaravel\Support\Stacks;
 
 class CallbacksStack extends AbstractStack
 {

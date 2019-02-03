@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerLaravel\Callbacks;
+namespace AvtoDev\RoadRunnerLaravel\Worker;
 
-use AvtoDev\RoadRunnerLaravel\Stacks\CallbacksStack;
+use AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack;
 
 class CallbackStacks
 {
@@ -42,7 +42,7 @@ class CallbackStacks
     /**
      * @return CallbacksStack
      */
-    public function getAfterHandleRequestStack(): CallbacksStack
+    public function afterHandleRequestStack(): CallbacksStack
     {
         return $this->after_handle_request;
     }
@@ -50,7 +50,7 @@ class CallbackStacks
     /**
      * @return CallbacksStack
      */
-    public function getAfterLoopStack(): CallbacksStack
+    public function afterLoopStack(): CallbacksStack
     {
         return $this->after_loop;
     }
@@ -58,7 +58,7 @@ class CallbackStacks
     /**
      * @return CallbacksStack
      */
-    public function getBeforeHandleRequestStack(): CallbacksStack
+    public function beforeHandleRequestStack(): CallbacksStack
     {
         return $this->before_handle_request;
     }
@@ -66,7 +66,7 @@ class CallbackStacks
     /**
      * @return CallbacksStack
      */
-    public function getBeforeLoopStack(): CallbacksStack
+    public function beforeLoopStack(): CallbacksStack
     {
         return $this->before_loop;
     }
