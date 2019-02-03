@@ -56,6 +56,10 @@
         "test-cover": "@php ./vendor/bin/phpunit --coverage-html='./coverage/html'",
         "phpstan": "@php ./vendor/bin/phpstan analyze --no-progress --ansi --level=max ./src"
     },
+    "suggest": {
+        "illuminate/redis": "Required for dropping redis connections",
+        "illuminate/database": "Required for dropping database connections"
+    },
     "support": {
         "issues": "https://github.com/avto-dev/roadrunner-laravel/issues",
         "source": "https://github.com/avto-dev/roadrunner-laravel"

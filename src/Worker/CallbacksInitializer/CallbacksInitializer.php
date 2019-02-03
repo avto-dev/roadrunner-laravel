@@ -115,14 +115,12 @@ class CallbacksInitializer implements CallbacksInitializerInterface
                     // Drop database connections
                     $db_manager = $app->make('db');
                     if ($db_manager instanceof DatabaseManager) {
-                        $db_connections = $db_manager->getConnections();
-                        if (\is_iterable($db_connections)) {
-                            foreach ($db_connections as $connection) {
-                                if ($connection instanceof DatabaseConnection) {
-                                    $connection->disconnect();
+                        if (\is_array($db_connections = $db_manager->getConnections())) {
+                            foreach ($db_connections as $db_connection) {
+                                /** @var DatabaseConnection $db_connection */
+                                if (\method_exists($db_connection, 'disconnect')) {
+                                    $db_connection->disconnect();
                                 }
-
-                                unset($connection);
                             }
                         }
                     }
@@ -130,15 +128,12 @@ class CallbacksInitializer implements CallbacksInitializerInterface
                     // Drop redis connections
                     $redis_manager = $app->make('redis');
                     if ($redis_manager instanceof RedisManager) {
-                        $redis_connections = $redis_manager->connections();
-                        if (\is_iterable($redis_connections)) {
-                            foreach ($redis_connections as $connection) {
-                                if ($connection instanceof RedisConnection && \method_exists($connection,
-                                        'disconnect')) {
-                                    $connection->disconnect();
+                        if (\is_array($redis_connections = $redis_manager->connections())) {
+                            foreach ($redis_connections as $redis_connection) {
+                                /** @var RedisConnection $redis_connection */
+                                if (\method_exists($redis_connection, 'disconnect')) {
+                                    $redis_connection->disconnect();
                                 }
-
-                                unset($connection);
                             }
                         }
                     }
