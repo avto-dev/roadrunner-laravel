@@ -1,8 +1,7 @@
 <?php
 
-namespace AvtoDev\RoadRunnerWorkerLaravel\Tests;
+namespace AvtoDev\RoadRunnerLaravel\Tests;
 
-use AvtoDev\RoadRunnerWorkerLaravel\LaravelPackageServiceProvider;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class AbstractTestCase extends BaseTestCase
@@ -10,12 +9,10 @@ abstract class AbstractTestCase extends BaseTestCase
     use Traits\CreatesApplicationTrait;
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
-    public function setUp()
+    public function testFoo()
     {
-        parent::setUp();
-
-        $this->app->register(LaravelPackageServiceProvider::class);
+        $this->assertTrue(true);
     }
 }

@@ -1,11 +1,10 @@
 {
-    "name": "avto-dev/roadrunner-worker-laravel",
-    "description": "Some package description goes here",
+    "name": "avto-dev/roadrunner-laravel",
+    "description": "RoadRunner worker for Laravel applications",
     "keywords": [
-        "some",
-        "keywords",
-        "goes",
-        "here"
+        "laravel",
+        "bridge",
+        "roadrunner"
     ],
     "type": "library",
     "license": "MIT",
@@ -17,9 +16,11 @@
     ],
     "require": {
         "php": ">=7.0",
-        "ext-json": "*",
         "ext-mbstring": "*",
-        "illuminate/support": ">=5.5.0 <5.8.0"
+        "illuminate/contracts": ">=5.5.0 <5.8.0",
+        "illuminate/support": ">=5.5.0 <5.8.0",
+        "spiral/roadrunner": "^1.3",
+        "symfony/psr-http-message-bridge": "^1.1"
     },
     "require-dev": {
         "laravel/laravel": ">=5.5.0 <5.8.0",
@@ -30,12 +31,22 @@
     },
     "autoload": {
         "psr-4": {
-            "AvtoDev\\RoadRunnerWorkerLaravel\\": "src"
+            "AvtoDev\\RoadRunnerLaravel\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AvtoDev\\RoadRunnerWorkerLaravel\\Tests\\": "tests"
+            "AvtoDev\\RoadRunnerLaravel\\Tests\\": "tests"
+        }
+    },
+    "bin": [
+        "bin/rr-worker"
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AvtoDev\\RoadRunnerLaravel\\ServiceProvider"
+            ]
         }
     },
     "scripts": {
@@ -43,16 +54,9 @@
         "test-cover": "@php ./vendor/bin/phpunit --coverage-html='./coverage/html'",
         "phpstan": "@php ./vendor/bin/phpstan analyze --no-progress --ansi --level=max ./src"
     },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "AvtoDev\\RoadRunnerWorkerLaravel\\LaravelPackageServiceProvider"
-            ]
-        }
-    },
     "support": {
-        "issues": "https://github.com/avto-dev/roadrunner-worker-laravel/issues",
-        "source": "https://github.com/avto-dev/roadrunner-worker-laravel"
+        "issues": "https://github.com/avto-dev/roadrunner-laravel/issues",
+        "source": "https://github.com/avto-dev/roadrunner-laravel"
     },
     "config": {
         "sort-packages": true
