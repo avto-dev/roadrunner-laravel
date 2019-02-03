@@ -24,7 +24,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
-        /** @see \AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer::initForceHttps() */
+        /* @see \AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer::initForceHttps() */
         if ($this->app->make(Request::class)->hasHeader(CallbacksInitializerInterface::FORCE_HTTPS_HEADER_NAME)) {
             $this->app->make(UrlGenerator::class)->forceScheme('https');
         }
