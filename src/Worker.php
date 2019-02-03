@@ -9,11 +9,11 @@ use InvalidArgumentException;
 use Spiral\RoadRunner\PSR7Client;
 use Spiral\Goridge\RelayInterface;
 use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Contracts\Foundation\Application;
 use AvtoDev\RoadRunnerLaravel\Settings\Settings;
+use Illuminate\Contracts\Foundation\Application;
+use AvtoDev\RoadRunnerLaravel\Settings\SettingsInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
-use AvtoDev\RoadRunnerLaravel\Settings\SettingsInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 
