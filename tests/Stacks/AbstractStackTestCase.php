@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerWorkerLaravel\Tests\Stacks;
 
-use AvtoDev\RoadRunnerWorkerLaravel\Tests\AbstractTestCase;
+use Illuminate\Contracts\Support\Arrayable;
 use AvtoDev\RoadRunnerWorkerLaravel\Stacks\AbstractStack;
 use AvtoDev\RoadRunnerWorkerLaravel\Stacks\StackInterface;
-use Illuminate\Contracts\Support\Arrayable;
+use AvtoDev\RoadRunnerWorkerLaravel\Tests\AbstractTestCase;
 
 /**
  * @covers \AvtoDev\RoadRunnerWorkerLaravel\Stacks\AbstractStack
