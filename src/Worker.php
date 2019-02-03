@@ -4,18 +4,18 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerWorkerLaravel;
 
-use AvtoDev\RoadRunnerWorkerLaravel\Settings\Settings;
-use AvtoDev\RoadRunnerWorkerLaravel\Settings\SettingsInterface;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
-use Spiral\Goridge\RelayInterface;
 use Spiral\RoadRunner\PSR7Client;
+use Spiral\Goridge\RelayInterface;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Contracts\Foundation\Application;
+use AvtoDev\RoadRunnerWorkerLaravel\Settings\Settings;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
+use AvtoDev\RoadRunnerWorkerLaravel\Settings\SettingsInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
-use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 
 class Worker
 {
@@ -31,7 +31,6 @@ class Worker
 
     /**
      * @var SettingsInterface
-     *
      */
     protected $settings;
 
@@ -121,11 +120,35 @@ class Worker
     }
 
     /**
+     * @return void
+     */
+    public function start()
+    {
+        /** @var Kernel $kernel */
+        $kernel = $this->app->make(Kernel::class);
+
+        while ($req = $this->psr7_client->acceptRequest()) {
+            try {
+                $request = Request::createFromBase($this->http_factory->createRequest($req));
+
+                $response = $kernel->handle($request);
+
+                $psr7_response = $this->diactoros->createResponse($response);
+                $this->psr7_client->respond($psr7_response);
+
+                $kernel->terminate($request, $response);
+            } catch (\Throwable $e) {
+                $this->psr7_client->getWorker()->error($e->__toString());
+            }
+        }
+    }
+
+    /**
      * @param string $app_base_path
      *
-     * @return Application
-     *
      * @throws InvalidArgumentException
+     *
+     * @return Application
      */
     protected function appFactory(string $app_base_path): Application
     {
@@ -178,29 +201,5 @@ class Worker
     protected function diactorosFactoryFactory(): HttpMessageFactoryInterface
     {
         return new DiactorosFactory;
-    }
-
-    /**
-     * @return void
-     */
-    public function start()
-    {
-        /** @var Kernel $kernel */
-        $kernel = $this->app->make(Kernel::class);
-
-        while ($req = $this->psr7_client->acceptRequest()) {
-            try {
-                $request = Request::createFromBase($this->http_factory->createRequest($req));
-
-                $response = $kernel->handle($request);
-
-                $psr7_response = $this->diactoros->createResponse($response);
-                $this->psr7_client->respond($psr7_response);
-
-                $kernel->terminate($request, $response);
-            } catch (\Throwable $e) {
-                $this->psr7_client->getWorker()->error($e->__toString());
-            }
-        }
     }
 }

@@ -93,14 +93,14 @@ class CallbacksStackTest extends AbstractStackTestCase
             $this->assertEquals(1, $val_1);
             $this->assertEquals('foo', $val_2);
 
-            ++$counter;
+            $counter++;
         });
 
         $this->instance->push($callable_2 = function ($val_1, $val_2) use (&$counter) {
             $this->assertEquals(1, $val_1);
             $this->assertEquals('foo', $val_2);
 
-            ++$counter;
+            $counter++;
         });
 
         $this->instance->callEach(1, 'foo');
