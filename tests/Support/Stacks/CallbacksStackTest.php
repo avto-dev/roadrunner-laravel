@@ -45,18 +45,19 @@ class CallbacksStackTest extends AbstractStackTestCase
         $this->instance->push($value = function (): bool {
             return true;
         });
+        $this->instance->push($value2 = [$this, 'createApplication']);
         $this->instance->push('foo'); // must be ignored
         $this->instance->push(new \stdClass); // must be ignored
 
-        $this->assertEquals([$value], $this->instance->all());
-        $this->assertCount(1, $this->instance);
+        $this->assertEquals([$value, $value2], $this->instance->all());
+        $this->assertCount(2, $this->instance);
 
         // Test array iterator
         $_value = null;
         foreach ($this->instance as $item) {
             $_value = $item;
         }
-        $this->assertEquals($value, $_value);
+        $this->assertEquals($value2, $_value);
 
         $this->instance->clear();
 

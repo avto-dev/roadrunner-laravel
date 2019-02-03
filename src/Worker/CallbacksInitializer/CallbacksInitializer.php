@@ -128,11 +128,13 @@ class CallbacksInitializer implements CallbacksInitializerInterface
                     // Drop redis connections
                     $redis_manager = $app->make('redis');
                     if ($redis_manager instanceof RedisManager) {
-                        if (\is_array($redis_connections = $redis_manager->connections())) {
-                            foreach ($redis_connections as $redis_connection) {
-                                /** @var RedisConnection $redis_connection */
-                                if (\method_exists($redis_connection, 'disconnect')) {
-                                    $redis_connection->disconnect();
+                        if (\method_exists($redis_manager, 'connections')) {
+                            if (\is_array($redis_connections = $redis_manager->connections())) {
+                                foreach ($redis_connections as $redis_connection) {
+                                    /** @var RedisConnection $redis_connection */
+                                    if (\method_exists($redis_connection, 'disconnect')) {
+                                        $redis_connection->disconnect();
+                                    }
                                 }
                             }
                         }

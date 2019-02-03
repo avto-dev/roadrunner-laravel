@@ -18,7 +18,7 @@ class CallbacksStack extends AbstractStack
      *
      * @see <https://secure.php.net/manual/ru/function.is-callable.php>
      *
-     * @param array|callable $callable
+     * @param array|callable|mixed $callable
      *
      * @return $this
      */
