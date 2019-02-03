@@ -63,12 +63,12 @@ class Worker
     {
         $this->app_base_path = $app_base_path ?? $_ENV['APP_BASE_PATH'] ?? \dirname(__DIR__, 4);
 
-        $this->app          = $this->appFactory($app_base_path);
-        $this->settings     = $this->settingsFactory();
-        $this->stream_relay = $this->streamRelayFactory();
-        $this->psr7_client  = $this->psr7ClientFactory($this->stream_relay);
-        $this->http_factory = $this->httpFactoryFactory();
-        $this->diactoros    = $this->diactorosFactoryFactory();
+        $this->app          = $this->createApplication($this->app_base_path);
+        $this->settings     = $this->createSettings();
+        $this->stream_relay = $this->createStreamRelay();
+        $this->psr7_client  = $this->createPsr7Client($this->stream_relay);
+        $this->http_factory = $this->createHttpFactory();
+        $this->diactoros    = $this->createDiactorosFactory();
     }
 
     /**
@@ -150,7 +150,7 @@ class Worker
      *
      * @return Application
      */
-    protected function appFactory(string $app_base_path): Application
+    protected function createApplication(string $app_base_path): Application
     {
         if (\is_file($app_file = $app_base_path . '/bootstrap/app.php')) {
             return require $app_file;
@@ -162,7 +162,7 @@ class Worker
     /**
      * @return SettingsInterface
      */
-    protected function settingsFactory(): SettingsInterface
+    protected function createSettings(): SettingsInterface
     {
         global $argv;
 
@@ -172,7 +172,7 @@ class Worker
     /**
      * @return RelayInterface
      */
-    protected function streamRelayFactory(): RelayInterface
+    protected function createStreamRelay(): RelayInterface
     {
         return new \Spiral\Goridge\StreamRelay(STDIN, STDOUT);
     }
@@ -182,7 +182,7 @@ class Worker
      *
      * @return PSR7Client
      */
-    protected function psr7ClientFactory(RelayInterface $stream_relay)
+    protected function createPsr7Client(RelayInterface $stream_relay)
     {
         return new PSR7Client(new \Spiral\RoadRunner\Worker($stream_relay));
     }
@@ -190,7 +190,7 @@ class Worker
     /**
      * @return HttpFoundationFactoryInterface
      */
-    protected function httpFactoryFactory(): HttpFoundationFactoryInterface
+    protected function createHttpFactory(): HttpFoundationFactoryInterface
     {
         return new HttpFoundationFactory;
     }
@@ -198,7 +198,7 @@ class Worker
     /**
      * @return HttpMessageFactoryInterface
      */
-    protected function diactorosFactoryFactory(): HttpMessageFactoryInterface
+    protected function createDiactorosFactory(): HttpMessageFactoryInterface
     {
         return new DiactorosFactory;
     }
