@@ -2,7 +2,7 @@
   <img src="https://laravel.com/assets/img/components/logo-laravel.svg" alt="Laravel" width="240" />
 </p>
 
-# [RoadRunner][roadrunner] worker for Laravel applications
+# [RoadRunner][roadrunner] :repeat: Laravel bridge
 
 [![Version][badge_packagist_version]][link_packagist]
 [![Version][badge_php_version]][link_packagist]
@@ -12,7 +12,7 @@
 [![Downloads count][badge_downloads_count]][link_packagist]
 [![License][badge_license]][link_license]
 
-Customizable [RoadRunner][roadrunner] worker (bridge) for Laravel applications.
+Easy way for connecting [RoadRunner][roadrunner] and Laravel applications.
 
 ## Install
 
