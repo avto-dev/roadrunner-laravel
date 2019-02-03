@@ -26,6 +26,20 @@ $ composer require avto-dev/roadrunner-laravel "^1.0"
 
 > You need to fix the major version of package.
 
+If you wants to disable package service-provider auto discover, just add into your `composer.json` next lines:
+
+```json
+{
+    "extra": {
+        "laravel": {
+            "dont-discover": [
+                "avto-dev/roadrunner-laravel"
+            ]
+        }
+    }
+}
+```
+
 ## Usage
 
 {% Usage descriptions goes here %}
