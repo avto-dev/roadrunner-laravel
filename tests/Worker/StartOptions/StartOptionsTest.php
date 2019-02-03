@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker\StartOptions;
 
-use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
+use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
 
 /**
  * @coversDefaultClass \AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions

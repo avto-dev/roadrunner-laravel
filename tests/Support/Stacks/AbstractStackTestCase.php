@@ -5,9 +5,9 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Tests\Support\Stacks;
 
 use Illuminate\Contracts\Support\Arrayable;
+use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\StackInterface;
-use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack

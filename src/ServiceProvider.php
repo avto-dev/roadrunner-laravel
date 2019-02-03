@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
-use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer;
-use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
 use Illuminate\Http\Request;
 use Illuminate\Routing\UrlGenerator;
+use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer;
+use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -25,7 +25,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
-        /**
+        /*
          * @see CallbacksInitializer::initForceHttps()
          */
         if ($this->app->make(Request::class)->hasHeader(CallbacksInitializerInterface::FORCE_HTTPS_HEADER_NAME)) {
