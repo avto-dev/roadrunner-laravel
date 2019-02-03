@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+
+$auto_loads = [
+    __DIR__ . '/vendor/autoload.php',
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../vendor/autoload.php',
+    __DIR__ . '/../autoload.php',
+    __DIR__ . '/../../autoload.php',
+    __DIR__ . '/../../../autoload.php',
+];
+
+$loaded = false;
+
+foreach ($auto_loads as $autoload_file) {
+    if (\is_file($autoload_file)) {
+        require $autoload_file;
+        $loaded = true;
+        break;
+    }
+}
+
+if ($loaded !== true) {
+    die(
+        'You need to set up the project dependencies using the following commands:' . PHP_EOL .
+        'wget http://getcomposer.org/composer.phar' . PHP_EOL .
+        'php composer.phar install' . PHP_EOL
+    );
+}
+
+$worker = new \AvtoDev\RoadRunnerWorkerLaravel\Worker;
+$worker->start();

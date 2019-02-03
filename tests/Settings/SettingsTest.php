@@ -2,12 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerWorkerLaravel\Tests;
+namespace AvtoDev\RoadRunnerWorkerLaravel\Tests\Settings;
 
-use AvtoDev\RoadRunnerWorkerLaravel\Settings;
+use AvtoDev\RoadRunnerWorkerLaravel\Settings\Settings;
+use AvtoDev\RoadRunnerWorkerLaravel\Tests\AbstractTestCase;
 
 /**
- * @coversDefaultClass \AvtoDev\RoadRunnerWorkerLaravel\Settings
+ * @coversDefaultClass \AvtoDev\RoadRunnerWorkerLaravel\Settings\Settings
  */
 class SettingsTest extends AbstractTestCase
 {

@@ -12,7 +12,7 @@
 [![Downloads count][badge_downloads_count]][link_packagist]
 [![License][badge_license]][link_license]
 
-Customizable [RoadRunner][roadrunner] worker for Laravel applications.
+Customizable [RoadRunner][roadrunner] worker (bridge) for Laravel applications.
 
 ## Install
 

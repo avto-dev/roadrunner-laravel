@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerWorkerLaravel;
+namespace AvtoDev\RoadRunnerWorkerLaravel\Settings;
 
-class Settings
+class Settings implements SettingsInterface
 {
     /**
      * Options this this prefix will invert own logic (true -> false).
@@ -34,11 +34,7 @@ class Settings
     }
 
     /**
-     * Returns true if an options array contains option by name.
-     *
-     * @param string $option_name Option name
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function hasOption(string $option_name): bool
     {
@@ -46,12 +42,7 @@ class Settings
     }
 
     /**
-     * Set an option.
-     *
-     * @param string $option_name Option name
-     * @param mixed  $value       Scalar type only
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function setOption(string $option_name, $value): bool
     {
@@ -65,9 +56,7 @@ class Settings
     }
 
     /**
-     * Get all options.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getOptions(): array
     {
