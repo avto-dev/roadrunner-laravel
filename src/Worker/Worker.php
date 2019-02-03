@@ -15,7 +15,7 @@ use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
 use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
 
-class Worker
+class Worker implements WorkerInterface
 {
     /**
      * @var string
@@ -116,7 +116,7 @@ class Worker
     }
 
     /**
-     * @return void
+     * {@inheritdoc}
      */
     public function start()
     {

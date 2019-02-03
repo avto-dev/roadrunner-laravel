@@ -82,6 +82,8 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     /**
      * For option: "force-https".
      *
+     * @see \AvtoDev\RoadRunnerLaravel\ServiceProvider::boot()
+     *
      * @param mixed $value
      *
      * @return void
