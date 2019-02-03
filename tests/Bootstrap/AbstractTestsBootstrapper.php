@@ -2,8 +2,8 @@
 
 namespace AvtoDev\RoadRunnerWorkerLaravel\Tests\Bootstrap;
 
-use TypeError;
 use Exception;
+use TypeError;
 use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
