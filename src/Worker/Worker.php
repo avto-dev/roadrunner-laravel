@@ -4,19 +4,19 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Worker;
 
-use Throwable;
+use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
+use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
-use Spiral\RoadRunner\PSR7Client;
 use Spiral\Goridge\RelayInterface;
-use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Contracts\Foundation\Application;
-use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
-use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
+use Spiral\RoadRunner\PSR7Client;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
-use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
-use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
-use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
+use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
+use Throwable;
 
 class Worker implements WorkerInterface
 {
@@ -77,9 +77,12 @@ class Worker implements WorkerInterface
                                 string $app_bootstrap_path = null)
     {
         $this->app_base_path      = $app_base_path ?? $_ENV['APP_BASE_PATH'] ?? \dirname(__DIR__, 4);
-        $this->app_bootstrap_path = $app_bootstrap_path ?? $_ENV['APP_BOOTSTRAP_PATH'] ?? '/bootstrap/app.php';
-        $this->callbacks          = new Callbacks;
+        $this->app_bootstrap_path = DIRECTORY_SEPARATOR . \ltrim(
+                $app_bootstrap_path ?? $_ENV['APP_BOOTSTRAP_PATH'] ?? '/bootstrap/app.php',
+                '\\/ '
+            );
 
+        $this->callbacks     = new Callbacks;
         $this->app           = $this->createApplication($this->app_base_path);
         $this->start_options = $this->createStartOptions($start_arguments);
         $this->stream_relay  = $this->createStreamRelay();
@@ -119,6 +122,14 @@ class Worker implements WorkerInterface
     public function appBasePath(): string
     {
         return $this->app_base_path;
+    }
+
+    /**
+     * @return string
+     */
+    public function appBootstrapPath(): string
+    {
+        return $this->app_bootstrap_path;
     }
 
     /**
@@ -170,9 +181,7 @@ class Worker implements WorkerInterface
      */
     protected function createApplication(string $app_base_path): Application
     {
-        $bootstrap = \ltrim($this->app_bootstrap_path, '\\/ ') . DIRECTORY_SEPARATOR . $this->app_bootstrap_path;
-
-        if (\is_file($app_file = $app_base_path . $bootstrap)) {
+        if (\is_file($app_file = $app_base_path . $this->app_bootstrap_path)) {
             return require $app_file;
         }
 

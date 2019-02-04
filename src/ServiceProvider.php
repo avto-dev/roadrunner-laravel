@@ -22,6 +22,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
+        $this->registerForceHttpsMiddleware();
+    }
+
+    /**
+     * Register "ForceHttpsMiddleware".
+     *
+     * @return void
+     */
+    protected function registerForceHttpsMiddleware()
+    {
         $this->app->make(Kernel::class)->pushMiddleware(Middleware\ForceHttpsMiddleware::class);
     }
 }

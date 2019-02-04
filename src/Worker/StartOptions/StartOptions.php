@@ -4,10 +4,13 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Worker\StartOptions;
 
+use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 
 class StartOptions implements StartOptionsInterface
 {
+    use Macroable;
+
     /**
      * Options this this prefix will invert own logic (true -> false).
      */

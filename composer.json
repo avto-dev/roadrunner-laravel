@@ -1,6 +1,6 @@
 {
     "name": "avto-dev/roadrunner-laravel",
-    "description": "RoadRunner worker for Laravel applications",
+    "description": "RoadRunner bridge for Laravel applications",
     "keywords": [
         "laravel",
         "bridge",
@@ -25,11 +25,12 @@
         "symfony/psr-http-message-bridge": "^1.1"
     },
     "require-dev": {
+        "avto-dev/dev-tools": "^1.9",
         "laravel/laravel": ">=5.5.0 <5.8.0",
-        "phpunit/phpunit": "~5.7.10 || ^6.4 || ~7.0",
         "mockery/mockery": "0.9.* || ~1.0",
-        "symfony/var-dumper": "~3.2 || ^4.0",
-        "phpstan/phpstan": "~0.9 || ^0.10"
+        "phpstan/phpstan": "~0.9 || ^0.10",
+        "phpunit/phpunit": "~5.7.10 || ^6.4 || ~7.0",
+        "symfony/var-dumper": "~3.2 || ^4.0"
     },
     "autoload": {
         "psr-4": {

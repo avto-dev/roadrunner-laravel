@@ -10,8 +10,6 @@ use AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\StackInterface;
 
 /**
- * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack
- *
  * @group  stacks
  */
 abstract class AbstractStackTestCase extends AbstractTestCase
@@ -38,10 +36,7 @@ abstract class AbstractStackTestCase extends AbstractTestCase
      */
     public function testInterfacesAndTraits()
     {
-        // Has \Illuminate\Support\Traits\Macroable trait methods
-        foreach (['macro', 'mixin', 'hasMacro'] as $macro_method_name) {
-            $this->assertTrue(\method_exists($this->instance, $macro_method_name));
-        }
+        $this->assertClassUsesTraits($this->instance, \Illuminate\Support\Traits\Macroable::class);
 
         $this->assertInstanceOf(StackInterface::class, $this->instance);
 

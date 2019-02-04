@@ -7,8 +7,6 @@ namespace AvtoDev\RoadRunnerLaravel\Tests\Support\Stacks;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack;
 
 /**
- * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack
- *
  * @group stacks
  */
 class CallbacksStackTest extends AbstractStackTestCase

@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Redis\RedisManager;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Support\Traits\Macroable;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Connection as DatabaseConnection;
@@ -20,6 +21,8 @@ use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
  */
 class CallbacksInitializer implements CallbacksInitializerInterface
 {
+    use Macroable;
+
     /**
      * "Magic" method prefix. You can simply add your own method, name it as an required option name this this prefix.
      *
