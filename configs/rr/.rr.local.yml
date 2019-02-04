@@ -1,0 +1,73 @@
+# @link: <https://github.com/spiral/roadrunner/wiki/Configuration>
+
+# rpc bus allows php application and external clients to talk to rr services.
+rpc:
+  # enable rpc server (enabled by default)
+  enable: true
+
+  # rpc connection DSN. Supported TCP and Unix sockets.
+  listen: tcp://127.0.0.1:6001
+
+# http service configuration.
+http:
+  # http host to listen.
+  address: 0.0.0.0:80
+
+  ssl:
+    # custom https port (default 443)
+    port:     443
+
+    # force redirect to https connection
+    redirect: false
+
+    # ssl cert
+    #cert:     server.crt
+
+    # ssl private key
+    #key:      server.key
+
+  # max POST request size, including file uploads in MB.
+  maxRequest: 128
+
+  # file upload configuration.
+  uploads:
+    # list of file extensions which are forbidden for uploading.
+    forbid: [".php", ".exe", ".bat"]
+
+  # http worker pool configuration.
+  workers:
+    # php worker command.
+    #
+    # Allowed arguments:
+    # - `--(not-)force-https`
+    # - `--(not-)reset-db-connections`
+    # - `--(not-)reset-redis-connections`
+    command: "php ./vendor/bin/rr-worker"
+
+    # connection method (pipes, tcp://:9000, unix://socket.unix). default "pipes"
+    relay: "pipes"
+
+    # worker pool configuration.
+    pool:
+      # number of workers to be serving.
+      numWorkers: 2
+
+      # maximum jobs per worker, 0 - unlimited.
+      maxJobs: 1
+
+      # for how long worker is allowed to be bootstrapped.
+      allocateTimeout: 60
+
+      # amount of time given to worker to gracefully destruct itself.
+      destroyTimeout:  60
+
+# static file serving. remove this section to disable static file serving.
+static:
+  # serve http static files
+  enable: true
+
+  # root directory for static file (http would not serve .php and .htaccess files).
+  dir: "public"
+
+  # list of extensions for forbid for serving.
+  forbid: [".php"]

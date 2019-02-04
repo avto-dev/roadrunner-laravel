@@ -14,7 +14,12 @@ class Callbacks implements CallbacksInterface
     /**
      * @var CallbacksStack
      */
-    protected $before_loop;
+    protected $before_loop_starts;
+
+    /**
+     * @var CallbacksStack
+     */
+    protected $before_loop_iteration;
 
     /**
      * @var CallbacksStack
@@ -29,17 +34,32 @@ class Callbacks implements CallbacksInterface
     /**
      * @var CallbacksStack
      */
-    protected $after_loop;
+    protected $after_loop_iteration;
+
+    /**
+     * @var CallbacksStack
+     */
+    protected $after_loop_ends;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->before_loop           = new CallbacksStack;
+        $this->before_loop_starts    = new CallbacksStack;
+        $this->before_loop_iteration = new CallbacksStack;
         $this->before_handle_request = new CallbacksStack;
         $this->after_handle_request  = new CallbacksStack;
-        $this->after_loop            = new CallbacksStack;
+        $this->after_loop_iteration  = new CallbacksStack;
+        $this->after_loop_ends       = new CallbacksStack;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beforeLoopStarts(): CallbacksStack
+    {
+        return $this->before_loop_starts;
     }
 
     /**
@@ -53,9 +73,9 @@ class Callbacks implements CallbacksInterface
     /**
      * {@inheritdoc}
      */
-    public function afterLoopStack(): CallbacksStack
+    public function afterLoopIterationStack(): CallbacksStack
     {
-        return $this->after_loop;
+        return $this->after_loop_iteration;
     }
 
     /**
@@ -69,8 +89,16 @@ class Callbacks implements CallbacksInterface
     /**
      * {@inheritdoc}
      */
-    public function beforeLoopStack(): CallbacksStack
+    public function beforeLoopIterationStack(): CallbacksStack
     {
-        return $this->before_loop;
+        return $this->before_loop_iteration;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function afterLoopEnds(): CallbacksStack
+    {
+        return $this->after_loop_ends;
     }
 }

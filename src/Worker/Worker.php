@@ -144,12 +144,14 @@ class Worker implements WorkerInterface
      */
     public function start()
     {
+        $this->callbacks->beforeLoopStarts()->callEach($this->app);
+
         /** @var Kernel $kernel */
         $kernel = $this->app->make(Kernel::class);
 
         while ($req = $this->psr7_client->acceptRequest()) {
             try {
-                $this->callbacks->beforeLoopStack()->callEach($this->app, $req);
+                $this->callbacks->beforeLoopIterationStack()->callEach($this->app, $req);
 
                 $request = Request::createFromBase($this->http_factory->createRequest($req));
 
@@ -164,11 +166,13 @@ class Worker implements WorkerInterface
 
                 $kernel->terminate($request, $response);
 
-                $this->callbacks->afterLoopStack()->callEach($this->app, $request, $response);
+                $this->callbacks->afterLoopIterationStack()->callEach($this->app, $request, $response);
             } catch (Throwable $e) {
                 $this->psr7_client->getWorker()->error($e->__toString());
             }
         }
+
+        $this->callbacks->afterLoopEnds()->callEach($this->app);
     }
 
     /**

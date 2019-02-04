@@ -42,8 +42,8 @@ class CallbacksTest extends AbstractTestCase
     public function testAccessorMethodsArePresented()
     {
         $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->afterHandleRequestStack());
-        $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->afterLoopStack());
+        $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->afterLoopIterationStack());
         $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->beforeHandleRequestStack());
-        $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->beforeLoopStack());
+        $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->beforeLoopIterationStack());
     }
 }

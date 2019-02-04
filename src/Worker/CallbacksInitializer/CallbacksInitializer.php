@@ -76,7 +76,7 @@ class CallbacksInitializer implements CallbacksInitializerInterface
      */
     protected function defaults(CallbacksInterface $callbacks)
     {
-        $callbacks->afterLoopStack()
+        $callbacks->afterLoopIterationStack()
             ->push(function (Application $app, Request $request, Response $response) {
                 \gc_collect_cycles(); // keep the memory low (this will slow down your application a bit)
             });
@@ -123,7 +123,7 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     protected function initResetDbConnections(CallbacksInterface $callbacks, $value)
     {
         if ($value === true) {
-            $callbacks->afterLoopStack()
+            $callbacks->afterLoopIterationStack()
                 ->push(function (Application $app, Request $request, Response $response) {
                     // Drop database connections
                     if (($db_manager = $app->make('db')) instanceof DatabaseManager) {
@@ -151,7 +151,7 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     protected function initResetRedisConnections(CallbacksInterface $callbacks, $value)
     {
         if ($value === true) {
-            $callbacks->afterLoopStack()
+            $callbacks->afterLoopIterationStack()
                 ->push(function (Application $app, Request $request, Response $response) {
                     // Drop redis connections
                     if (($redis_manager = $app->make('redis')) instanceof RedisManager) {

@@ -26,6 +26,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
+     * Register services and etc.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->initializePublishes();
+    }
+
+    /**
      * Register "ForceHttpsMiddleware".
      *
      * @return void
@@ -33,5 +43,17 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function registerForceHttpsMiddleware()
     {
         $this->app->make(Kernel::class)->pushMiddleware(Middleware\ForceHttpsMiddleware::class);
+    }
+
+    /**
+     * Initialize publishes.
+     *
+     * @return void
+     */
+    protected function initializePublishes()
+    {
+        $this->publishes([
+            __DIR__ . '/../configs/rr' => $this->app->basePath()
+        ], 'config');
     }
 }

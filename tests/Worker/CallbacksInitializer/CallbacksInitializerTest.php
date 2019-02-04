@@ -94,7 +94,7 @@ class CallbacksInitializerTest extends AbstractTestCase
         // Get default closures without touching $this->.. instances
         $callbacks = new Callbacks;
         $this->callMethod(new CallbacksInitializer(new StartOptions, $callbacks), 'defaults', [$callbacks]);
-        $first_closure  = $callbacks->afterLoopStack()->first();
+        $first_closure  = $callbacks->afterLoopIterationStack()->first();
         $second_closure = $callbacks->beforeHandleRequestStack()->first();
 
         // And now - call same methods using $this->.. instances
@@ -102,7 +102,7 @@ class CallbacksInitializerTest extends AbstractTestCase
 
         $this->assertSame(
             $this::getClosureHash($first_closure),
-            $this::getClosureHash($this->callbacks->afterLoopStack()->first())
+            $this::getClosureHash($this->callbacks->afterLoopIterationStack()->first())
         );
         $this->assertSame(
             $this::getClosureHash($second_closure),
@@ -176,7 +176,7 @@ class CallbacksInitializerTest extends AbstractTestCase
         $this->assertInstanceOf(\PDO::class, $db_manager->connection($connection_name)->getPdo());
 
         $this->callMethod($this->initializer, 'initResetDbConnections', [$this->callbacks, true]);
-        $closure = $this->callbacks->afterLoopStack()->first();
+        $closure = $this->callbacks->afterLoopIterationStack()->first();
         $closure($this->app, new Request, new Response);
 
         $this->assertNull($db_manager->connection($connection_name)->getPdo());
@@ -204,7 +204,7 @@ class CallbacksInitializerTest extends AbstractTestCase
         $this->assertInstanceOf(\PDO::class, $db_manager->connection($connection_name)->getPdo());
 
         $this->callMethod($this->initializer, 'initResetDbConnections', [$this->callbacks, false]);
-        $this->assertEmpty($this->callbacks->afterLoopStack());
+        $this->assertEmpty($this->callbacks->afterLoopIterationStack());
 
         $this->assertInstanceOf(\PDO::class, $db_manager->connection($connection_name)->getPdo());
     }
@@ -215,7 +215,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     public function testResetRedisConnectionsWithPassingTrue()
     {
         $this->callMethod($this->initializer, 'initResetRedisConnections', [$this->callbacks, true]);
-        $closure = $this->callbacks->afterLoopStack()->first();
+        $closure = $this->callbacks->afterLoopIterationStack()->first();
         $closure($this->app, new Request, new Response); // Test direct calling
         $this->assertInstanceOf(\Closure::class, $closure);
     }
@@ -226,6 +226,6 @@ class CallbacksInitializerTest extends AbstractTestCase
     public function testResetRedisConnectionsWithPassingFalse()
     {
         $this->callMethod($this->initializer, 'initResetRedisConnections', [$this->callbacks, false]);
-        $this->assertEmpty($this->callbacks->afterLoopStack());
+        $this->assertEmpty($this->callbacks->afterLoopIterationStack());
     }
 }
