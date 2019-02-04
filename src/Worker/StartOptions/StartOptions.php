@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Worker\StartOptions;
 
-use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
+use Illuminate\Support\Traits\Macroable;
 
 class StartOptions implements StartOptionsInterface
 {

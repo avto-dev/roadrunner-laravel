@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker\Callbacks;
 
-use AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack;
+use Illuminate\Support\Traits\Macroable;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
+use AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
-use Illuminate\Support\Traits\Macroable;
 
 class CallbacksTest extends AbstractTestCase
 {

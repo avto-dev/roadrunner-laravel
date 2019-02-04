@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker;
 
-use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Worker\Worker;
+use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface;
 
 class WorkerTest extends AbstractTestCase

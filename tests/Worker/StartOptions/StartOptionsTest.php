@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker\StartOptions;
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
-use Illuminate\Support\Str;
-use Illuminate\Support\Traits\Macroable;
 
 /**
  * @group start_options

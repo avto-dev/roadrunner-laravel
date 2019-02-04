@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Middleware;
 
-use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
-use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use Illuminate\Http\Request;
 use Illuminate\Routing\UrlGenerator;
+use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
+use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
 
 class ForceHttpsMiddlewareTest extends AbstractTestCase
 {
@@ -28,7 +28,7 @@ class ForceHttpsMiddlewareTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->middleware = $this->app->make(ForceHttpsMiddleware::class);
+        $this->middleware    = $this->app->make(ForceHttpsMiddleware::class);
         $this->url_generator = $this->app->make(UrlGenerator::class);
     }
 
