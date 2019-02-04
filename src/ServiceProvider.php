@@ -54,6 +54,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../configs/rr' => $this->app->basePath(),
-        ], 'config');
+        ], 'rr-config');
     }
 }

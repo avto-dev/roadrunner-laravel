@@ -2,7 +2,7 @@
   <img src="https://laravel.com/assets/img/components/logo-laravel.svg" alt="Laravel" width="240" />
 </p>
 
-# [RoadRunner][roadrunner] :repeat: Laravel bridge
+# [RoadRunner][roadrunner] ⇆ Laravel bridge
 
 [![Version][badge_packagist_version]][link_packagist]
 [![Version][badge_php_version]][link_packagist]
@@ -26,6 +26,12 @@ $ composer require avto-dev/roadrunner-laravel "^1.0"
 
 > You need to fix the major version of package.
 
+After that you can optionally "publish" default RoadRunner configuration files into your application root directory using next command:
+
+```bash
+$ php ./artisan vendor:publish --provider='AvtoDev\RoadRunnerLaravel\ServiceProvider' --tag=rr-config
+```
+
 If you wants to disable package service-provider auto discover, just add into your `composer.json` next lines:
 
 ```json
@@ -42,13 +48,38 @@ If you wants to disable package service-provider auto discover, just add into yo
 
 ## Usage
 
-{% Usage descriptions goes here %}
+Данный пакет поставляет готовый к использованию воркер для RoadRunner, который вы можете расширить по собственному усмотрению - по умолчанию он наделен тем функционалом, который нам показался наиболее востребованным.
+
+Из коробки он поддерживает следующие параметры запуска:
+
+Имя параметра | Описание
+------------- | --------
+`--(not-)force-https` | Форсирует (или нет) использование схемы `https` для генерации внутренних ссылок приложения
+`--(not-)reset-db-connections` | Обрывает (или нет) соединения с БД после обработки входящего запроса
+`--(not-)reset-redis-connections` | Обрывает (или нет) соединения с redis после обработки входящего запроса
+
+> Параметры запуска указываются в файле-конфигурации (например: `./.rr.local.yml`) по пути `http.workers.command`, например: `php ./vendor/bin/rr-worker --some-parameter`
+
+Так же доступны для взаимодействия следующие переменные окружения:
+
+Имя переменной окружения | Описание
+------------------------ | --------
+`APP_BASE_PATH` | Путь к директории с приложением
+`APP_BOOTSTRAP_PATH` | Путь к bootstrap файлу приложения _(по умолчанию `/bootstrap/app.php`)_
+
+### Дополнительные HTTP-заголовки 
+
+Для форсирования `https` схемы для генерации внутренних ссылок приложения вы ты же можете использовать специальный HTTP заголовок (выставляя его, например, на реверс-прокси стоящим перед приложением) - `FORCE-HTTPS` с произвольным не пустым значением.
+
+### Расширение функционала
+
+Данный пакет спроектирован с учетом возможности расширения практически любых его компонентов. За всеми подробностями - "read the sources, Luke!".
 
 ### Testing
 
-For package testing we use `phpunit` framework. Just write into your terminal:
+For package testing we use `phpunit` framework. Just write into your terminal _(installed `docker-ce` is required)_:
 
-```shell
+```bash
 $ git clone git@github.com:avto-dev/roadrunner-laravel.git ./roadrunner-laravel && cd $_
 $ make install
 $ make test
