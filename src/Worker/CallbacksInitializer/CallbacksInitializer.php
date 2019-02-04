@@ -42,6 +42,11 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     protected $callbacks;
 
     /**
+     * @var bool
+     */
+    protected $https_forced = false;
+
+    /**
      * {@inheritdoc}
      */
     public function __construct(StartOptionsInterface $start_options, CallbacksInterface $callbacks)
@@ -89,6 +94,12 @@ class CallbacksInitializer implements CallbacksInitializerInterface
                     $request->headers->remove(self::FORCE_HTTPS_HEADER_NAME);
                 }
             });
+
+        $env = WorkerInterface::ENV_NAME_APP_FORCE_HTTPS;
+
+        if (((bool) ($_ENV[$env] ?? env($env, false))) === true) {
+            $this->initForceHttps($callbacks, true);
+        }
     }
 
     /**
@@ -103,18 +114,18 @@ class CallbacksInitializer implements CallbacksInitializerInterface
      */
     protected function initForceHttps(CallbacksInterface $callbacks, $value)
     {
-        $callbacks->beforeHandleRequestStack()
-            ->push(function (Application $app, Request $request) use ($value) {
-                $env = WorkerInterface::ENV_NAME_APP_FORCE_HTTPS;
+        if ($this->https_forced === false) {
+            $callbacks->beforeHandleRequestStack()
+                ->push(function (Application $app, Request $request) use ($value) {
+                    // Attach special header for telling application "force use https schema!"
+                    // IMPORTANT! 'FORCE-HTTPS' header can be set externally
+                    if ($value === true || $request->headers->has(self::FORCE_HTTPS_EXTERNAL_HEADER_NAME)) {
+                        $request->headers->set(self::FORCE_HTTPS_HEADER_NAME, 'HTTPS');
+                    }
+                });
 
-                // Attach special header for telling application "force use https schema!"
-                // IMPORTANT! 'FORCE-HTTPS' header can be set externally
-                if ($value === true
-                    || ((bool) ($_ENV[$env] ?? env($env, false))) === true
-                    || $request->headers->has(self::FORCE_HTTPS_EXTERNAL_HEADER_NAME)) {
-                    $request->headers->set(self::FORCE_HTTPS_HEADER_NAME, 'HTTPS');
-                }
-            });
+            $this->https_forced = true;
+        }
     }
 
     /**

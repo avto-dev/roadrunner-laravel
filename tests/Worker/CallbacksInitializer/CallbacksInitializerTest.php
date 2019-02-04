@@ -130,6 +130,21 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
+    public function testDefaultActionsWithForceHttpsEnvValue()
+    {
+        $_ENV['APP_FORCE_HTTPS'] = true;
+
+        $this->initializer->makeInit();
+
+        $closure = $this->callbacks->beforeHandleRequestStack()->all()[1];
+
+        $closure($this->app, $request = new Request);
+        $this->assertSame('HTTPS', $request->headers->get('HTTPS'));
+    }
+
+    /**
+     * @return void
+     */
     public function testInitForceHttpsWithPassingTrue()
     {
         $this->callMethod($this->initializer, 'initForceHttps', [$this->callbacks, true]);
@@ -162,20 +177,6 @@ class CallbacksInitializerTest extends AbstractTestCase
 
         $closure($this->app, $request = new Request);
         $this->assertFalse($request->headers->has('HTTPS'));
-    }
-
-    /**
-     * @return void
-     */
-    public function testInitForceHttpsWithInitializedEnvValue()
-    {
-        $_ENV['APP_FORCE_HTTPS'] = true;
-
-        $this->callMethod($this->initializer, 'initForceHttps', [$this->callbacks, null]);
-        $closure = $this->callbacks->beforeHandleRequestStack()->first();
-
-        $closure($this->app, $request = new Request);
-        $this->assertSame('HTTPS', $request->headers->get('HTTPS'));
     }
 
     /**
