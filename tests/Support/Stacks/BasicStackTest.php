@@ -9,7 +9,7 @@ use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\StackInterface;
 
-abstract class AbstractStackTestCase extends AbstractTestCase
+class BasicStackTest extends AbstractTestCase
 {
     /**
      * @var AbstractStack

@@ -12,7 +12,7 @@ use AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack;
  * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack
  * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack
  */
-class CallbacksStackTest extends AbstractStackTestCase
+class CallbacksStackTest extends BasicStackTest
 {
     /**
      * @var CallbacksStack
