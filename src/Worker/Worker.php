@@ -4,19 +4,19 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Worker;
 
-use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
-use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
-use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
-use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Http\Kernel;
+use Throwable;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
-use Spiral\Goridge\RelayInterface;
 use Spiral\RoadRunner\PSR7Client;
-use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
+use Spiral\Goridge\RelayInterface;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Contracts\Foundation\Application;
+use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
-use Throwable;
+use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
 
 class Worker implements WorkerInterface
 {
@@ -96,26 +96,6 @@ class Worker implements WorkerInterface
     }
 
     /**
-     * Get default application base path.
-     *
-     * @return string
-     */
-    protected function getDefaultAppBasePath(): string
-    {
-        return env(static::ENV_APP_BASE_PATH_NAME, $_ENV[static::ENV_APP_BASE_PATH_NAME] ?? \dirname(__DIR__, 4));
-    }
-
-    /**
-     * Get default application bootstrap file path.
-     *
-     * @return string
-     */
-    protected function getDefaultAppBootstrapPath(): string
-    {
-        return env(static::ENV_APP_BOOTSTRAP_PATH_NAME, $_ENV[static::ENV_APP_BOOTSTRAP_PATH_NAME] ?? '/bootstrap/app.php');
-    }
-
-    /**
      * Get the application instance.
      *
      * @return Application
@@ -189,6 +169,26 @@ class Worker implements WorkerInterface
                 $this->psr7_client->getWorker()->error($e->__toString());
             }
         }
+    }
+
+    /**
+     * Get default application base path.
+     *
+     * @return string
+     */
+    protected function getDefaultAppBasePath(): string
+    {
+        return env(static::ENV_APP_BASE_PATH_NAME, $_ENV[static::ENV_APP_BASE_PATH_NAME] ?? \dirname(__DIR__, 4));
+    }
+
+    /**
+     * Get default application bootstrap file path.
+     *
+     * @return string
+     */
+    protected function getDefaultAppBootstrapPath(): string
+    {
+        return env(static::ENV_APP_BOOTSTRAP_PATH_NAME, $_ENV[static::ENV_APP_BOOTSTRAP_PATH_NAME] ?? '/bootstrap/app.php');
     }
 
     /**
