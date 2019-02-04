@@ -4,12 +4,12 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker\CallbacksInitializer;
 
+use Illuminate\Support\Traits\Macroable;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
+use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
 use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer;
 use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
-use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
-use Illuminate\Support\Traits\Macroable;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer

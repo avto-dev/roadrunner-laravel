@@ -4,17 +4,17 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer;
 
-use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
-use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Database\Connection as DatabaseConnection;
-use Illuminate\Database\DatabaseManager;
-use Illuminate\Http\Request;
-use Illuminate\Redis\Connections\Connection as RedisConnection;
-use Illuminate\Redis\RedisManager;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Redis\RedisManager;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Traits\Macroable;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Connection as DatabaseConnection;
+use Illuminate\Redis\Connections\Connection as RedisConnection;
+use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
 
 /**
  * @see \AvtoDev\RoadRunnerLaravel\Worker\Worker::start() - Look for callback parameters
