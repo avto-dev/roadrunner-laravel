@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker\CallbacksInitializer;
 
-use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
 use Illuminate\Support\Traits\Macroable;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
@@ -61,8 +60,7 @@ class CallbacksInitializerTest extends AbstractTestCase
      */
     public function testAutoInitMethodsCalling()
     {
-        $mock = new class (new StartOptions(['--bla-bla']), $this->callbacks) extends CallbacksInitializer {
-
+        $mock              = new class(new StartOptions(['--bla-bla']), $this->callbacks) extends CallbacksInitializer {
             public $called = false;
 
             public $should_not = false;
