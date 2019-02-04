@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+\ini_set('display_errors', 'stderr');
+
 $auto_loads = [
     __DIR__ . '/vendor/autoload.php',
     __DIR__ . '/../vendor/autoload.php',

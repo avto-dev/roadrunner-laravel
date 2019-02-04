@@ -66,6 +66,7 @@ If you wants to disable package service-provider auto discover, just add into yo
 ------------------------ | --------
 `APP_BASE_PATH` | Путь к директории с приложением
 `APP_BOOTSTRAP_PATH` | Путь к bootstrap файлу приложения _(по умолчанию `/bootstrap/app.php`)_
+`APP_FORCE_HTTPS` | Форсирует использование схемы `https` для генерации внутренних ссылок приложения
 
 ### Дополнительные HTTP-заголовки 
 
@@ -73,7 +74,7 @@ If you wants to disable package service-provider auto discover, just add into yo
 
 ### Расширение функционала
 
-Данный пакет спроектирован с учетом возможности расширения практически любых его компонентов. За всеми подробностями - "read the sources, Luke!".
+Данный пакет спроектирован с учетом возможности расширения практически любых его компонентов. За всеми подробностями - "Look into the sources, Luke!".
 
 ### Testing
 

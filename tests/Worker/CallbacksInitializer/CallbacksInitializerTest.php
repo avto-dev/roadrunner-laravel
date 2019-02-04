@@ -42,6 +42,16 @@ class CallbacksInitializerTest extends AbstractTestCase
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function tearDown()
+    {
+        unset($_ENV['APP_FORCE_HTTPS']);
+
+        parent::tearDown();
+    }
+
+    /**
      * @return void
      */
     public function testConstants()
@@ -152,6 +162,20 @@ class CallbacksInitializerTest extends AbstractTestCase
 
         $closure($this->app, $request = new Request);
         $this->assertFalse($request->headers->has('HTTPS'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testInitForceHttpsWithInitializedEnvValue()
+    {
+        $_ENV['APP_FORCE_HTTPS'] = true;
+
+        $this->callMethod($this->initializer, 'initForceHttps', [$this->callbacks, null]);
+        $closure = $this->callbacks->beforeHandleRequestStack()->first();
+
+        $closure($this->app, $request = new Request);
+        $this->assertSame('HTTPS', $request->headers->get('HTTPS'));
     }
 
     /**

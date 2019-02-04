@@ -11,6 +11,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Traits\Macroable;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Foundation\Application;
+use AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface;
 use Illuminate\Database\Connection as DatabaseConnection;
 use Illuminate\Redis\Connections\Connection as RedisConnection;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
@@ -104,9 +105,13 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     {
         $callbacks->beforeHandleRequestStack()
             ->push(function (Application $app, Request $request) use ($value) {
+                $env = WorkerInterface::ENV_NAME_APP_FORCE_HTTPS;
+
                 // Attach special header for telling application "force use https schema!"
                 // IMPORTANT! 'FORCE-HTTPS' header can be set externally
-                if ($value === true || $request->headers->has(self::FORCE_HTTPS_EXTERNAL_HEADER_NAME)) {
+                if ($value === true
+                    || ((bool) ($_ENV[$env] ?? env($env, false))) === true
+                    || $request->headers->has(self::FORCE_HTTPS_EXTERNAL_HEADER_NAME)) {
                     $request->headers->set(self::FORCE_HTTPS_HEADER_NAME, 'HTTPS');
                 }
             });

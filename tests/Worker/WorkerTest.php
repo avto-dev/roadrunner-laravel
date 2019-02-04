@@ -43,8 +43,9 @@ class WorkerTest extends AbstractTestCase
      */
     public function testConstants()
     {
-        $this->assertSame('APP_BASE_PATH', WorkerInterface::ENV_APP_BASE_PATH_NAME);
-        $this->assertSame('APP_BOOTSTRAP_PATH', WorkerInterface::ENV_APP_BOOTSTRAP_PATH_NAME);
+        $this->assertSame('APP_BASE_PATH', WorkerInterface::ENV_NAME_APP_BASE_PATH);
+        $this->assertSame('APP_BOOTSTRAP_PATH', WorkerInterface::ENV_NAME_APP_BOOTSTRAP_PATH);
+        $this->assertSame('APP_FORCE_HTTPS', WorkerInterface::ENV_NAME_APP_FORCE_HTTPS);
     }
 
     /**
