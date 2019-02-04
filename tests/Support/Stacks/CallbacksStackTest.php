@@ -8,6 +8,9 @@ use AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack;
 
 /**
  * @group stacks
+ *
+ * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack
+ * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack
  */
 class CallbacksStackTest extends AbstractStackTestCase
 {

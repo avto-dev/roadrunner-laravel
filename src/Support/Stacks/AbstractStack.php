@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Support\Stacks;
 
 use ArrayIterator;
+use LogicException;
 use Illuminate\Support\Traits\Macroable;
 
 abstract class AbstractStack implements StackInterface
@@ -48,6 +49,20 @@ abstract class AbstractStack implements StackInterface
     public function all(): array
     {
         return $this->items;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws LogicException
+     */
+    public function first()
+    {
+        if (isset($this->items[0])) {
+            return $this->items[0];
+        }
+
+        throw new LogicException('Stack does not contains first element');
     }
 
     /**

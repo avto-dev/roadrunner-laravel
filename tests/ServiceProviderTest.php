@@ -9,6 +9,9 @@ use AvtoDev\RoadRunnerLaravel\ServiceProvider;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
 
+/**
+ * @covers \AvtoDev\RoadRunnerLaravel\ServiceProvider
+ */
 class ServiceProviderTest extends AbstractTestCase
 {
     /**

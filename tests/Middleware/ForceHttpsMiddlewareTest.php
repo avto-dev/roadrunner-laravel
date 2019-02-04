@@ -9,6 +9,11 @@ use Illuminate\Routing\UrlGenerator;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
 
+/**
+ * @group middleware
+ *
+ * @covers \AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware
+ */
 class ForceHttpsMiddlewareTest extends AbstractTestCase
 {
     /**

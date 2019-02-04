@@ -4,17 +4,17 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Redis\RedisManager;
-use Illuminate\Database\DatabaseManager;
-use Illuminate\Support\Traits\Macroable;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Database\Connection as DatabaseConnection;
-use Illuminate\Redis\Connections\Connection as RedisConnection;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Connection as DatabaseConnection;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Http\Request;
+use Illuminate\Redis\Connections\Connection as RedisConnection;
+use Illuminate\Redis\RedisManager;
+use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @see \AvtoDev\RoadRunnerLaravel\Worker\Worker::start() - Look for callback parameters
@@ -38,15 +38,15 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     /**
      * @var CallbacksInterface
      */
-    protected $callback_stacks;
+    protected $callbacks;
 
     /**
      * {@inheritdoc}
      */
-    public function __construct(StartOptionsInterface $start_options, CallbacksInterface $callback_stacks)
+    public function __construct(StartOptionsInterface $start_options, CallbacksInterface $callbacks)
     {
-        $this->start_options   = $start_options;
-        $this->callback_stacks = $callback_stacks;
+        $this->start_options = $start_options;
+        $this->callbacks     = $callbacks;
     }
 
     /**
@@ -55,14 +55,14 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     public function makeInit()
     {
         // Initialize default callbacks
-        $this->defaults();
+        $this->defaults($this->callbacks);
 
         // Iterate passed options and try to find initialization method for it
         foreach ($this->start_options->getOptions() as $option_name => $option_value) {
             $method = static::RULE_METHOD_PREFIX . Str::studly($option_name);
 
             if (\method_exists($this, $method)) {
-                $this->$method($option_value);
+                $this->$method($this->callbacks, $option_value);
             }
         }
     }
@@ -70,16 +70,18 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     /**
      * Default callbacks, that should be initialized without any conditions.
      *
+     * @param CallbacksInterface $callbacks
+     *
      * @return void
      */
-    protected function defaults()
+    protected function defaults(CallbacksInterface $callbacks)
     {
-        $this->callback_stacks->afterLoopStack()
+        $callbacks->afterLoopStack()
             ->push(function (Application $app, Request $request, Response $response) {
                 \gc_collect_cycles(); // keep the memory low (this will slow down your application a bit)
             });
 
-        $this->callback_stacks->beforeHandleRequestStack()
+        $callbacks->beforeHandleRequestStack()
             ->push(function (Application $app, Request $request) {
                 // Remove header 'HTTPS' (we keep control under this header manually)
                 if ($request->headers->has(self::FORCE_HTTPS_HEADER_NAME)) {
@@ -93,13 +95,14 @@ class CallbacksInitializer implements CallbacksInitializerInterface
      *
      * @see \AvtoDev\RoadRunnerLaravel\ServiceProvider::boot()
      *
-     * @param mixed $value
+     * @param CallbacksInterface $callbacks
+     * @param bool|mixed         $value
      *
      * @return void
      */
-    protected function initForceHttps($value)
+    protected function initForceHttps(CallbacksInterface $callbacks, $value)
     {
-        $this->callback_stacks->beforeHandleRequestStack()
+        $callbacks->beforeHandleRequestStack()
             ->push(function (Application $app, Request $request) use ($value) {
                 // Attach special header for telling application "force use https schema!"
                 // IMPORTANT! 'FORCE-HTTPS' header can be set externally
@@ -110,16 +113,17 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     }
 
     /**
-     * For option: "reset-connections".
+     * For option: "reset-db-connections".
      *
-     * @param mixed $value
+     * @param CallbacksInterface $callbacks
+     * @param bool|mixed         $value
      *
      * @return void
      */
-    protected function initResetConnections($value)
+    protected function initResetDbConnections(CallbacksInterface $callbacks, $value)
     {
         if ($value === true) {
-            $this->callback_stacks->afterLoopStack()
+            $callbacks->afterLoopStack()
                 ->push(function (Application $app, Request $request, Response $response) {
                     // Drop database connections
                     if (($db_manager = $app->make('db')) instanceof DatabaseManager) {
@@ -132,7 +136,23 @@ class CallbacksInitializer implements CallbacksInitializerInterface
                             }
                         }
                     }
+                });
+        }
+    }
 
+    /**
+     * For option: "reset-redis-connections".
+     *
+     * @param CallbacksInterface $callbacks
+     * @param bool|mixed         $value
+     *
+     * @return void
+     */
+    protected function initResetRedisConnections(CallbacksInterface $callbacks, $value)
+    {
+        if ($value === true) {
+            $callbacks->afterLoopStack()
+                ->push(function (Application $app, Request $request, Response $response) {
                     // Drop redis connections
                     if (($redis_manager = $app->make('redis')) instanceof RedisManager) {
                         if (\method_exists($redis_manager, 'connections')) {

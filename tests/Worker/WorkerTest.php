@@ -8,6 +8,9 @@ use AvtoDev\RoadRunnerLaravel\Worker\Worker;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface;
 
+/**
+ * @covers \AvtoDev\RoadRunnerLaravel\Worker\Worker
+ */
 class WorkerTest extends AbstractTestCase
 {
     protected $vendor_laravel_path = __DIR__ . '/../../vendor/laravel/laravel';

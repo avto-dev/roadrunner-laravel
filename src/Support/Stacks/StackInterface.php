@@ -26,4 +26,11 @@ interface StackInterface extends Countable, Arrayable, IteratorAggregate
      * Make stack clearing.
      */
     public function clear();
+
+    /**
+     * Get first element from stack.
+     *
+     * @return mixed
+     */
+    public function first();
 }

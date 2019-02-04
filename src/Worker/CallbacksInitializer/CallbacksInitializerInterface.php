@@ -16,9 +16,9 @@ interface CallbacksInitializerInterface
      * Constructor.
      *
      * @param StartOptionsInterface $start_options
-     * @param CallbacksInterface    $callback_stacks
+     * @param CallbacksInterface    $callbacks
      */
-    public function __construct(StartOptionsInterface $start_options, CallbacksInterface $callback_stacks);
+    public function __construct(StartOptionsInterface $start_options, CallbacksInterface $callbacks);
 
     /**
      * Make initialization.

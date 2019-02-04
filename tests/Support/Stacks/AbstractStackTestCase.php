@@ -9,9 +9,6 @@ use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\StackInterface;
 
-/**
- * @group  stacks
- */
 abstract class AbstractStackTestCase extends AbstractTestCase
 {
     /**
@@ -81,6 +78,13 @@ abstract class AbstractStackTestCase extends AbstractTestCase
 
         $this->assertCount(0, $this->instance);
         $this->assertEquals([], $this->instance->all());
+
+        // First element getter
+        $this->instance->clear();
+        $this->instance->push($first = 'foo');
+        $this->instance->push('bar');
+
+        $this->assertSame($first, $this->instance->first());
     }
 
     /**
@@ -89,6 +93,17 @@ abstract class AbstractStackTestCase extends AbstractTestCase
     public function testToArray()
     {
         $this->assertEquals($this->instance->all(), $this->instance->toArray());
+    }
+
+    /**
+     * @return void
+     */
+    public function testFirstElementGetterThrownAnExceptionWhenStackIsEmpty()
+    {
+        $this->expectException(\LogicException::class);
+
+        $this->instance->clear();
+        $this->instance->first();
     }
 
     /**

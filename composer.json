@@ -26,6 +26,7 @@
     },
     "require-dev": {
         "avto-dev/dev-tools": "^1.9",
+        "jeremeamia/SuperClosure": "^2.4",
         "laravel/laravel": ">=5.5.0 <5.8.0",
         "mockery/mockery": "0.9.* || ~1.0",
         "phpstan/phpstan": "~0.9 || ^0.10",
@@ -53,7 +54,7 @@
         }
     },
     "scripts": {
-        "test": "@php ./vendor/bin/phpunit --no-coverage",
+        "test": "@php ./vendor/bin/phpunit --no-coverage --testdox --color=always",
         "test-cover": "@php ./vendor/bin/phpunit --coverage-html='./coverage/html'",
         "phpstan": "@php ./vendor/bin/phpstan analyze --no-progress --ansi --level=max ./src"
     },
