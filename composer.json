@@ -25,6 +25,8 @@
         "symfony/psr-http-message-bridge": "^1.1"
     },
     "require-dev": {
+        "ext-pdo_sqlite": "*",
+        "ext-sqlite3": "*",
         "avto-dev/dev-tools": "^1.9",
         "jeremeamia/superclosure": "^2.4",
         "laravel/laravel": ">=5.5.0 <5.8.0",

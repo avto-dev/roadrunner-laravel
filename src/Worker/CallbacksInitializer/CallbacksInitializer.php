@@ -91,7 +91,7 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     }
 
     /**
-     * For option: "force-https".
+     * For option: "--force-https".
      *
      * @see \AvtoDev\RoadRunnerLaravel\ServiceProvider::boot()
      *
@@ -106,14 +106,14 @@ class CallbacksInitializer implements CallbacksInitializerInterface
             ->push(function (Application $app, Request $request) use ($value) {
                 // Attach special header for telling application "force use https schema!"
                 // IMPORTANT! 'FORCE-HTTPS' header can be set externally
-                if ($value === true || $request->headers->has('FORCE-HTTPS')) {
+                if ($value === true || $request->headers->has(self::FORCE_HTTPS_EXTERNAL_HEADER_NAME)) {
                     $request->headers->set(self::FORCE_HTTPS_HEADER_NAME, 'HTTPS');
                 }
             });
     }
 
     /**
-     * For option: "reset-db-connections".
+     * For option: "--reset-db-connections".
      *
      * @param CallbacksInterface $callbacks
      * @param bool|mixed         $value
@@ -141,7 +141,7 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     }
 
     /**
-     * For option: "reset-redis-connections".
+     * For option: "--reset-redis-connections".
      *
      * @param CallbacksInterface $callbacks
      * @param bool|mixed         $value

@@ -4,12 +4,17 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker\CallbacksInitializer;
 
-use Illuminate\Support\Traits\Macroable;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
-use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
 use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer;
 use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
+use Illuminate\Config\Repository as ConfigRepository;
+use Illuminate\Redis\RedisManager;
+use Illuminate\Http\Request;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Http\Response;
+use Illuminate\Support\Traits\Macroable;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer
@@ -60,8 +65,9 @@ class CallbacksInitializerTest extends AbstractTestCase
      */
     public function testAutoInitMethodsCalling()
     {
-        $mock              = new class(new StartOptions(['--bla-bla']), $this->callbacks) extends CallbacksInitializer {
-            public $called = false;
+        $mock = new class(new StartOptions(['--bla-bla']), $this->callbacks) extends CallbacksInitializer
+        {
+            public $called     = false;
 
             public $should_not = false;
 
@@ -87,16 +93,141 @@ class CallbacksInitializerTest extends AbstractTestCase
      */
     public function testDefaultActionsInitialized()
     {
+        // Get default closures without touching $this->.. instances
         $callbacks = new Callbacks;
-
         $this->callMethod(new CallbacksInitializer(new StartOptions, $callbacks), 'defaults', [$callbacks]);
+        $first_closure  = $callbacks->afterLoopStack()->first();
+        $second_closure = $callbacks->beforeHandleRequestStack()->first();
 
-        $first_closure_hash   = $this::getClosureHash($callbacks->afterLoopStack()->first());
-        $second_closure_hash  = $this::getClosureHash($callbacks->beforeHandleRequestStack()->first());
-
+        // And now - call same methods using $this->.. instances
         $this->initializer->makeInit();
 
-        $this->assertSame($first_closure_hash, $this::getClosureHash($this->callbacks->afterLoopStack()->first()));
-        $this->assertSame($second_closure_hash, $this::getClosureHash($this->callbacks->beforeHandleRequestStack()->first()));
+        $this->assertSame(
+            $this::getClosureHash($first_closure),
+            $this::getClosureHash($this->callbacks->afterLoopStack()->first())
+        );
+        $this->assertSame(
+            $this::getClosureHash($second_closure),
+            $this::getClosureHash($this->callbacks->beforeHandleRequestStack()->first())
+        );
+
+        // Test call
+        $first_closure($this->app, new Request, new Response);
+
+        ($request = new Request)->headers->set(CallbacksInitializer::FORCE_HTTPS_HEADER_NAME, 'true');
+        $second_closure($this->app, $request);
+        $this->assertFalse($request->headers->has(CallbacksInitializer::FORCE_HTTPS_HEADER_NAME));
+    }
+
+    /**
+     * @return void
+     */
+    public function testInitForceHttpsWithPassingTrue()
+    {
+        $this->callMethod($this->initializer, 'initForceHttps', [$this->callbacks, true]);
+        $closure = $this->callbacks->beforeHandleRequestStack()->first();
+
+        $closure($this->app, $request = new Request);
+        $this->assertSame('HTTPS', $request->headers->get('HTTPS'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testInitForceHttpsWithPassingFalseButExistingSpecialExternalHeader()
+    {
+        $this->callMethod($this->initializer, 'initForceHttps', [$this->callbacks, false]);
+        $closure = $this->callbacks->beforeHandleRequestStack()->first();
+
+        ($request = new Request)->headers->set('FORCE-HTTPS', 'true');
+        $closure($this->app, $request);
+        $this->assertSame('HTTPS', $request->headers->get('HTTPS'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testInitForceHttpsWithPassingFalse()
+    {
+        $this->callMethod($this->initializer, 'initForceHttps', [$this->callbacks, false]);
+        $closure = $this->callbacks->beforeHandleRequestStack()->first();
+
+        $closure($this->app, $request = new Request);
+        $this->assertFalse($request->headers->has('HTTPS'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testResetDbConnectionsWithPassingTrue()
+    {
+        /** @var ConfigRepository $config */
+        $config = $this->app->make('config');
+        /** @var DatabaseManager $db_manager */
+        $db_manager = $this->app->make('db');
+
+        $config->set('database.default', $connection_name = 'sqlite');
+        $config->set("database.connections.{$connection_name}", [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
+
+        $db_manager->connection($connection_name)->reconnect();
+
+        $this->assertInstanceOf(\PDO::class, $db_manager->connection($connection_name)->getPdo());
+
+        $this->callMethod($this->initializer, 'initResetDbConnections', [$this->callbacks, true]);
+        $closure = $this->callbacks->afterLoopStack()->first();
+        $closure($this->app, new Request, new Response);
+
+        $this->assertNull($db_manager->connection($connection_name)->getPdo());
+    }
+
+    /**
+     * @return void
+     */
+    public function testResetDbConnectionsWithPassingFalse()
+    {
+        /** @var ConfigRepository $config */
+        $config = $this->app->make('config');
+        /** @var DatabaseManager $db_manager */
+        $db_manager = $this->app->make('db');
+
+        $config->set('database.default', $connection_name = 'sqlite');
+        $config->set("database.connections.{$connection_name}", [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
+
+        $db_manager->connection($connection_name)->reconnect();
+
+        $this->assertInstanceOf(\PDO::class, $db_manager->connection($connection_name)->getPdo());
+
+        $this->callMethod($this->initializer, 'initResetDbConnections', [$this->callbacks, false]);
+        $this->assertEmpty($this->callbacks->afterLoopStack());
+
+        $this->assertInstanceOf(\PDO::class, $db_manager->connection($connection_name)->getPdo());
+    }
+
+    /**
+     * @return void
+     */
+    public function testResetRedisConnectionsWithPassingTrue()
+    {
+        $this->callMethod($this->initializer, 'initResetRedisConnections', [$this->callbacks, true]);
+        $closure = $this->callbacks->afterLoopStack()->first();
+        $closure($this->app, new Request, new Response); // Test direct calling
+        $this->assertInstanceOf(\Closure::class, $closure);
+    }
+
+    /**
+     * @return void
+     */
+    public function testResetRedisConnectionsWithPassingFalse()
+    {
+        $this->callMethod($this->initializer, 'initResetRedisConnections', [$this->callbacks, false]);
+        $this->assertEmpty($this->callbacks->afterLoopStack());
     }
 }

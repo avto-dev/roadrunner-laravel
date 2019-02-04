@@ -13,6 +13,11 @@ interface CallbacksInitializerInterface
     const FORCE_HTTPS_HEADER_NAME = 'HTTPS';
 
     /**
+     * Header for forcing https schema by incoming (**external**) request header.
+     */
+    const FORCE_HTTPS_EXTERNAL_HEADER_NAME = 'FORCE-HTTPS';
+
+    /**
      * Constructor.
      *
      * @param StartOptionsInterface $start_options
