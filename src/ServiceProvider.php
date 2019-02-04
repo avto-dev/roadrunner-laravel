@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\UrlGenerator;
-use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
+use Illuminate\Contracts\Http\Kernel;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -18,15 +16,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected $defer = false;
 
     /**
-     * Register service and listener.
+     * Register services and middleware.
      *
      * @return void
      */
     public function boot()
     {
-        /* @see \AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer::initForceHttps() */
-        if ($this->app->make(Request::class)->hasHeader(CallbacksInitializerInterface::FORCE_HTTPS_HEADER_NAME)) {
-            $this->app->make(UrlGenerator::class)->forceScheme('https');
-        }
+        $this->app->make(Kernel::class)->pushMiddleware(Middleware\ForceHttpsMiddleware::class);
     }
 }
