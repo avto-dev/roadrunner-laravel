@@ -26,7 +26,7 @@
     },
     "require-dev": {
         "avto-dev/dev-tools": "^1.9",
-        "jeremeamia/SuperClosure": "^2.4",
+        "jeremeamia/superclosure": "^2.4",
         "laravel/laravel": ">=5.5.0 <5.8.0",
         "mockery/mockery": "0.9.* || ~1.0",
         "phpstan/phpstan": "~0.9 || ^0.10",
