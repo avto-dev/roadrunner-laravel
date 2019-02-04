@@ -53,7 +53,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function initializePublishes()
     {
         $this->publishes([
-            __DIR__ . '/../configs/rr' => $this->app->basePath()
+            __DIR__ . '/../configs/rr' => $this->app->basePath(),
         ], 'config');
     }
 }
