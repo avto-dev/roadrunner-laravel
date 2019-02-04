@@ -113,8 +113,7 @@ class CallbacksInitializer implements CallbacksInitializerInterface
             $this->callback_stacks->afterLoopStack()
                 ->push(function (Application $app, Request $request, Response $response) {
                     // Drop database connections
-                    $db_manager = $app->make('db');
-                    if ($db_manager instanceof DatabaseManager) {
+                    if (($db_manager = $app->make('db')) instanceof DatabaseManager) {
                         if (\is_array($db_connections = $db_manager->getConnections())) {
                             foreach ($db_connections as $db_connection) {
                                 /** @var DatabaseConnection $db_connection */
@@ -126,10 +125,10 @@ class CallbacksInitializer implements CallbacksInitializerInterface
                     }
 
                     // Drop redis connections
-                    $redis_manager = $app->make('redis');
-                    if ($redis_manager instanceof RedisManager) {
+                    if (($redis_manager = $app->make('redis')) instanceof RedisManager) {
                         if (\method_exists($redis_manager, 'connections')) {
-                            if (\is_array($redis_connections = $redis_manager->connections())) {
+                            $redis_connections = $redis_manager->connections();
+                            if (\is_array($redis_connections)) {
                                 foreach ($redis_connections as $redis_connection) {
                                     /** @var RedisConnection $redis_connection */
                                     if (\method_exists($redis_connection, 'disconnect')) {
