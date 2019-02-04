@@ -1,6 +1,6 @@
 <?php
 
-namespace AvtoDev\RoadRunnerWorkerLaravel\Tests\Traits;
+namespace AvtoDev\RoadRunnerLaravel\Tests\Traits;
 
 use Illuminate\Contracts\Console\Kernel;
 
