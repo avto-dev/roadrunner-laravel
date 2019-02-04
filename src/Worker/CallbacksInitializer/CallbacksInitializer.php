@@ -10,9 +10,9 @@ use Illuminate\Redis\RedisManager;
 use Illuminate\Database\DatabaseManager;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Foundation\Application;
-use AvtoDev\RoadRunnerLaravel\Worker\CallbackStacks;
 use Illuminate\Database\Connection as DatabaseConnection;
 use Illuminate\Redis\Connections\Connection as RedisConnection;
+use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
 
 /**
@@ -33,23 +33,29 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     protected $start_options;
 
     /**
-     * @var CallbackStacks
+     * @var CallbacksInterface
      */
     protected $callback_stacks;
 
     /**
      * {@inheritdoc}
      */
-    public function __construct(StartOptionsInterface $start_options, CallbackStacks $callback_stacks)
+    public function __construct(StartOptionsInterface $start_options, CallbacksInterface $callback_stacks)
     {
         $this->start_options   = $start_options;
         $this->callback_stacks = $callback_stacks;
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function makeInit()
+    {
         // Initialize default callbacks
         $this->defaults();
 
         // Iterate passed options and try to find initialization method for it
-        foreach ($start_options->getOptions() as $option_name => $option_value) {
+        foreach ($this->start_options->getOptions() as $option_name => $option_value) {
             $method = static::RULE_METHOD_PREFIX . Str::studly($option_name);
 
             if (\method_exists($this, $method)) {

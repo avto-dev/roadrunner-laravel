@@ -2,11 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace AvtoDev\RoadRunnerLaravel\Worker;
+namespace AvtoDev\RoadRunnerLaravel\Worker\Callbacks;
 
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack;
 
-class CallbackStacks
+class Callbacks implements CallbacksInterface
 {
     /**
      * @var CallbacksStack
@@ -40,7 +40,7 @@ class CallbackStacks
     }
 
     /**
-     * @return CallbacksStack
+     * {@inheritdoc}
      */
     public function afterHandleRequestStack(): CallbacksStack
     {
@@ -48,7 +48,7 @@ class CallbackStacks
     }
 
     /**
-     * @return CallbacksStack
+     * {@inheritdoc}
      */
     public function afterLoopStack(): CallbacksStack
     {
@@ -56,7 +56,7 @@ class CallbackStacks
     }
 
     /**
-     * @return CallbacksStack
+     * {@inheritdoc}
      */
     public function beforeHandleRequestStack(): CallbacksStack
     {
@@ -64,7 +64,7 @@ class CallbackStacks
     }
 
     /**
-     * @return CallbacksStack
+     * {@inheritdoc}
      */
     public function beforeLoopStack(): CallbacksStack
     {

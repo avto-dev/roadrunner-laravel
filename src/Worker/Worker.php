@@ -4,14 +4,17 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Worker;
 
+use Throwable;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 use Spiral\RoadRunner\PSR7Client;
 use Spiral\Goridge\RelayInterface;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Contracts\Foundation\Application;
+use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
 use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
 
@@ -53,7 +56,7 @@ class Worker implements WorkerInterface
     protected $diactoros;
 
     /**
-     * @var CallbackStacks
+     * @var CallbacksInterface
      */
     protected $callbacks;
 
@@ -66,7 +69,7 @@ class Worker implements WorkerInterface
     public function __construct(array $start_arguments = [], string $app_base_path = null)
     {
         $this->app_base_path = $app_base_path ?? $_ENV['APP_BASE_PATH'] ?? \dirname(__DIR__, 4);
-        $this->callbacks     = new CallbackStacks;
+        $this->callbacks     = new Callbacks;
 
         $this->app           = $this->createApplication($this->app_base_path);
         $this->start_options = $this->createStartOptions($start_arguments);
@@ -75,8 +78,10 @@ class Worker implements WorkerInterface
         $this->http_factory  = $this->createHttpFactory();
         $this->diactoros     = $this->createDiactorosFactory();
 
+        $initializer = $this->createCallbacksInitializer($this->start_options, $this->callbacks);
+
         // Initialize callbacks, based on start options
-        $this->createCallbacksInitializer($this->start_options, $this->callbacks);
+        $initializer->makeInit();
     }
 
     /**
@@ -108,9 +113,9 @@ class Worker implements WorkerInterface
     }
 
     /**
-     * @return CallbackStacks
+     * @return CallbacksInterface
      */
-    public function callbacks(): CallbackStacks
+    public function callbacks(): CallbacksInterface
     {
         return $this->callbacks;
     }
@@ -141,7 +146,7 @@ class Worker implements WorkerInterface
                 $kernel->terminate($request, $response);
 
                 $this->callbacks->afterLoopStack()->callEach($this->app, $request, $response);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $this->psr7_client->getWorker()->error($e->__toString());
             }
         }
@@ -212,12 +217,12 @@ class Worker implements WorkerInterface
 
     /**
      * @param StartOptionsInterface $start_options
-     * @param CallbackStacks        $callback_stacks
+     * @param CallbacksInterface    $callback_stacks
      *
      * @return CallbacksInitializerInterface
      */
     protected function createCallbacksInitializer(StartOptionsInterface $start_options,
-                                                  CallbackStacks $callback_stacks): CallbacksInitializerInterface
+                                                  CallbacksInterface $callback_stacks): CallbacksInitializerInterface
     {
         return new CallbacksInitializer\CallbacksInitializer($start_options, $callback_stacks);
     }

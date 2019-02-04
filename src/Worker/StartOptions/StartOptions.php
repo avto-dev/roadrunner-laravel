@@ -102,8 +102,8 @@ class StartOptions implements StartOptionsInterface
      */
     protected function parseBooleanArgumentsList(array $arguments): array
     {
-        $options_prefix_length         = \mb_strlen(static::OPTIONS_PREFIX);
-        $logic_inversion_prefix_length = \mb_strlen(static::BOOL_OPTION_INVERT_LOGIC_NAME_PREFIX);
+        $options_prefix_length         = (int) \mb_strlen(static::OPTIONS_PREFIX);
+        $logic_inversion_prefix_length = (int) \mb_strlen(static::BOOL_OPTION_INVERT_LOGIC_NAME_PREFIX);
         $result                        = [];
 
         foreach ($arguments as $argument) {
