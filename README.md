@@ -57,6 +57,7 @@ If you wants to disable package service-provider auto discover, just add into yo
 `--(not-)force-https` | Форсирует (или нет) использование схемы `https` для генерации внутренних ссылок приложения
 `--(not-)reset-db-connections` | Обрывает (или нет) соединения с БД после обработки входящего запроса
 `--(not-)reset-redis-connections` | Обрывает (или нет) соединения с redis после обработки входящего запроса
+`--(not-)refresh-app` | Принудительно пересоздает инстанс приложения после обработки **каждого** запроса
 
 > Параметры запуска указываются в файле-конфигурации (например: `./.rr.local.yml`) по пути `http.workers.command`, например: `php ./vendor/bin/rr-worker --some-parameter`
 

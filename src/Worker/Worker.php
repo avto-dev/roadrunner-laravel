@@ -82,7 +82,7 @@ class Worker implements WorkerInterface
             );
 
         $this->callbacks     = new Callbacks;
-        $this->app           = $this->createApplication($this->app_base_path);
+        $this->app           = $this->createApplication($this->app_base_path, $this->app_bootstrap_path);
         $this->start_options = $this->createStartOptions($start_arguments);
         $this->stream_relay  = $this->createStreamRelay();
         $this->psr7_client   = $this->createPsr7Client($this->stream_relay);
@@ -144,6 +144,9 @@ class Worker implements WorkerInterface
      */
     public function start()
     {
+        $refresh_app = $this->start_options->hasOption('refresh-app')
+                       && $this->start_options->getOption('refresh-app') === true;
+
         $this->callbacks->beforeLoopStarts()->callEach($this->app);
 
         /** @var Kernel $kernel */
@@ -167,6 +170,12 @@ class Worker implements WorkerInterface
                 $kernel->terminate($request, $response);
 
                 $this->callbacks->afterLoopIterationStack()->callEach($this->app, $request, $response);
+
+                if ($refresh_app === true) {
+                    unset($this->app);
+                    $this->app = $this->createApplication($this->app_base_path, $this->app_bootstrap_path);
+                    $kernel = $this->app->make(Kernel::class);
+                }
             } catch (Throwable $e) {
                 $this->psr7_client->getWorker()->error($e->__toString());
             }
@@ -197,14 +206,15 @@ class Worker implements WorkerInterface
 
     /**
      * @param string $app_base_path
+     * @param string $app_bootstrap_path
      *
      * @throws InvalidArgumentException
      *
      * @return Application
      */
-    protected function createApplication(string $app_base_path): Application
+    protected function createApplication(string $app_base_path, string $app_bootstrap_path): Application
     {
-        if (\is_file($app_file = $app_base_path . $this->app_bootstrap_path)) {
+        if (\is_file($app_file = $app_base_path . $app_bootstrap_path)) {
             return require $app_file;
         }
 

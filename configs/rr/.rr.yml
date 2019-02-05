@@ -42,6 +42,7 @@ http:
     # - `--(not-)force-https`
     # - `--(not-)reset-db-connections`
     # - `--(not-)reset-redis-connections`
+    # - `--(not-)refresh-app`
     command: "php ./vendor/bin/rr-worker"
 
     # connection method (pipes, tcp://:9000, unix://socket.unix). default "pipes"
