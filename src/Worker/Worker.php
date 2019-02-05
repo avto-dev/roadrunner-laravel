@@ -182,7 +182,7 @@ class Worker implements WorkerInterface
      */
     protected function getDefaultAppBasePath(): string
     {
-        return env(static::ENV_NAME_APP_BASE_PATH, $_ENV[static::ENV_NAME_APP_BASE_PATH] ?? \dirname(__DIR__, 5));
+        return env(static::ENV_NAME_APP_BASE_PATH) ?? $_ENV[static::ENV_NAME_APP_BASE_PATH] ?? \dirname(__DIR__, 5);
     }
 
     /**
@@ -192,7 +192,7 @@ class Worker implements WorkerInterface
      */
     protected function getDefaultAppBootstrapPath(): string
     {
-        return env(static::ENV_NAME_APP_BOOTSTRAP_PATH, $_ENV[static::ENV_NAME_APP_BOOTSTRAP_PATH] ?? '/bootstrap/app.php');
+        return env(static::ENV_NAME_APP_BOOTSTRAP_PATH) ?? $_ENV[static::ENV_NAME_APP_BOOTSTRAP_PATH] ?? '/bootstrap/app.php';
     }
 
     /**
