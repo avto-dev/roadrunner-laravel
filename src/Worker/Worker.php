@@ -174,7 +174,7 @@ class Worker implements WorkerInterface
                 if ($refresh_app === true) {
                     unset($this->app);
                     $this->app = $this->createApplication($this->app_base_path, $this->app_bootstrap_path);
-                    $kernel = $this->app->make(Kernel::class);
+                    $kernel    = $this->app->make(Kernel::class);
                 }
             } catch (Throwable $e) {
                 $this->psr7_client->getWorker()->error($e->__toString());
