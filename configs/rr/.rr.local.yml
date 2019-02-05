@@ -13,12 +13,12 @@ http:
   # http host to listen.
   address: 0.0.0.0:80
 
-  ssl:
+  #ssl: # For forcing HTTPS you should set env variable "APP_FORCE_HTTPS" to "true" or add --force-https worker argument
     # custom https port (default 443)
-    port:     443
+    #port:     443
 
     # force redirect to https connection
-    redirect: false
+    #redirect: false
 
     # ssl cert
     #cert:     server.crt
