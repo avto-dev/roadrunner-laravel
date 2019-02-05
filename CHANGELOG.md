@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v1.0.1
+
+### Fixed
+
+- Forcing https schema (using env variable) method
+
 ## v1.0.0
 
 ### Changed
