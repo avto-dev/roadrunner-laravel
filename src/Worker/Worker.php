@@ -172,7 +172,7 @@ class Worker implements WorkerInterface
                 $this->callbacks->afterLoopIterationStack()->callEach($this->app, $request, $response);
 
                 if ($refresh_app === true) {
-                    unset($this->app);
+                    unset($kernel, $this->app);
                     $this->app = $this->createApplication($this->app_base_path, $this->app_bootstrap_path);
                     $kernel = $this->app->make(Kernel::class);
                 }
