@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v1.1.2
+
+### Fixed
+
+-  Fixed `$_SERVER['LARAVEL_START_TIME']` and `$_SERVER['LARAVEL_START_MEMORY']` for roadrunner worker.
+
 ## v1.1.1
 
 ### Added
