@@ -134,7 +134,7 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     {
         if ($value === true) {
             $callbacks->beforeLoopIterationStack()
-                ->push(function (Application $app, ServerRequestInterface $request) {
+                ->push(function (Application $app) {
                     $_SERVER['LARAVEL_START_TIME']   = microtime(true);
                     $_SERVER['LARAVEL_START_MEMORY'] = memory_get_usage();
                 });
