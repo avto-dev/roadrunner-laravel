@@ -154,6 +154,9 @@ class Worker implements WorkerInterface
 
         while ($req = $this->psr7_client->acceptRequest()) {
             try {
+                $_SERVER['LARAVEL_START_TIME']   = microtime(true);
+                $_SERVER['LARAVEL_START_MEMORY'] = memory_get_usage();
+
                 $this->callbacks->beforeLoopIterationStack()->callEach($this->app, $req);
 
                 $request = Request::createFromBase($this->http_factory->createRequest($req));
