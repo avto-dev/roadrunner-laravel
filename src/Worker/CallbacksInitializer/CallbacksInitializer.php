@@ -123,7 +123,7 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     }
 
     /**
-     * For option "--reset-debug-info"
+     * For option "--reset-debug-info".
      *
      * @param CallbacksInterface $callbacks
      * @param bool|mixed         $value
@@ -133,11 +133,10 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     protected function initResetDebugInfo(CallbacksInterface $callbacks, $value)
     {
         if ($value === true) {
-            $callbacks->beforeLoopIterationStack()
-                ->push(function (Application $app) {
-                    $_SERVER['LARAVEL_START_TIME']   = microtime(true);
-                    $_SERVER['LARAVEL_START_MEMORY'] = memory_get_usage();
-                });
+            $callbacks->beforeLoopIterationStack()->push(function (Application $app) {
+                $_SERVER['LARAVEL_START_TIME']   = microtime(true);
+                $_SERVER['LARAVEL_START_MEMORY'] = memory_get_usage();
+            });
         }
     }
 

@@ -240,7 +240,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     public function testResetDebugInfoWithPassingTrue()
     {
         $this->callMethod($this->initializer, 'initResetDebugInfo', [$this->callbacks, true]);
-        $closure = $this->callbacks->afterLoopIterationStack()->first();
+        $closure = $this->callbacks->beforeLoopIterationStack()->first();
         $closure($this->app); // Test direct calling
         $this->assertInstanceOf(\Closure::class, $closure);
     }
@@ -251,7 +251,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     public function testResetDebugInfoWithPassingFalse()
     {
         $this->callMethod($this->initializer, 'initResetDebugInfo', [$this->callbacks, false]);
-        $this->assertEmpty($this->callbacks->afterLoopIterationStack());
+        $this->assertEmpty($this->callbacks->beforeLoopIterationStack());
     }
 
     /**
