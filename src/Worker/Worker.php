@@ -93,12 +93,6 @@ class Worker implements WorkerInterface
 
         // Initialize callbacks, based on start options
         $initializer->makeInit();
-
-        // Fixed start time and memory usage
-        $this->callbacks()->beforeLoopIterationStack()->push(function () {
-            $_SERVER['LARAVEL_START_TIME']   = microtime(true);
-            $_SERVER['LARAVEL_START_MEMORY'] = memory_get_usage();
-        });
     }
 
     /**

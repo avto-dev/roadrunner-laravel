@@ -123,6 +123,25 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     }
 
     /**
+     * For option "--reset-debug-info"
+     *
+     * @param CallbacksInterface $callbacks
+     * @param bool|mixed         $value
+     *
+     * @return void
+     */
+    protected function initResetDebugInfo(CallbacksInterface $callbacks, $value)
+    {
+        if ($value === true) {
+            $callbacks->beforeLoopIterationStack()
+                ->push(function (Application $app, ServerRequestInterface $request) {
+                    $_SERVER['LARAVEL_START_TIME']   = microtime(true);
+                    $_SERVER['LARAVEL_START_MEMORY'] = memory_get_usage();
+                });
+        }
+    }
+
+    /**
      * For option: "--reset-db-connections".
      *
      * @param CallbacksInterface $callbacks
