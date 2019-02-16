@@ -18,6 +18,16 @@ interface CallbacksInitializerInterface
     const FORCE_HTTPS_EXTERNAL_HEADER_NAME = 'FORCE-HTTPS';
 
     /**
+     * Incoming request object macros name for accessing to the "before request processed" timestamp.
+     */
+    const REQUEST_TIMESTAMP_MACRO = 'getTimestamp';
+
+    /**
+     * Incoming request object macros name for accessing to the "before request processed" allocated memory size.
+     */
+    const REQUEST_ALLOCATED_MEMORY_MACRO = 'getAllocatedMemory';
+
+    /**
      * Constructor.
      *
      * @param StartOptionsInterface $start_options

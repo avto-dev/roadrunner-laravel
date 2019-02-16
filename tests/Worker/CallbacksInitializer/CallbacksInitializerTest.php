@@ -58,6 +58,9 @@ class CallbacksInitializerTest extends AbstractTestCase
     {
         $this->assertSame('init', CallbacksInitializer::RULE_METHOD_PREFIX);
         $this->assertSame('HTTPS', CallbacksInitializer::FORCE_HTTPS_HEADER_NAME);
+
+        $this->assertSame('getTimestamp', CallbacksInitializer::REQUEST_TIMESTAMP_MACRO);
+        $this->assertSame('getAllocatedMemory', CallbacksInitializer::REQUEST_ALLOCATED_MEMORY_MACRO);
     }
 
     /**
@@ -232,6 +235,43 @@ class CallbacksInitializerTest extends AbstractTestCase
         $this->assertEmpty($this->callbacks->afterLoopIterationStack());
 
         $this->assertInstanceOf(\PDO::class, $db_manager->connection($connection_name)->getPdo());
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateAppStatsWithPassingTrue()
+    {
+        /** @var Request $request */
+        $request = $this->app->make('request');
+
+        $this->assertFalse($request::hasMacro($this->initializer::REQUEST_TIMESTAMP_MACRO));
+        $this->assertFalse($request::hasMacro($this->initializer::REQUEST_ALLOCATED_MEMORY_MACRO));
+
+        $this->callMethod($this->initializer, 'initInjectStatsIntoRequest', [$this->callbacks, true]);
+        $closure = $this->callbacks->beforeHandleRequestStack()->first();
+        $closure($this->app, $request); // Direct calling
+
+        $this->assertTrue($request::hasMacro($this->initializer::REQUEST_TIMESTAMP_MACRO));
+        $this->assertTrue($request::hasMacro($this->initializer::REQUEST_ALLOCATED_MEMORY_MACRO));
+
+        $this->assertInternalType('float', $time = $request::{$this->initializer::REQUEST_TIMESTAMP_MACRO}());
+        $this->assertInternalType('integer', $mem = $request::{$this->initializer::REQUEST_ALLOCATED_MEMORY_MACRO}());
+
+        \usleep(\random_int(100, 400));
+        $closure($this->app, $request); // One more call
+
+        $this->assertNotEquals($request::{$this->initializer::REQUEST_TIMESTAMP_MACRO}(), $time);
+        $this->assertNotEquals($request::{$this->initializer::REQUEST_ALLOCATED_MEMORY_MACRO}(), $mem);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateAppStatsWithPassingFalse()
+    {
+        $this->callMethod($this->initializer, 'initInjectStatsIntoRequest', [$this->callbacks, false]);
+        $this->assertEmpty($this->callbacks->beforeHandleRequestStack());
     }
 
     /**

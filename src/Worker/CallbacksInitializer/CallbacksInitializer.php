@@ -123,6 +123,32 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     }
 
     /**
+     * For option "--inject-stats-into-request".
+     *
+     * @param CallbacksInterface $callbacks
+     * @param bool|mixed         $value
+     *
+     * @return void
+     */
+    protected function initInjectStatsIntoRequest(CallbacksInterface $callbacks, $value)
+    {
+        if ($value === true) {
+            $callbacks->beforeHandleRequestStack()->push(function (Application $app, Request $request) {
+                $current_time     = \microtime(true);
+                $allocated_memory = \memory_get_usage();
+
+                $request::macro(self::REQUEST_TIMESTAMP_MACRO, function () use ($current_time): float {
+                    return (float) $current_time;
+                });
+
+                $request::macro(self::REQUEST_ALLOCATED_MEMORY_MACRO, function () use ($allocated_memory): int {
+                    return (int) $allocated_memory;
+                });
+            });
+        }
+    }
+
+    /**
      * For option: "--reset-db-connections".
      *
      * @param CallbacksInterface $callbacks
