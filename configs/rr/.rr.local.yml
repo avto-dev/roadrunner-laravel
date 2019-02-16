@@ -1,5 +1,9 @@
 # @link: <https://github.com/spiral/roadrunner/wiki/Configuration>
 
+# defines environment variables for all underlying php processes
+#env:
+  #key: value
+
 # rpc bus allows php application and external clients to talk to rr services.
 rpc:
   # enable rpc server (enabled by default)
