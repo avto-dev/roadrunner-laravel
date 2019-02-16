@@ -59,14 +59,8 @@ class CallbacksInitializerTest extends AbstractTestCase
         $this->assertSame('init', CallbacksInitializer::RULE_METHOD_PREFIX);
         $this->assertSame('HTTPS', CallbacksInitializer::FORCE_HTTPS_HEADER_NAME);
 
-        $this->assertSame(
-            'REQUEST_PROCESSING_START_TIME',
-            CallbacksInitializer::ABSTRACT_REQUEST_PROCESSING_START_TIME
-        );
-        $this->assertSame(
-            'REQUEST_PROCESSING_ALLOCATED_MEMORY',
-            CallbacksInitializer::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY
-        );
+        $this->assertSame('getTimestamp', CallbacksInitializer::REQUEST_TIMESTAMP_MACRO);
+        $this->assertSame('getAllocatedMemory', CallbacksInitializer::REQUEST_ALLOCATED_MEMORY_MACRO);
     }
 
     /**
@@ -248,24 +242,27 @@ class CallbacksInitializerTest extends AbstractTestCase
      */
     public function testUpdateAppStatsWithPassingTrue()
     {
-        $this->assertFalse($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY));
-        $this->assertFalse($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_START_TIME));
+        /** @var Request $request */
+        $request = $this->app->make('request');
 
-        $this->callMethod($this->initializer, 'initUpdateAppStats', [$this->callbacks, true]);
-        $closure = $this->callbacks->beforeLoopIterationStack()->first();
-        $closure($this->app); // Test direct calling
+        $this->assertFalse($request::hasMacro($this->initializer::REQUEST_TIMESTAMP_MACRO));
+        $this->assertFalse($request::hasMacro($this->initializer::REQUEST_ALLOCATED_MEMORY_MACRO));
 
-        $this->assertTrue($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY));
-        $this->assertInternalType(
-            'integer',
-            $this->app->make($this->initializer::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY)
-        );
+        $this->callMethod($this->initializer, 'initInjectStatsIntoRequest', [$this->callbacks, true]);
+        $closure = $this->callbacks->beforeHandleRequestStack()->first();
+        $closure($this->app, $request); // Direct calling
 
-        $this->assertTrue($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_START_TIME));
-        $this->assertInternalType(
-            'float',
-            $this->app->make($this->initializer::ABSTRACT_REQUEST_PROCESSING_START_TIME)
-        );
+        $this->assertTrue($request::hasMacro($this->initializer::REQUEST_TIMESTAMP_MACRO));
+        $this->assertTrue($request::hasMacro($this->initializer::REQUEST_ALLOCATED_MEMORY_MACRO));
+
+        $this->assertInternalType('float', $time = $request::{$this->initializer::REQUEST_TIMESTAMP_MACRO}());
+        $this->assertInternalType('integer', $mem = $request::{$this->initializer::REQUEST_ALLOCATED_MEMORY_MACRO}());
+
+        \usleep(\random_int(100, 400));
+        $closure($this->app, $request); // One more call
+
+        $this->assertNotEquals($request::{$this->initializer::REQUEST_TIMESTAMP_MACRO}(), $time);
+        $this->assertNotEquals($request::{$this->initializer::REQUEST_ALLOCATED_MEMORY_MACRO}(), $mem);
     }
 
     /**
@@ -273,11 +270,8 @@ class CallbacksInitializerTest extends AbstractTestCase
      */
     public function testUpdateAppStatsWithPassingFalse()
     {
-        $this->callMethod($this->initializer, 'initUpdateAppStats', [$this->callbacks, false]);
-        $this->assertEmpty($this->callbacks->beforeLoopIterationStack());
-
-        $this->assertFalse($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY));
-        $this->assertFalse($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_START_TIME));
+        $this->callMethod($this->initializer, 'initInjectStatsIntoRequest', [$this->callbacks, false]);
+        $this->assertEmpty($this->callbacks->beforeHandleRequestStack());
     }
 
     /**

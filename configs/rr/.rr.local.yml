@@ -47,7 +47,7 @@ http:
     # - `--(not-)reset-db-connections`
     # - `--(not-)reset-redis-connections`
     # - `--(not-)refresh-app`
-    # - `--(not-)update-app-stats`
+    # - `--(not-)inject-stats-into-request`
     command: "php ./vendor/bin/rr-worker"
 
     # connection method (pipes, tcp://:9000, unix://socket.unix). default "pipes"

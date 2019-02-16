@@ -4,18 +4,18 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Redis\RedisManager;
-use Illuminate\Database\DatabaseManager;
-use Illuminate\Support\Traits\Macroable;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Contracts\Foundation\Application;
-use AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface;
-use Illuminate\Database\Connection as DatabaseConnection;
-use Illuminate\Redis\Connections\Connection as RedisConnection;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Connection as DatabaseConnection;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Http\Request;
+use Illuminate\Redis\Connections\Connection as RedisConnection;
+use Illuminate\Redis\RedisManager;
+use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @see \AvtoDev\RoadRunnerLaravel\Worker\Worker::start() - Look for callback parameters
@@ -123,19 +123,27 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     }
 
     /**
-     * For option "--update-app-stats".
+     * For option "--inject-stats-into-request".
      *
      * @param CallbacksInterface $callbacks
      * @param bool|mixed         $value
      *
      * @return void
      */
-    protected function initUpdateAppStats(CallbacksInterface $callbacks, $value)
+    protected function initInjectStatsIntoRequest(CallbacksInterface $callbacks, $value)
     {
         if ($value === true) {
-            $callbacks->beforeLoopIterationStack()->push(function (Application $app) {
-                $app->instance(self::ABSTRACT_REQUEST_PROCESSING_START_TIME, \microtime(true));
-                $app->instance(self::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY, \memory_get_usage());
+            $callbacks->beforeHandleRequestStack()->push(function (Application $app, Request $request) {
+                $current_time     = \microtime(true);
+                $allocated_memory = \memory_get_usage();
+
+                $request::macro(self::REQUEST_TIMESTAMP_MACRO, function () use ($current_time): float {
+                    return (float) $current_time;
+                });
+
+                $request::macro(self::REQUEST_ALLOCATED_MEMORY_MACRO, function () use ($allocated_memory): int {
+                    return (int) $allocated_memory;
+                });
             });
         }
     }

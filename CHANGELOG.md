@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 
 ### Added
 
-- Worker option `--(not-)update-app-stats` for updating in IoC containers timestamp and allocated memory size before each incoming request processing
+- Worker option `--(not-)inject-stats-into-request` for injecting macroses into request object for accessing timestamp and allocated memory size (before request processing) values
 
 ## v1.1.1
 

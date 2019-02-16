@@ -58,7 +58,7 @@ If you wants to disable package service-provider auto discover, just add into yo
 `--(not-)reset-db-connections` | Обрывает (или нет) соединения с БД после обработки входящего запроса
 `--(not-)reset-redis-connections` | Обрывает (или нет) соединения с redis после обработки входящего запроса
 `--(not-)refresh-app` | Принудительно пересоздает инстанс приложения после обработки **каждого** запроса
-`--(not-)update-app-stats` | Обновляет в сервис-контейнерах приложения значения временной метки (`REQUEST_PROCESSING_START_TIME`) и использованной памяти (`REQUEST_PROCESSING_ALLOCATED_MEMORY`) **перед** обработкой каждого входящего запроса
+`--(not-)inject-stats-into-request` | **Перед** обработкой **каждого** запроса добавляет в объект `Request` макросы (`::getTimestamp()` и `::getAllocatedMemory()`), возвращающие значения временной метки и объем выделенной памяти
 
 > Параметры запуска указываются в файле-конфигурации (например: `./.rr.local.yml`) по пути `http.workers.command`, например: `php ./vendor/bin/rr-worker --some-parameter`
 

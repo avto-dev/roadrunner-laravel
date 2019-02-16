@@ -18,14 +18,14 @@ interface CallbacksInitializerInterface
     const FORCE_HTTPS_EXTERNAL_HEADER_NAME = 'FORCE-HTTPS';
 
     /**
-     * App binding key for storing timestamp before request processing.
+     * Incoming request object macros name for accessing to the "before request processed" timestamp.
      */
-    const ABSTRACT_REQUEST_PROCESSING_START_TIME = 'REQUEST_PROCESSING_START_TIME';
+    const REQUEST_TIMESTAMP_MACRO = 'getTimestamp';
 
     /**
-     * App binding key for storing allocated memory size before request processing.
+     * Incoming request object macros name for accessing to the "before request processed" allocated memory size.
      */
-    const ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY = 'REQUEST_PROCESSING_ALLOCATED_MEMORY';
+    const REQUEST_ALLOCATED_MEMORY_MACRO = 'getAllocatedMemory';
 
     /**
      * Constructor.
