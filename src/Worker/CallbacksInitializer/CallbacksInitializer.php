@@ -123,19 +123,19 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     }
 
     /**
-     * For option "--reset-debug-info".
+     * For option "--update-app-stats".
      *
      * @param CallbacksInterface $callbacks
      * @param bool|mixed         $value
      *
      * @return void
      */
-    protected function initResetDebugInfo(CallbacksInterface $callbacks, $value)
+    protected function initUpdateAppStats(CallbacksInterface $callbacks, $value)
     {
         if ($value === true) {
             $callbacks->beforeLoopIterationStack()->push(function (Application $app) {
-                $_SERVER['LARAVEL_START_TIME']   = microtime(true);
-                $_SERVER['LARAVEL_START_MEMORY'] = memory_get_usage();
+                $app->instance(self::ABSTRACT_REQUEST_PROCESSING_START_TIME, \microtime(true));
+                $app->instance(self::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY, \memory_get_usage());
             });
         }
     }

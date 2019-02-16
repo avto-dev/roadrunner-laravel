@@ -19,7 +19,7 @@ Easy way for connecting [RoadRunner][roadrunner] and Laravel applications.
 Require this package with composer using the following command:
 
 ```shell
-$ composer require avto-dev/roadrunner-laravel "^1.0"
+$ composer require avto-dev/roadrunner-laravel "^1.2"
 ```
 
 > Installed `composer` is required ([how to install composer][getcomposer]).
@@ -58,7 +58,7 @@ If you wants to disable package service-provider auto discover, just add into yo
 `--(not-)reset-db-connections` | Обрывает (или нет) соединения с БД после обработки входящего запроса
 `--(not-)reset-redis-connections` | Обрывает (или нет) соединения с redis после обработки входящего запроса
 `--(not-)refresh-app` | Принудительно пересоздает инстанс приложения после обработки **каждого** запроса
-`--(not-)reset-debug-info` | Устанавливает переменные `$_SERVER['LARAVEL_START_TIME']`, `$_SERVER['LARAVEL_START_MEMORY']` на актуальные значение перед обработкой http-запроса.
+`--(not-)update-app-stats` | Обновляет в сервис-контейнерах приложения значения временной метки (`REQUEST_PROCESSING_START_TIME`) и использованной памяти (`REQUEST_PROCESSING_ALLOCATED_MEMORY`) **перед** обработкой каждого входящего запроса
 
 > Параметры запуска указываются в файле-конфигурации (например: `./.rr.local.yml`) по пути `http.workers.command`, например: `php ./vendor/bin/rr-worker --some-parameter`
 

@@ -7,7 +7,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 ## v1.2.0
 
 ### Added
-- Support option `--(not-)reset-debug-info`
+
+- Worker option `--(not-)update-app-stats` for updating in IoC containers timestamp and allocated memory size before each incoming request processing
 
 ## v1.1.1
 

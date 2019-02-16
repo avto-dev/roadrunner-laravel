@@ -18,6 +18,16 @@ interface CallbacksInitializerInterface
     const FORCE_HTTPS_EXTERNAL_HEADER_NAME = 'FORCE-HTTPS';
 
     /**
+     * App binding key for storing timestamp before request processing.
+     */
+    const ABSTRACT_REQUEST_PROCESSING_START_TIME = 'REQUEST_PROCESSING_START_TIME';
+
+    /**
+     * App binding key for storing allocated memory size before request processing.
+     */
+    const ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY = 'REQUEST_PROCESSING_ALLOCATED_MEMORY';
+
+    /**
      * Constructor.
      *
      * @param StartOptionsInterface $start_options

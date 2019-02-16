@@ -58,6 +58,15 @@ class CallbacksInitializerTest extends AbstractTestCase
     {
         $this->assertSame('init', CallbacksInitializer::RULE_METHOD_PREFIX);
         $this->assertSame('HTTPS', CallbacksInitializer::FORCE_HTTPS_HEADER_NAME);
+
+        $this->assertSame(
+            'REQUEST_PROCESSING_START_TIME',
+            CallbacksInitializer::ABSTRACT_REQUEST_PROCESSING_START_TIME
+        );
+        $this->assertSame(
+            'REQUEST_PROCESSING_ALLOCATED_MEMORY',
+            CallbacksInitializer::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY
+        );
     }
 
     /**
@@ -237,21 +246,38 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testResetDebugInfoWithPassingTrue()
+    public function testUpdateAppStatsWithPassingTrue()
     {
-        $this->callMethod($this->initializer, 'initResetDebugInfo', [$this->callbacks, true]);
+        $this->assertFalse($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY));
+        $this->assertFalse($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_START_TIME));
+
+        $this->callMethod($this->initializer, 'initUpdateAppStats', [$this->callbacks, true]);
         $closure = $this->callbacks->beforeLoopIterationStack()->first();
         $closure($this->app); // Test direct calling
-        $this->assertInstanceOf(\Closure::class, $closure);
+
+        $this->assertTrue($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY));
+        $this->assertInternalType(
+            'integer',
+            $this->app->make($this->initializer::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY)
+        );
+
+        $this->assertTrue($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_START_TIME));
+        $this->assertInternalType(
+            'float',
+            $this->app->make($this->initializer::ABSTRACT_REQUEST_PROCESSING_START_TIME)
+        );
     }
 
     /**
      * @return void
      */
-    public function testResetDebugInfoWithPassingFalse()
+    public function testUpdateAppStatsWithPassingFalse()
     {
-        $this->callMethod($this->initializer, 'initResetDebugInfo', [$this->callbacks, false]);
+        $this->callMethod($this->initializer, 'initUpdateAppStats', [$this->callbacks, false]);
         $this->assertEmpty($this->callbacks->beforeLoopIterationStack());
+
+        $this->assertFalse($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_ALLOCATED_MEMORY));
+        $this->assertFalse($this->app->bound($this->initializer::ABSTRACT_REQUEST_PROCESSING_START_TIME));
     }
 
     /**
