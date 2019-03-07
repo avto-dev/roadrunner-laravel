@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v1.2.1
+
+### Fixed
+
+- Middleware `ForceHttpsMiddleware` now set `HTTPS` server parameter to `on` _(required for correct working request methods like ::isSecure and others)_
+
 ## v1.2.0
 
 ### Added

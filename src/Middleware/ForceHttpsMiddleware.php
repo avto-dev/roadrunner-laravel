@@ -34,10 +34,13 @@ class ForceHttpsMiddleware
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         if ($request->hasHeader(CallbacksInitializerInterface::FORCE_HTTPS_HEADER_NAME)) {
             $this->url_generator->forceScheme('https');
+
+            // Set 'HTTPS' server parameter (required for correct working request methods like ::isSecure and others)
+            $request->server->set('HTTPS', 'on');
         }
 
         return $next($request);

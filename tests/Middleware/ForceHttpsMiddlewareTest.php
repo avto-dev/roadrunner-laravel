@@ -55,6 +55,8 @@ class ForceHttpsMiddlewareTest extends AbstractTestCase
         });
 
         $this->assertSame('https://', $this->url_generator->formatScheme(null));
+        $this->assertSame('on', $request->server->get('HTTPS'));
+        $this->assertTrue($request->isSecure());
 
         $this->assertTrue($handled);
     }
@@ -78,6 +80,8 @@ class ForceHttpsMiddlewareTest extends AbstractTestCase
 
         // Nothing was changed
         $this->assertSame('http://', $this->url_generator->formatScheme(null));
+        $this->assertFalse($request->server->has('HTTPS'));
+        $this->assertFalse($request->isSecure());
 
         $this->assertTrue($handled);
     }
