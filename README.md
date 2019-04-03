@@ -107,7 +107,6 @@ If you will find any package errors, please, [make an issue][link_create_issue] 
 
 This is open-sourced software licensed under the [MIT License][link_license].
 
-[#10]:https://github.com/avto-dev/roadrunner-laravel/issues/10
 [badge_packagist_version]:https://img.shields.io/packagist/v/avto-dev/roadrunner-laravel.svg?maxAge=180
 [badge_php_version]:https://img.shields.io/packagist/php-v/avto-dev/roadrunner-laravel.svg?longCache=true
 [badge_build_status]:https://travis-ci.org/avto-dev/roadrunner-laravel.svg?branch=master
@@ -132,3 +131,4 @@ This is open-sourced software licensed under the [MIT License][link_license].
 [link_license]:https://github.com/avto-dev/roadrunner-laravel/blob/master/LICENSE
 [getcomposer]:https://getcomposer.org/download/
 [roadrunner]:https://github.com/spiral/roadrunner
+[#10]:https://github.com/avto-dev/roadrunner-laravel/issues/10
