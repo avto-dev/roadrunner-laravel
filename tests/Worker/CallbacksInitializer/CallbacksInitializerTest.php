@@ -4,18 +4,18 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker\CallbacksInitializer;
 
-use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
-use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
-use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer;
-use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
-use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
-use Illuminate\Config\Repository as ConfigRepository;
-use Illuminate\Database\DatabaseManager;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Traits\Macroable;
+use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
+use Illuminate\Config\Repository as ConfigRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
+use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
+use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer;
+use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer
@@ -79,8 +79,7 @@ class CallbacksInitializerTest extends AbstractTestCase
      */
     public function testAutoInitMethodsCalling()
     {
-        $mock = new class(new StartOptions(['--bla-bla']), $this->callbacks) extends CallbacksInitializer
-        {
+        $mock                  = new class(new StartOptions(['--bla-bla']), $this->callbacks) extends CallbacksInitializer {
             public $called     = false;
 
             public $should_not = false;
@@ -179,7 +178,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     {
         $callbacks = new Callbacks;
         $this->callMethod(new CallbacksInitializer(new StartOptions([
-            '--not-fix-symfony-file-validation'
+            '--not-fix-symfony-file-validation',
         ]), $callbacks), 'defaults', [$callbacks]);
 
         $this->initializer->makeInit();
