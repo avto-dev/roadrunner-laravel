@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v1.3.0
+
+### Added
+
+- Worker option `--(not-)mock-is-uploaded-file`. Function `is-uploaded-file` for `Symfony\Component\HttpFoundation\File` will always return true.
+
 ## v1.2.1
 
 ### Fixed
