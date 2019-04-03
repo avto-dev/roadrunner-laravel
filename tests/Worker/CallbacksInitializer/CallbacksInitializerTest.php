@@ -77,8 +77,7 @@ class CallbacksInitializerTest extends AbstractTestCase
      */
     public function testAutoInitMethodsCalling()
     {
-        $mock = new class(new StartOptions(['--bla-bla']), $this->callbacks) extends CallbacksInitializer
-        {
+        $mock                  = new class(new StartOptions(['--bla-bla']), $this->callbacks) extends CallbacksInitializer {
             public $called     = false;
 
             public $should_not = false;
