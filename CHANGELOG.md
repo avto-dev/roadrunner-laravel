@@ -8,7 +8,9 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 
 ### Added
 
-- Worker option `--(not-)mock-is-uploaded-file`. Function `is-uploaded-file` for `Symfony\Component\HttpFoundation\File` will always return true.
+- Worker option `--not-fix-symfony-file-validation` for disabling symfony file validation fixing [#10]
+
+[#10]:https://github.com/avto-dev/roadrunner-laravel/issues/10
 
 ## v1.2.1
 

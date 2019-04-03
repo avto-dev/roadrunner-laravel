@@ -4,18 +4,18 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Redis\RedisManager;
-use Illuminate\Database\DatabaseManager;
-use Illuminate\Support\Traits\Macroable;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Contracts\Foundation\Application;
-use AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface;
-use Illuminate\Database\Connection as DatabaseConnection;
-use Illuminate\Redis\Connections\Connection as RedisConnection;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Connection as DatabaseConnection;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Http\Request;
+use Illuminate\Redis\Connections\Connection as RedisConnection;
+use Illuminate\Redis\RedisManager;
+use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @see \AvtoDev\RoadRunnerLaravel\Worker\Worker::start() - Look for callback parameters
@@ -98,17 +98,54 @@ class CallbacksInitializer implements CallbacksInitializerInterface
                     $request->headers->set(self::FORCE_HTTPS_HEADER_NAME, 'HTTPS');
                 });
         }
+
+        if ($this->skipSymfonyFileValidationFixing() === false) {
+            $this->fixSymfonyFileValidation($callbacks);
+        }
+    }
+
+    /**
+     * Need to skip symfony file validation fixing?
+     *
+     * @return bool
+     */
+    protected function skipSymfonyFileValidationFixing(): bool
+    {
+        return $this->start_options->hasOption(self::FIX_SYMFONY_FILE_VALIDATION_OPTION)
+               && $this->start_options->getOption(self::FIX_SYMFONY_FILE_VALIDATION_OPTION) === false;
+    }
+
+    /**
+     * Symfony `isValid` method fix.
+     *
+     * @see \Symfony\Component\HttpFoundation\File\UploadedFile::isValid
+     * @see <https://github.com/avto-dev/roadrunner-laravel/issues/10>
+     * @see <https://github.com/spiral/roadrunner/issues/133>
+     *
+     * @param CallbacksInterface $callbacks
+     *
+     * @return void
+     */
+    protected function fixSymfonyFileValidation(CallbacksInterface $callbacks)
+    {
+        $callbacks->beforeLoopStarts()
+            ->push(function (Application $app) {
+                // THIS MAGIC WORKS ONLY ONCE!
+                if (! \function_exists('\\Symfony\\Component\\HttpFoundation\\File\\is_uploaded_file')) {
+                    require __DIR__ . '/../../../fixes/fix-symfony-file-validation.php';
+                }
+            });
     }
 
     /**
      * For option: "--force-https".
      *
-     * @see \AvtoDev\RoadRunnerLaravel\ServiceProvider::boot()
-     *
      * @param CallbacksInterface $callbacks
      * @param bool|mixed         $value
      *
      * @return void
+     * @see \AvtoDev\RoadRunnerLaravel\ServiceProvider::boot()
+     *
      */
     protected function initForceHttps(CallbacksInterface $callbacks, $value)
     {
@@ -144,23 +181,6 @@ class CallbacksInitializer implements CallbacksInitializerInterface
                 $request::macro(self::REQUEST_ALLOCATED_MEMORY_MACRO, function () use ($allocated_memory): int {
                     return (int) $allocated_memory;
                 });
-            });
-        }
-    }
-
-    /**
-     * For option "--mock-is-uploaded-file".
-     *
-     * @param CallbacksInterface $callbacks
-     * @param bool|mixed         $value
-     *
-     * @return void
-     */
-    protected function initMockIsUploadedFile(CallbacksInterface $callbacks, $value)
-    {
-        if ($value === true) {
-            $callbacks->beforeLoopStarts()->push(function (Application $app) {
-                require __DIR__ . '/../../../hacks/is_uploaded_file.php';
             });
         }
     }

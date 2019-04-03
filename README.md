@@ -59,7 +59,7 @@ If you wants to disable package service-provider auto discover, just add into yo
 `--(not-)reset-redis-connections` | Обрывает (или нет) соединения с redis после обработки входящего запроса
 `--(not-)refresh-app` | Принудительно пересоздает инстанс приложения после обработки **каждого** запроса
 `--(not-)inject-stats-into-request` | **Перед** обработкой **каждого** запроса добавляет в объект `Request` макросы (`::getTimestamp()` и `::getAllocatedMemory()`), возвращающие значения временной метки и объем выделенной памяти
-`--(not-)mock-is-uploaded-file` | Перекрывает метод `is_uploaded-file` для `Symfony\Component\HttpFoundation\File`
+`--not-fix-symfony-file-validation` | Do **not** fix `isValid` method in `\Symfony\Component\HttpFoundation\File\UploadedFile` [#10]
 
 > Параметры запуска указываются в файле-конфигурации (например: `./.rr.local.yml`) по пути `http.workers.command`, например: `php ./vendor/bin/rr-worker --some-parameter`
 
@@ -107,6 +107,7 @@ If you will find any package errors, please, [make an issue][link_create_issue] 
 
 This is open-sourced software licensed under the [MIT License][link_license].
 
+[#10]:https://github.com/avto-dev/roadrunner-laravel/issues/10
 [badge_packagist_version]:https://img.shields.io/packagist/v/avto-dev/roadrunner-laravel.svg?maxAge=180
 [badge_php_version]:https://img.shields.io/packagist/php-v/avto-dev/roadrunner-laravel.svg?longCache=true
 [badge_build_status]:https://travis-ci.org/avto-dev/roadrunner-laravel.svg?branch=master
