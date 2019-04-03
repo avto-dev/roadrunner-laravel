@@ -59,6 +59,7 @@ If you wants to disable package service-provider auto discover, just add into yo
 `--(not-)reset-redis-connections` | Обрывает (или нет) соединения с redis после обработки входящего запроса
 `--(not-)refresh-app` | Принудительно пересоздает инстанс приложения после обработки **каждого** запроса
 `--(not-)inject-stats-into-request` | **Перед** обработкой **каждого** запроса добавляет в объект `Request` макросы (`::getTimestamp()` и `::getAllocatedMemory()`), возвращающие значения временной метки и объем выделенной памяти
+`--not-fix-symfony-file-validation` | Do **not** fix `isValid` method in `\Symfony\Component\HttpFoundation\File\UploadedFile` [#10]
 
 > Параметры запуска указываются в файле-конфигурации (например: `./.rr.local.yml`) по пути `http.workers.command`, например: `php ./vendor/bin/rr-worker --some-parameter`
 
@@ -130,3 +131,4 @@ This is open-sourced software licensed under the [MIT License][link_license].
 [link_license]:https://github.com/avto-dev/roadrunner-laravel/blob/master/LICENSE
 [getcomposer]:https://getcomposer.org/download/
 [roadrunner]:https://github.com/spiral/roadrunner
+[#10]:https://github.com/avto-dev/roadrunner-laravel/issues/10

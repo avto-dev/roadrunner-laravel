@@ -98,17 +98,54 @@ class CallbacksInitializer implements CallbacksInitializerInterface
                     $request->headers->set(self::FORCE_HTTPS_HEADER_NAME, 'HTTPS');
                 });
         }
+
+        if ($this->skipSymfonyFileValidationFixing() === false) {
+            $this->fixSymfonyFileValidation($callbacks);
+        }
+    }
+
+    /**
+     * Need to skip symfony file validation fixing?
+     *
+     * @return bool
+     */
+    protected function skipSymfonyFileValidationFixing(): bool
+    {
+        return $this->start_options->hasOption(self::FIX_SYMFONY_FILE_VALIDATION_OPTION)
+               && $this->start_options->getOption(self::FIX_SYMFONY_FILE_VALIDATION_OPTION) === false;
+    }
+
+    /**
+     * Symfony `isValid` method fix.
+     *
+     * @see \Symfony\Component\HttpFoundation\File\UploadedFile::isValid
+     * @see <https://github.com/avto-dev/roadrunner-laravel/issues/10>
+     * @see <https://github.com/spiral/roadrunner/issues/133>
+     *
+     * @param CallbacksInterface $callbacks
+     *
+     * @return void
+     */
+    protected function fixSymfonyFileValidation(CallbacksInterface $callbacks)
+    {
+        $callbacks->beforeLoopStarts()
+            ->push(function (Application $app) {
+                // THIS MAGIC WORKS ONLY ONCE!
+                if (! \function_exists('\\Symfony\\Component\\HttpFoundation\\File\\is_uploaded_file')) {
+                    require __DIR__ . '/../../../fixes/fix-symfony-file-validation.php';
+                }
+            });
     }
 
     /**
      * For option: "--force-https".
      *
-     * @see \AvtoDev\RoadRunnerLaravel\ServiceProvider::boot()
-     *
      * @param CallbacksInterface $callbacks
      * @param bool|mixed         $value
      *
      * @return void
+     *
+     * @see \AvtoDev\RoadRunnerLaravel\ServiceProvider::boot()
      */
     protected function initForceHttps(CallbacksInterface $callbacks, $value)
     {

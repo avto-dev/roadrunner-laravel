@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v1.3.0
+
+### Added
+
+- Worker option `--not-fix-symfony-file-validation` for disabling symfony file validation fixing [#10]
+
+[#10]:https://github.com/avto-dev/roadrunner-laravel/issues/10
+
 ## v1.2.1
 
 ### Fixed

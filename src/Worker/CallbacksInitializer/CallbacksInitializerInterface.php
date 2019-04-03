@@ -28,6 +28,11 @@ interface CallbacksInitializerInterface
     const REQUEST_ALLOCATED_MEMORY_MACRO = 'getAllocatedMemory';
 
     /**
+     * Option name for fixing symfony file validation.
+     */
+    const FIX_SYMFONY_FILE_VALIDATION_OPTION = 'fix-symfony-file-validation';
+
+    /**
      * Constructor.
      *
      * @param StartOptionsInterface $start_options

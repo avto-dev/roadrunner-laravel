@@ -4,12 +4,14 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker\CallbacksInitializer;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Traits\Macroable;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use Illuminate\Config\Repository as ConfigRepository;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
 use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer;
@@ -102,32 +104,86 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testDefaultActionsInitialized()
+    public function testDefaultActionCollectCycles()
     {
-        // Get default closures without touching $this->.. instances
         $callbacks = new Callbacks;
         $this->callMethod(new CallbacksInitializer(new StartOptions, $callbacks), 'defaults', [$callbacks]);
-        $first_closure  = $callbacks->afterLoopIterationStack()->first();
-        $second_closure = $callbacks->beforeHandleRequestStack()->first();
+        $closure = $callbacks->afterLoopIterationStack()->first();
 
-        // And now - call same methods using $this->.. instances
         $this->initializer->makeInit();
 
         $this->assertSame(
-            $this::getClosureHash($first_closure),
+            $this::getClosureHash($closure),
             $this::getClosureHash($this->callbacks->afterLoopIterationStack()->first())
-        );
-        $this->assertSame(
-            $this::getClosureHash($second_closure),
-            $this::getClosureHash($this->callbacks->beforeHandleRequestStack()->first())
         );
 
         // Test call
-        $first_closure($this->app, new Request, new Response);
+        $closure($this->app, new Request, new Response);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDefaultActionRemoveForceHttpsHeader()
+    {
+        $callbacks = new Callbacks;
+        $this->callMethod(new CallbacksInitializer(new StartOptions, $callbacks), 'defaults', [$callbacks]);
+        $remove_force_https_closure = $callbacks->beforeHandleRequestStack()->first();
+
+        $this->initializer->makeInit();
+
+        $this->assertSame(
+            $this::getClosureHash($remove_force_https_closure),
+            $this::getClosureHash($this->callbacks->beforeHandleRequestStack()->first())
+        );
 
         ($request = new Request)->headers->set(CallbacksInitializer::FORCE_HTTPS_HEADER_NAME, 'true');
-        $second_closure($this->app, $request);
+        $remove_force_https_closure($this->app, $request);
         $this->assertFalse($request->headers->has(CallbacksInitializer::FORCE_HTTPS_HEADER_NAME));
+    }
+
+    /**
+     * @return void
+     */
+    public function testDefaultActionFixSymfonyFileValidation()
+    {
+        $callbacks = new Callbacks;
+        $this->callMethod(new CallbacksInitializer(new StartOptions, $callbacks), 'defaults', [$callbacks]);
+        $closure = $callbacks->beforeLoopStarts()->first();
+
+        $this->initializer->makeInit();
+
+        $this->assertSame(
+            $this::getClosureHash($closure),
+            $this::getClosureHash($this->callbacks->beforeLoopStarts()->first())
+        );
+
+        $tmp_file = \tempnam(\sys_get_temp_dir(), $file_name = Str::random(32));
+        // If uncomment next line - "magic" doesn't work! (looks like PHP optimization in action)
+        // $this->assertFalse((new UploadedFile($tmp_file, $file_name))->isValid());
+        $this->assertFalse(\function_exists($func = '\\Symfony\\Component\\HttpFoundation\\File\\is_uploaded_file'));
+        $closure($this->app);
+        $this->assertTrue(\function_exists($func));
+        $this->assertTrue((new UploadedFile($tmp_file, $file_name))->isValid());
+
+        if (\is_file($tmp_file)) {
+            \unlink($tmp_file);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testDefaultActionSkipSymfonyFileValidationFixing()
+    {
+        $callbacks = new Callbacks;
+        $this->callMethod(new CallbacksInitializer(new StartOptions([
+            '--not-fix-symfony-file-validation',
+        ]), $callbacks), 'defaults', [$callbacks]);
+
+        $this->initializer->makeInit();
+
+        $this->assertCount(0, $callbacks->beforeLoopStarts());
     }
 
     /**
