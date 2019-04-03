@@ -59,6 +59,7 @@ If you wants to disable package service-provider auto discover, just add into yo
 `--(not-)reset-redis-connections` | Обрывает (или нет) соединения с redis после обработки входящего запроса
 `--(not-)refresh-app` | Принудительно пересоздает инстанс приложения после обработки **каждого** запроса
 `--(not-)inject-stats-into-request` | **Перед** обработкой **каждого** запроса добавляет в объект `Request` макросы (`::getTimestamp()` и `::getAllocatedMemory()`), возвращающие значения временной метки и объем выделенной памяти
+`--(not-)mock-is-uploaded-file` | Перекрывает метод `is_uploaded-file` для `Symfony\Component\HttpFoundation\File`
 
 > Параметры запуска указываются в файле-конфигурации (например: `./.rr.local.yml`) по пути `http.workers.command`, например: `php ./vendor/bin/rr-worker --some-parameter`
 

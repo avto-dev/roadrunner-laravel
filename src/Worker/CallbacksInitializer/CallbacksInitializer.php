@@ -149,6 +149,23 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     }
 
     /**
+     * For option "--mock-is-uploaded-file".
+     *
+     * @param CallbacksInterface $callbacks
+     * @param bool|mixed         $value
+     *
+     * @return void
+     */
+    protected function initMockIsUploadedFile(CallbacksInterface $callbacks, $value)
+    {
+        if ($value === true) {
+            $callbacks->beforeLoopStarts()->push(function (Application $app) {
+                require __DIR__ . '/../../../hacks/is_uploaded_file.php';
+            });
+        }
+    }
+
+    /**
      * For option: "--reset-db-connections".
      *
      * @param CallbacksInterface $callbacks

@@ -293,4 +293,27 @@ class CallbacksInitializerTest extends AbstractTestCase
         $this->callMethod($this->initializer, 'initResetRedisConnections', [$this->callbacks, false]);
         $this->assertEmpty($this->callbacks->afterLoopIterationStack());
     }
+
+    /**
+     * @throws \LogicException
+     * @throws \ReflectionException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     *
+     * @return void
+     */
+    public function testInitMockIsUploadedFile()
+    {
+        $sym_function_name = '\Symfony\Component\HttpFoundation\File\is_uploaded_file';
+
+        $this->assertFalse(function_exists($sym_function_name));
+
+        $this->callMethod($this->initializer, 'initMockIsUploadedFile', [$this->callbacks, true]);
+        $closure = $this->callbacks->beforeLoopStarts()->first();
+        $closure($this->app);
+
+        $this->assertTrue(function_exists($sym_function_name));
+
+        $this->assertTrue(\Symfony\Component\HttpFoundation\File\is_uploaded_file('some name'));
+        $this->assertFalse(\is_uploaded_file('some name'));
+    }
 }
