@@ -6,10 +6,15 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 
 ## v1.3.0
 
+### Fixed
+
+- Files upload mechanism (Symfony file validation bug) [RR#133], [#10]
+
 ### Added
 
-- Worker option `--not-fix-symfony-file-validation` for disabling symfony file validation fixing [#10]
+- Worker option `--not-fix-symfony-file-validation` for disabling upload mechanism fix
 
+[RR#133]:https://github.com/spiral/roadrunner/issues/133
 [#10]:https://github.com/avto-dev/roadrunner-laravel/issues/10
 
 ## v1.2.1
