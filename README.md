@@ -19,7 +19,7 @@ Easy way for connecting [RoadRunner][roadrunner] and Laravel applications.
 Require this package with composer using the following command:
 
 ```shell
-$ composer require avto-dev/roadrunner-laravel "^1.2"
+$ composer require avto-dev/roadrunner-laravel "^1.4"
 ```
 
 > Installed `composer` is required ([how to install composer][getcomposer]).
