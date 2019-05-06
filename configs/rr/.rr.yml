@@ -1,4 +1,4 @@
-# @link: <https://github.com/spiral/roadrunner/wiki/Configuration>
+# @link: <https://roadrunner.dev/docs/intro-config>
 
 # defines environment variables for all underlying php processes
 #env:
@@ -31,12 +31,15 @@ http:
     #key:      server.key
 
   # max POST request size, including file uploads in MB.
-  maxRequest: 128
+  maxRequestSize: 128
 
   # file upload configuration.
   uploads:
     # list of file extensions which are forbidden for uploading.
     forbid: [".php", ".exe", ".bat"]
+
+  # cidr blocks which can set ip using X-Real-Ip or X-Forwarded-For
+  trustedSubnets: ["10.0.0.0/8", "127.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "::1/128", "fc00::/7", "fe80::/10"]
 
   # http worker pool configuration.
   workers:
@@ -67,6 +70,27 @@ http:
 
       # amount of time given to worker to gracefully destruct itself.
       destroyTimeout:  60
+
+# monitors rr server(s)
+limit:
+  # check worker state each second
+  interval: 1
+
+  # custom watch configuration for each service
+  services:
+    # monitor http workers
+    http:
+      # maximum allowed memory consumption per worker (soft)
+      maxMemory: 128
+
+      # maximum time to live for the worker (soft)
+      TTL: 0
+
+      # maximum allowed amount of time worker can spend in idle before being removed (for weak db connections, soft)
+      idleTTL: 0
+
+      # max_execution_time (brutal)
+      execTTL: 60
 
 # static file serving. remove this section to disable static file serving.
 static:

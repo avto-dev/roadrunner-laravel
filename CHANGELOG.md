@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v1.4.0
+
+### Changed
+
+- Minimal `spiral/roadrunner` version now is `^1.4`
+
+### Added
+
+- RR Config option `trustedSubnets`
+- RR Config option `limit`
+
+### Deprecated
+
+- RR Config option `maxRequest` has been deprecated in favor of `maxRequestSize`
+
 ## v1.3.0
 
 ### Fixed

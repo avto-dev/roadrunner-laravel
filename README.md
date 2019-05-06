@@ -48,36 +48,36 @@ If you wants to disable package service-provider auto discover, just add into yo
 
 ## Usage
 
-Данный пакет поставляет готовый к использованию воркер для RoadRunner, который вы можете расширить по собственному усмотрению - по умолчанию он наделен тем функционалом, который нам показался наиболее востребованным.
+This package allows you to use "production ready" worker for RoadRunner, that you can extend as you want.
 
-Из коробки он поддерживает следующие параметры запуска:
+Out of the box it supports next run parameters:
 
-Имя параметра | Описание
+Name | Description
 ------------- | --------
-`--(not-)force-https` | Форсирует (или нет) использование схемы `https` для генерации внутренних ссылок приложения
-`--(not-)reset-db-connections` | Обрывает (или нет) соединения с БД после обработки входящего запроса
-`--(not-)reset-redis-connections` | Обрывает (или нет) соединения с redis после обработки входящего запроса
-`--(not-)refresh-app` | Принудительно пересоздает инстанс приложения после обработки **каждого** запроса
-`--(not-)inject-stats-into-request` | **Перед** обработкой **каждого** запроса добавляет в объект `Request` макросы (`::getTimestamp()` и `::getAllocatedMemory()`), возвращающие значения временной метки и объем выделенной памяти
+`--(not-)force-https` | Force (or not) `https` schema usage (eg. for links generation)
+`--(not-)reset-db-connections` | Drop (or not) database connections after incoming request serving
+`--(not-)reset-redis-connections` | Drop (or not) Redis connections after incoming request serving
+`--(not-)refresh-app` | Force refresh application instance after incoming request serving
+`--(not-)inject-stats-into-request` | Inject into each `Request` object macros `::getTimestamp()` and `::getAllocatedMemory()` that returns timestamp and used allocated memory size
 `--not-fix-symfony-file-validation` | Do **not** fix `isValid` method in `\Symfony\Component\HttpFoundation\File\UploadedFile` [#10]
 
-> Параметры запуска указываются в файле-конфигурации (например: `./.rr.local.yml`) по пути `http.workers.command`, например: `php ./vendor/bin/rr-worker --some-parameter`
+> Parameters should be declared in RR configuration file (eg. `./.rr.local.yml`) in `http.workers.command`, eg. `php ./vendor/bin/rr-worker --some-parameter`
 
-Так же доступны для взаимодействия следующие переменные окружения:
+Also you can use next environment variables:
 
-Имя переменной окружения | Описание
+Environment name | Description
 ------------------------ | --------
-`APP_BASE_PATH` | Путь к директории с приложением
-`APP_BOOTSTRAP_PATH` | Путь к bootstrap файлу приложения _(по умолчанию `/bootstrap/app.php`)_
-`APP_FORCE_HTTPS` | Форсирует использование схемы `https` для генерации внутренних ссылок приложения
+`APP_BASE_PATH` | Base path to the application
+`APP_BOOTSTRAP_PATH` | Path to the application bootstrap file _(default: `/bootstrap/app.php`)_
+`APP_FORCE_HTTPS` | Force `https` schema usage (eg. for links generation)
 
-### Дополнительные HTTP-заголовки 
+### Additional HTTP-headers 
 
-Для форсирования `https` схемы для генерации внутренних ссылок приложения вы ты же можете использовать специальный HTTP заголовок (выставляя его, например, на реверс-прокси стоящим перед приложением) - `FORCE-HTTPS` с произвольным не пустым значением.
+For forcing `https` schema usage you can pass special HTTP header `FORCE-HTTPS` with any non-empty value.
 
-### Расширение функционала
+### Extending
 
-Данный пакет спроектирован с учетом возможности расширения практически любых его компонентов. За всеми подробностями - "Look into the sources, Luke!".
+You can extend this worker as you wish, for more information - "Look into the sources, Luke!".
 
 ### Testing
 
