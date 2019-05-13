@@ -1,7 +1,6 @@
 <?php
 
-
-declare (strict_types = 1);
+declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Support\Stacks;
 
@@ -31,8 +30,7 @@ class CallbacksStackTest extends BasicStackTest
         };
 
         $this->assertEquals(
-            $this->instanceFactory([$callable]),
-            $this->instance::make([$callable])
+            $this->instanceFactory([$callable]), $this->instance::make([$callable])
         );
     }
 
