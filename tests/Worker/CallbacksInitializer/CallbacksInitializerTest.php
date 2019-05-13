@@ -46,7 +46,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($_ENV['APP_FORCE_HTTPS']);
 
