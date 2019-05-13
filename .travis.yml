@@ -32,6 +32,8 @@ after_success:
 - if [[ $coverage = 'true' ]]; then bash <(curl -s https://codecov.io/bash); fi
 
 matrix:
+  include:
+
   - php: 7.1
   - php: 7.1
     env: setup=lowest
