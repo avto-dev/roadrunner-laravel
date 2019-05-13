@@ -17,10 +17,10 @@
     "require": {
         "php": ">=7.0",
         "ext-mbstring": "*",
-        "illuminate/contracts": ">=5.5.0 <5.8.0",
-        "illuminate/support": ">=5.5.0 <5.8.0",
-        "illuminate/http": ">=5.5.0 <5.8.0",
-        "illuminate/routing": ">=5.5.0 <5.8.0",
+        "illuminate/contracts": ">=5.5.0",
+        "illuminate/support": ">=5.5.0",
+        "illuminate/http": ">=5.5.0",
+        "illuminate/routing": ">=5.5.0",
         "spiral/roadrunner": "^1.4",
         "symfony/psr-http-message-bridge": "^1.1"
     },
@@ -30,7 +30,7 @@
         "ext-sqlite3": "*",
         "avto-dev/dev-tools": "^1.9",
         "jeremeamia/superclosure": "^2.4",
-        "laravel/laravel": ">=5.5.0 <5.8.0",
+        "laravel/laravel": ">=5.5.0",
         "mockery/mockery": "0.9.* || ~1.0",
         "phpstan/phpstan": "~0.9 || ^0.10",
         "phpunit/phpunit": "^6.4 || ~7.0",
