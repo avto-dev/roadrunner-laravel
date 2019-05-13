@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare (strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Support\Stacks;
 
@@ -26,11 +26,11 @@ class CallbacksStackTest extends BasicStackTest
      */
     public function testMakeMethod()
     {
-        $callable = function () {
-        };
+        $callable = function () { };
 
         $this->assertEquals(
-            $this->instanceFactory([$callable]), $this->instance::make([$callable])
+            $this->instanceFactory([$callable]),
+            $this->instance::make([$callable])
         );
     }
 
@@ -73,8 +73,7 @@ class CallbacksStackTest extends BasicStackTest
     {
         $instance = $this->instanceFactory([
             'foo',
-            $callable_1 = function () {
-            },
+            $callable_1 = function () { },
             $callable_2 = function (): bool {
                 return false;
             },
