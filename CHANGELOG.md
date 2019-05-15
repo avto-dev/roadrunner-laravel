@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v2.0.0
+
+### Added
+
+- Laravel **v5.8** supports
+
+### Changed
+
+- Minimal `php` version now is `7.1.3`
+- Minimal `illuminate/*` and `laravel/*` package versions now is `>=5.8`
+
 ## v1.4.0
 
 ### Changed
