@@ -23,7 +23,7 @@ class WorkerTest extends AbstractTestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($_ENV['APP_BOOTSTRAP_PATH'], $_ENV['APP_BASE_PATH']);
 
