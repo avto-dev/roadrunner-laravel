@@ -7,9 +7,11 @@ namespace AvtoDev\RoadRunnerLaravel\Tests\Worker\Callbacks;
 use Illuminate\Support\Traits\Macroable;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
-use AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
 
+/**
+ * @covers \AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks<extended>
+ */
 class CallbacksTest extends AbstractTestCase
 {
     /**
@@ -31,10 +33,14 @@ class CallbacksTest extends AbstractTestCase
      */
     public function testAccessorMethodsArePresented(): void
     {
-        $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->afterHandleRequestStack());
-        $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->afterLoopIterationStack());
-        $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->beforeHandleRequestStack());
-        $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->beforeLoopIterationStack());
+        $after_handle  = $this->callbacks->afterHandleRequestStack();
+        $after_loop    = $this->callbacks->afterLoopIterationStack();
+        $before_handle = $this->callbacks->beforeHandleRequestStack();
+        $before_loop   = $this->callbacks->beforeLoopIterationStack();
+
+        $this->assertNotSame($after_handle, $after_loop);
+        $this->assertNotSame($before_handle, $before_loop);
+        $this->assertNotSame($after_handle, $before_handle);
     }
 
     /**

@@ -11,7 +11,7 @@ use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
 
 /**
- * @group start_options
+ * @covers \AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions<extended>
  */
 class StartOptionsTest extends AbstractTestCase
 {

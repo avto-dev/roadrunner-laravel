@@ -1,21 +1,29 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
-use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Foundation\Http\Kernel;
+use Illuminate\Contracts\Http\Kernel as KernelContract;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
      * Register services and middleware.
      *
+     * @param KernelContract $kernel
+     *
      * @return void
      */
-    public function boot(): void
+    public function boot(KernelContract $kernel): void
     {
-        $this->registerForceHttpsMiddleware();
+        if ($kernel instanceof Kernel) {
+            // NOTE: Registering order is very important
+            // ForceHttpsMiddleware MUST be registered EARLIER then SetServerPortMiddleware
+            $this->registerSetServerPortMiddleware($kernel);
+            $this->registerForceHttpsMiddleware($kernel);
+        }
     }
 
     /**
@@ -31,11 +39,25 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Register "ForceHttpsMiddleware".
      *
+     * @param Kernel $kernel
+     *
      * @return void
      */
-    protected function registerForceHttpsMiddleware(): void
+    protected function registerForceHttpsMiddleware(Kernel $kernel): void
     {
-        $this->app->make(Kernel::class)->pushMiddleware(Middleware\ForceHttpsMiddleware::class);
+        $kernel->prependMiddleware(Middleware\ForceHttpsMiddleware::class);
+    }
+
+    /**
+     * Register "SetServerPortMiddleware".
+     *
+     * @param Kernel $kernel
+     *
+     * @return void
+     */
+    protected function registerSetServerPortMiddleware(Kernel $kernel): void
+    {
+        $kernel->prependMiddleware(Middleware\SetServerPortMiddleware::class);
     }
 
     /**

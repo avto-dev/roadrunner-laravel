@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v2.1.0
+
+### Added
+
+- Middleware `SetServerPortMiddleware` for automatic setting `SERVER_PORT` in server parameters bag if it does not set before (value based on request schema)
+- Environment variable `RR_WORKER_CLASS` supports for overriding default worker class (watch in `./bin/rr-worker`)
+- Docker-based environment for development
+- Project `Makefile`
+
+### Changed
+
+- Allowed RR configuration options (`http.fcgi.*`, `http.http2.*`, `headers.*`) (**do not forget update your existing config files**)
+- Minimal `Laravel` version now is `5.5.x`
+- Minimal `spiral/roadrunner` version now is `^1.4.6`
+- Composer scripts
+- Package service-provider automatically register `SetServerPortMiddleware` middleware
+
 ## v2.0.0
 
 ### Added
