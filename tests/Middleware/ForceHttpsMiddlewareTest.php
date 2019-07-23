@@ -27,6 +27,17 @@ class ForceHttpsMiddlewareTest extends AbstractTestCase
     protected $url_generator;
 
     /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->middleware    = $this->app->make(ForceHttpsMiddleware::class);
+        $this->url_generator = $this->app->make(UrlGenerator::class);
+    }
+
+    /**
      * @return void
      */
     public function testForceHttpsSchemaIfHeaderArePresents(): void
@@ -73,16 +84,5 @@ class ForceHttpsMiddlewareTest extends AbstractTestCase
         $this->assertFalse($request->isSecure());
 
         $this->assertTrue($handled);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->middleware    = $this->app->make(ForceHttpsMiddleware::class);
-        $this->url_generator = $this->app->make(UrlGenerator::class);
     }
 }

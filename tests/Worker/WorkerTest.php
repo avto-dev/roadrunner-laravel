@@ -21,6 +21,16 @@ class WorkerTest extends AbstractTestCase
     protected $vendor_laravel_path = __DIR__ . '/../../vendor/laravel/laravel';
 
     /**
+     * {@inheritdoc}
+     */
+    protected function tearDown(): void
+    {
+        unset($_ENV['APP_BOOTSTRAP_PATH'], $_ENV['APP_BASE_PATH']);
+
+        parent::tearDown();
+    }
+
+    /**
      * @return void
      */
     public function testInterfacesAndTraits(): void
@@ -107,15 +117,5 @@ class WorkerTest extends AbstractTestCase
 
         // This shit should not starts in tests ;)
         (new Worker([], $this->vendor_laravel_path))->start();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        unset($_ENV['APP_BOOTSTRAP_PATH'], $_ENV['APP_BASE_PATH']);
-
-        parent::tearDown();
     }
 }

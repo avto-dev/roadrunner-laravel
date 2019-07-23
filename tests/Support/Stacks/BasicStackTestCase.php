@@ -17,6 +17,16 @@ abstract class BasicStackTestCase extends AbstractTestCase
     protected $instance;
 
     /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->instance = $this->instanceFactory();
+    }
+
+    /**
      * Test interfaces amd traits.
      *
      * @return void
@@ -97,24 +107,13 @@ abstract class BasicStackTestCase extends AbstractTestCase
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->instance = $this->instanceFactory();
-    }
-
-    /**
      * Fabric method for tested instances.
      *
      * @return StackInterface
      */
     protected function instanceFactory()
     {
-        return new class extends AbstractStack
-        {
+        return new class extends AbstractStack {
             /**
              * {@inheritdoc}
              */

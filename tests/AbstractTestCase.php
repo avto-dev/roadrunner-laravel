@@ -11,8 +11,8 @@ use ReflectionException;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\TestCase;
 use AvtoDev\RoadRunnerLaravel\ServiceProvider;
-use SuperClosure\Serializer as ClosureSerializer;
 use PHPUnit\Framework\ExpectationFailedException;
+use SuperClosure\Serializer as ClosureSerializer;
 use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 abstract class AbstractTestCase extends TestCase
@@ -108,8 +108,8 @@ abstract class AbstractTestCase extends TestCase
      * @throws ReflectionException
      *
      * @return mixed
-     * @deprecated
      *
+     * @deprecated
      */
     public function callMethod($object, string $method_name, array $args = [])
     {
