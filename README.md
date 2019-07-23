@@ -78,6 +78,7 @@ Environment name | Description
 `APP_BASE_PATH` | Base path to the application
 `APP_BOOTSTRAP_PATH` | Path to the application bootstrap file _(default: `/bootstrap/app.php`)_
 `APP_FORCE_HTTPS` | Force `https` schema usage (eg. for links generation)
+`RR_WORKER_CLASS` | Worker class name _(default: `\AvtoDev\RoadRunnerLaravel\Worker\Worker`)_
 
 ### Additional HTTP-headers 
 

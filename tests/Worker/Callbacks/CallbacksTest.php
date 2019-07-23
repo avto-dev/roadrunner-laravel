@@ -18,19 +18,9 @@ class CallbacksTest extends AbstractTestCase
     protected $callbacks;
 
     /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->callbacks = new Callbacks;
-    }
-
-    /**
      * @return void
      */
-    public function testInterfacesAndTraits()
+    public function testInterfacesAndTraits(): void
     {
         $this->assertClassUsesTraits(Callbacks::class, Macroable::class);
         $this->assertInstanceOf(CallbacksInterface::class, $this->callbacks);
@@ -39,11 +29,21 @@ class CallbacksTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testAccessorMethodsArePresented()
+    public function testAccessorMethodsArePresented(): void
     {
         $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->afterHandleRequestStack());
         $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->afterLoopIterationStack());
         $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->beforeHandleRequestStack());
         $this->assertInstanceOf(CallbacksStack::class, $this->callbacks->beforeLoopIterationStack());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->callbacks = new Callbacks;
     }
 }

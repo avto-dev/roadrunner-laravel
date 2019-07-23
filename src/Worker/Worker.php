@@ -142,7 +142,7 @@ class Worker implements WorkerInterface
     /**
      * {@inheritdoc}
      */
-    public function start()
+    public function start(): void
     {
         $refresh_app = $this->start_options->hasOption('refresh-app')
                        && $this->start_options->getOption('refresh-app') === true;
@@ -177,7 +177,7 @@ class Worker implements WorkerInterface
                     $kernel    = $this->app->make(Kernel::class);
                 }
             } catch (Throwable $e) {
-                $this->psr7_client->getWorker()->error($e->__toString());
+                $this->psr7_client->getWorker()->error((string) $e);
             }
         }
 

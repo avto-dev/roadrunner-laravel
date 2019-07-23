@@ -29,7 +29,7 @@ class CallbacksInitializer implements CallbacksInitializerInterface
      *
      * See for examples below.
      */
-    const RULE_METHOD_PREFIX = 'init';
+    protected const RULE_METHOD_PREFIX = 'init';
 
     /**
      * @var StartOptionsInterface
@@ -53,7 +53,7 @@ class CallbacksInitializer implements CallbacksInitializerInterface
     /**
      * {@inheritdoc}
      */
-    public function makeInit()
+    public function makeInit(): void
     {
         // Initialize default callbacks
         $this->defaults($this->callbacks);
@@ -75,15 +75,15 @@ class CallbacksInitializer implements CallbacksInitializerInterface
      *
      * @return void
      */
-    protected function defaults(CallbacksInterface $callbacks)
+    protected function defaults(CallbacksInterface $callbacks): void
     {
         $callbacks->afterLoopIterationStack()
-            ->push(function (Application $app, Request $request, Response $response) {
+            ->push(function (Application $app, Request $request, Response $response): void {
                 \gc_collect_cycles(); // keep the memory low (this will slow down your application a bit)
             });
 
         $callbacks->beforeHandleRequestStack()
-            ->push(function (Application $app, Request $request) {
+            ->push(function (Application $app, Request $request): void {
                 // Remove header 'HTTPS' (we keep control under this header manually)
                 if ($request->headers->has(self::FORCE_HTTPS_HEADER_NAME)) {
                     $request->headers->remove(self::FORCE_HTTPS_HEADER_NAME);
@@ -94,7 +94,7 @@ class CallbacksInitializer implements CallbacksInitializerInterface
 
         if (((bool) ($_ENV[$env] ?? env($env, false))) === true) {
             $callbacks->beforeHandleRequestStack()
-                ->push(function (Application $app, Request $request) {
+                ->push(function (Application $app, Request $request): void {
                     $request->headers->set(self::FORCE_HTTPS_HEADER_NAME, 'HTTPS');
                 });
         }
@@ -126,10 +126,10 @@ class CallbacksInitializer implements CallbacksInitializerInterface
      *
      * @return void
      */
-    protected function fixSymfonyFileValidation(CallbacksInterface $callbacks)
+    protected function fixSymfonyFileValidation(CallbacksInterface $callbacks): void
     {
         $callbacks->beforeLoopStarts()
-            ->push(function (Application $app) {
+            ->push(function (Application $app): void {
                 // THIS MAGIC WORKS ONLY ONCE!
                 if (! \function_exists('\\Symfony\\Component\\HttpFoundation\\File\\is_uploaded_file')) {
                     require __DIR__ . '/../../../fixes/fix-symfony-file-validation.php';
@@ -147,10 +147,10 @@ class CallbacksInitializer implements CallbacksInitializerInterface
      *
      * @see \AvtoDev\RoadRunnerLaravel\ServiceProvider::boot()
      */
-    protected function initForceHttps(CallbacksInterface $callbacks, $value)
+    protected function initForceHttps(CallbacksInterface $callbacks, $value): void
     {
         $callbacks->beforeHandleRequestStack()
-            ->push(function (Application $app, Request $request) use ($value) {
+            ->push(function (Application $app, Request $request) use ($value): void {
                 // Attach special header for telling application "force use https schema!"
                 // IMPORTANT! 'FORCE-HTTPS' header can be set externally
                 if ($value === true || $request->headers->has(self::FORCE_HTTPS_EXTERNAL_HEADER_NAME)) {
@@ -167,10 +167,10 @@ class CallbacksInitializer implements CallbacksInitializerInterface
      *
      * @return void
      */
-    protected function initInjectStatsIntoRequest(CallbacksInterface $callbacks, $value)
+    protected function initInjectStatsIntoRequest(CallbacksInterface $callbacks, $value): void
     {
         if ($value === true) {
-            $callbacks->beforeHandleRequestStack()->push(function (Application $app, Request $request) {
+            $callbacks->beforeHandleRequestStack()->push(function (Application $app, Request $request): void {
                 $current_time     = \microtime(true);
                 $allocated_memory = \memory_get_usage();
 
@@ -193,11 +193,11 @@ class CallbacksInitializer implements CallbacksInitializerInterface
      *
      * @return void
      */
-    protected function initResetDbConnections(CallbacksInterface $callbacks, $value)
+    protected function initResetDbConnections(CallbacksInterface $callbacks, $value): void
     {
         if ($value === true) {
             $callbacks->afterLoopIterationStack()
-                ->push(function (Application $app, Request $request, Response $response) {
+                ->push(function (Application $app, Request $request, Response $response): void {
                     // Drop database connections
                     if (($db_manager = $app->make('db')) instanceof DatabaseManager) {
                         if (\is_array($db_connections = $db_manager->getConnections())) {
@@ -221,11 +221,11 @@ class CallbacksInitializer implements CallbacksInitializerInterface
      *
      * @return void
      */
-    protected function initResetRedisConnections(CallbacksInterface $callbacks, $value)
+    protected function initResetRedisConnections(CallbacksInterface $callbacks, $value): void
     {
         if ($value === true) {
             $callbacks->afterLoopIterationStack()
-                ->push(function (Application $app, Request $request, Response $response) {
+                ->push(function (Application $app, Request $request, Response $response): void {
                     // Drop redis connections
                     if (($redis_manager = $app->make('redis')) instanceof RedisManager) {
                         if (\method_exists($redis_manager, 'connections')) {

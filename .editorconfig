@@ -8,10 +8,10 @@ indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 
-[*.md]
+[*.{md,json}]
 trim_trailing_whitespace = false
 
-[*.{yml,yaml,sh,conf}]
+[*.{yml,yaml,sh,conf,neon*}]
 indent_size = 2
 
 [Makefile]

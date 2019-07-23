@@ -10,9 +10,9 @@ use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
 
 /**
- * @group middleware
+ * @group  middleware
  *
- * @covers \AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware
+ * @covers \AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware<extended>
  */
 class ForceHttpsMiddlewareTest extends AbstractTestCase
 {
@@ -27,20 +27,9 @@ class ForceHttpsMiddlewareTest extends AbstractTestCase
     protected $url_generator;
 
     /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->middleware    = $this->app->make(ForceHttpsMiddleware::class);
-        $this->url_generator = $this->app->make(UrlGenerator::class);
-    }
-
-    /**
      * @return void
      */
-    public function testForceHttpsSchemaIfHeaderArePresents()
+    public function testForceHttpsSchemaIfHeaderArePresents(): void
     {
         ($request = new Request)->headers->set('HTTPS', 'HTTPS');
 
@@ -64,7 +53,7 @@ class ForceHttpsMiddlewareTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testHttpsSchemaNotForcedIfHeaderAreNotPresents()
+    public function testHttpsSchemaNotForcedIfHeaderAreNotPresents(): void
     {
         $request = new Request;
 
@@ -84,5 +73,16 @@ class ForceHttpsMiddlewareTest extends AbstractTestCase
         $this->assertFalse($request->isSecure());
 
         $this->assertTrue($handled);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->middleware    = $this->app->make(ForceHttpsMiddleware::class);
+        $this->url_generator = $this->app->make(UrlGenerator::class);
     }
 }

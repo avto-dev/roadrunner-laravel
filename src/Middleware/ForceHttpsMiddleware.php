@@ -15,7 +15,7 @@ class ForceHttpsMiddleware
     protected $url_generator;
 
     /**
-     * Middleware constructor.
+     * Create a new middleware instance.
      *
      * @param UrlGenerator $url_generator
      */

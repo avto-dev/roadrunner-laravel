@@ -30,7 +30,16 @@ if ($loaded !== true) {
     );
 }
 
-global $argv;
+global $argv, $_ENV;
 
-$worker = new \AvtoDev\RoadRunnerLaravel\Worker\Worker($argv, null);
+$worker_class = isset($_ENV['RR_WORKER_CLASS']) && \is_string($_ENV['RR_WORKER_CLASS'])
+    ? $_ENV['RR_WORKER_CLASS']
+    : \AvtoDev\RoadRunnerLaravel\Worker\Worker::class;
+
+$worker = new $worker_class($argv, null);
+
+if (! $worker instanceof \AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface) {
+    die("Wrong worker class [{$worker_class}]");
+}
+
 $worker->start();

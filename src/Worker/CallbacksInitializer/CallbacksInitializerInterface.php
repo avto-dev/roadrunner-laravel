@@ -10,27 +10,27 @@ interface CallbacksInitializerInterface
     /**
      * This header using for telling application "force use https schema!".
      */
-    const FORCE_HTTPS_HEADER_NAME = 'HTTPS';
+    public const FORCE_HTTPS_HEADER_NAME = 'HTTPS';
 
     /**
      * Header for forcing https schema by incoming (**external**) request header.
      */
-    const FORCE_HTTPS_EXTERNAL_HEADER_NAME = 'FORCE-HTTPS';
+    public const FORCE_HTTPS_EXTERNAL_HEADER_NAME = 'FORCE-HTTPS';
 
     /**
      * Incoming request object macros name for accessing to the "before request processed" timestamp.
      */
-    const REQUEST_TIMESTAMP_MACRO = 'getTimestamp';
+    public const REQUEST_TIMESTAMP_MACRO = 'getTimestamp';
 
     /**
      * Incoming request object macros name for accessing to the "before request processed" allocated memory size.
      */
-    const REQUEST_ALLOCATED_MEMORY_MACRO = 'getAllocatedMemory';
+    public const REQUEST_ALLOCATED_MEMORY_MACRO = 'getAllocatedMemory';
 
     /**
      * Option name for fixing symfony file validation.
      */
-    const FIX_SYMFONY_FILE_VALIDATION_OPTION = 'fix-symfony-file-validation';
+    public const FIX_SYMFONY_FILE_VALIDATION_OPTION = 'fix-symfony-file-validation';
 
     /**
      * Constructor.
@@ -47,5 +47,5 @@ interface CallbacksInitializerInterface
      *
      * @return void
      */
-    public function makeInit();
+    public function makeInit(): void;
 }

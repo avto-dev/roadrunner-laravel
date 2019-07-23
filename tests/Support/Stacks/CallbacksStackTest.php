@@ -7,12 +7,12 @@ namespace AvtoDev\RoadRunnerLaravel\Tests\Support\Stacks;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack;
 
 /**
- * @group stacks
+ * @group  stacks
  *
- * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack
- * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack
+ * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack<extended>
+ * @covers \AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack<extended>
  */
-class CallbacksStackTest extends BasicStackTest
+class CallbacksStackTest extends BasicStackTestCase
 {
     /**
      * @var CallbacksStack
@@ -24,7 +24,7 @@ class CallbacksStackTest extends BasicStackTest
      *
      * @return void
      */
-    public function testMakeMethod()
+    public function testMakeMethod(): void
     {
         $callable = function () {
         };
@@ -37,9 +37,19 @@ class CallbacksStackTest extends BasicStackTest
     /**
      * {@inheritdoc}
      *
+     * @return CallbacksStack
+     */
+    protected function instanceFactory(...$arguments): CallbacksStack
+    {
+        return new CallbacksStack(...$arguments);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return void
      */
-    public function testStackAccessors()
+    public function testStackAccessors(): void
     {
         $this->assertCount(0, $this->instance);
 
@@ -69,7 +79,7 @@ class CallbacksStackTest extends BasicStackTest
     /**
      * @return void
      */
-    public function testConstructorWithInvalidElements()
+    public function testConstructorWithInvalidElements(): void
     {
         $instance = $this->instanceFactory([
             'foo',
@@ -87,7 +97,7 @@ class CallbacksStackTest extends BasicStackTest
     /**
      * @return void
      */
-    public function testCallEach()
+    public function testCallEach(): void
     {
         $counter = 0;
 
@@ -107,15 +117,5 @@ class CallbacksStackTest extends BasicStackTest
 
         $this->instance->callEach(1, 'foo');
         $this->assertEquals(2, $counter);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return CallbacksStack
-     */
-    protected function instanceFactory(...$arguments): CallbacksStack
-    {
-        return new CallbacksStack(...$arguments);
     }
 }

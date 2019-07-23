@@ -9,18 +9,11 @@ use Illuminate\Contracts\Http\Kernel;
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      * Register services and middleware.
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerForceHttpsMiddleware();
     }
@@ -30,7 +23,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->initializePublishes();
     }
@@ -40,7 +33,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return void
      */
-    protected function registerForceHttpsMiddleware()
+    protected function registerForceHttpsMiddleware(): void
     {
         $this->app->make(Kernel::class)->pushMiddleware(Middleware\ForceHttpsMiddleware::class);
     }
@@ -50,7 +43,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return void
      */
-    protected function initializePublishes()
+    protected function initializePublishes(): void
     {
         $this->publishes([
             __DIR__ . '/../configs/rr' => $this->app->basePath(),
