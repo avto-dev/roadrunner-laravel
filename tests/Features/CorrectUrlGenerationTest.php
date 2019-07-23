@@ -32,7 +32,7 @@ class CorrectUrlGenerationTest extends AbstractTestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function tearDown(): void
     {

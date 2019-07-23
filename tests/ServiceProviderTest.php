@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests;
 
-use AvtoDev\RoadRunnerLaravel\Middleware\SetServerPortMiddleware;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
+use AvtoDev\RoadRunnerLaravel\Middleware\SetServerPortMiddleware;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\ServiceProvider
@@ -19,7 +19,7 @@ class ServiceProviderTest extends AbstractTestCase
     protected $http_kernel;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function setUp(): void
     {
@@ -55,7 +55,7 @@ class ServiceProviderTest extends AbstractTestCase
         $middleware = $this->getObjectAttribute($this->http_kernel, 'middleware');
 
         $force_https_index = \array_search(ForceHttpsMiddleware::class, $middleware);
-        $set_port_index = \array_search(SetServerPortMiddleware::class, $middleware);
+        $set_port_index    = \array_search(SetServerPortMiddleware::class, $middleware);
 
         $this->assertNotEquals($force_https_index, $set_port_index);
 
