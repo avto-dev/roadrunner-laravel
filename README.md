@@ -17,7 +17,7 @@ Easy way for connecting [RoadRunner][roadrunner] and Laravel applications.
 
 Require this package with composer using the one of next commands.
 
-For Laravel versions `5.5.x`..`5.7.x` with minimal PHP version 7.0:
+For Laravel versions `5.5.x`..`5.7.x` with minimal PHP version 7.0 (version `1.x` is abandoned):
 
 ```shell
 $ composer require avto-dev/roadrunner-laravel "^1.4"

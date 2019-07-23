@@ -36,10 +36,7 @@ $worker_class = isset($_ENV['RR_WORKER_CLASS']) && \is_string($_ENV['RR_WORKER_C
     ? $_ENV['RR_WORKER_CLASS']
     : \AvtoDev\RoadRunnerLaravel\Worker\Worker::class;
 
+/** @var \AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface $worker */
 $worker = new $worker_class($argv, null);
-
-if (! $worker instanceof \AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface) {
-    die("Wrong worker class [{$worker_class}]");
-}
 
 $worker->start();

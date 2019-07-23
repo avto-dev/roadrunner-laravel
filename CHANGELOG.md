@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 
 ### Added
 
-- Middleware `SetServerPortMiddleware` for automatic setting `SERVER_PORT` in server parameters bag if it does not set before (value based on request schema)
+- Middleware `SetServerPortMiddleware` for automatic setting `SERVER_PORT` in server parameters bag if it does not set before (value based on request schema; this middleware fixes **empty port value** like `https://127.0.0.1:/` when exposed default port without set `SERVER_PORT`)
 - Environment variable `RR_WORKER_CLASS` supports for overriding default worker class (watch in `./bin/rr-worker`)
 - Docker-based environment for development
 - Project `Makefile`
@@ -20,6 +20,13 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 - Minimal `spiral/roadrunner` version now is `^1.4.6`
 - Composer scripts
 - Package service-provider automatically register `SetServerPortMiddleware` middleware
+- Constant `RULE_METHOD_PREFIX` in `CallbacksInitializer` class now protected
+- Constants `BOOL_OPTION_INVERT_LOGIC_NAME_PREFIX` and `OPTIONS_PREFIX` in `StartOptions` class now protected
+- Method `start()` must returns `void` in `WorkerInterface` interface
+
+### Removed
+
+- Dev-dependency `avto-dev/dev-tools`
 
 ## v2.0.0
 
