@@ -20,6 +20,16 @@ class CallbacksTest extends AbstractTestCase
     protected $callbacks;
 
     /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->callbacks = new Callbacks;
+    }
+
+    /**
      * @return void
      */
     public function testInterfacesAndTraits(): void
@@ -41,15 +51,5 @@ class CallbacksTest extends AbstractTestCase
         $this->assertNotSame($after_handle, $after_loop);
         $this->assertNotSame($before_handle, $before_loop);
         $this->assertNotSame($after_handle, $before_handle);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->callbacks = new Callbacks;
     }
 }

@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Traits\Macroable;
-use Illuminate\Config\Repository as ConfigRepository;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
+use Illuminate\Config\Repository as ConfigRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
@@ -31,6 +31,27 @@ class CallbacksInitializerTest extends AbstractTestCase
      * @var Callbacks
      */
     protected $callbacks;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->callbacks   = new Callbacks;
+        $this->initializer = new CallbacksInitializer(new StartOptions, $this->callbacks);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function tearDown(): void
+    {
+        unset($_ENV['APP_FORCE_HTTPS']);
+
+        parent::tearDown();
+    }
 
     /**
      * @return void
@@ -57,8 +78,7 @@ class CallbacksInitializerTest extends AbstractTestCase
      */
     public function testAutoInitMethodsCalling(): void
     {
-        $mock = new class(new StartOptions(['--bla-bla']), $this->callbacks) extends CallbacksInitializer
-        {
+        $mock                  = new class(new StartOptions(['--bla-bla']), $this->callbacks) extends CallbacksInitializer {
             public $called     = false;
 
             public $should_not = false;
@@ -327,26 +347,5 @@ class CallbacksInitializerTest extends AbstractTestCase
     {
         $this->callMethod($this->initializer, 'initResetRedisConnections', [$this->callbacks, false]);
         $this->assertEmpty($this->callbacks->afterLoopIterationStack());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->callbacks   = new Callbacks;
-        $this->initializer = new CallbacksInitializer(new StartOptions, $this->callbacks);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        unset($_ENV['APP_FORCE_HTTPS']);
-
-        parent::tearDown();
     }
 }

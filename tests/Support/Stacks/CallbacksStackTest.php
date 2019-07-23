@@ -37,16 +37,6 @@ class CallbacksStackTest extends BasicStackTestCase
     /**
      * {@inheritdoc}
      *
-     * @return CallbacksStack
-     */
-    protected function instanceFactory(...$arguments): CallbacksStack
-    {
-        return new CallbacksStack(...$arguments);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
      * @return void
      */
     public function testStackAccessors(): void
@@ -117,5 +107,15 @@ class CallbacksStackTest extends BasicStackTestCase
 
         $this->instance->callEach(1, 'foo');
         $this->assertEquals(2, $counter);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return CallbacksStack
+     */
+    protected function instanceFactory(...$arguments): CallbacksStack
+    {
+        return new CallbacksStack(...$arguments);
     }
 }

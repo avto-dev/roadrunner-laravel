@@ -21,6 +21,16 @@ class StartOptionsTest extends AbstractTestCase
     protected $start_options;
 
     /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->start_options = new StartOptions;
+    }
+
+    /**
      * @return void
      */
     public function testInterfacesAndTraits(): void
@@ -119,15 +129,5 @@ class StartOptionsTest extends AbstractTestCase
         $this->assertFalse($this->start_options->hasOption($not_exists_option_name = Str::random()));
 
         $this->start_options->getOption($not_exists_option_name);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->start_options = new StartOptions;
     }
 }
