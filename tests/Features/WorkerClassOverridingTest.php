@@ -51,7 +51,7 @@ class WorkerClassOverridingTest extends AbstractTestCase
      */
     public function testWorkerClassOverriding(): void
     {
-        $output = [];
+        $output     = [];
         $return_var = null;
 
         $this->assertFileNotExists($this->path);

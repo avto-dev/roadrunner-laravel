@@ -11,7 +11,7 @@ class CustomWorker extends Worker
     private const PATH = __DIR__ . '/worker_works';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function start(): void
     {
