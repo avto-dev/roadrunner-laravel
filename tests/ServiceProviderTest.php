@@ -4,10 +4,9 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests;
 
-use Illuminate\Foundation\Application;
-use AvtoDev\RoadRunnerLaravel\ServiceProvider;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
+use AvtoDev\RoadRunnerLaravel\Middleware\SetServerPortMiddleware;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\ServiceProvider
@@ -15,18 +14,54 @@ use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
 class ServiceProviderTest extends AbstractTestCase
 {
     /**
-     * @return void
+     * @var \Illuminate\Foundation\Http\Kernel
      */
-    public function testForceHttpsMiddlewareRegistered()
+    protected $http_kernel;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
     {
-        $this->assertTrue($this->app->make(HttpKernel::class)->hasMiddleware(ForceHttpsMiddleware::class));
+        parent::setUp();
+
+        $this->http_kernel = $this->app->make(HttpKernel::class);
     }
 
     /**
      * @return void
      */
-    protected function afterApplicationBootstrapped(Application $app)
+    public function testForceHttpsMiddlewareRegistered(): void
     {
-        $app->register(ServiceProvider::class);
+        $this->assertTrue($this->http_kernel->hasMiddleware(ForceHttpsMiddleware::class));
+    }
+
+    /**
+     * @return void
+     */
+    public function testSetServerPortMiddlewareRegistered(): void
+    {
+        $this->assertTrue($this->http_kernel->hasMiddleware(SetServerPortMiddleware::class));
+    }
+
+    /**
+     * @small
+     *
+     * @return void
+     */
+    public function testMiddlewareOrder(): void
+    {
+        /** @var string[] $middleware */
+        $middleware = $this->getObjectAttribute($this->http_kernel, 'middleware');
+
+        $force_https_index = \array_search(ForceHttpsMiddleware::class, $middleware);
+        $set_port_index    = \array_search(SetServerPortMiddleware::class, $middleware);
+
+        $this->assertNotEquals($force_https_index, $set_port_index);
+
+        $this->assertTrue(
+            $force_https_index < $set_port_index,
+            'ForceHttpsMiddleware MUST be registered EARLIER then SetServerPortMiddleware'
+        );
     }
 }

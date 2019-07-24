@@ -9,7 +9,7 @@ use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\AbstractStack;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\StackInterface;
 
-class BasicStackTest extends AbstractTestCase
+abstract class BasicStackTestCase extends AbstractTestCase
 {
     /**
      * @var AbstractStack
@@ -31,7 +31,7 @@ class BasicStackTest extends AbstractTestCase
      *
      * @return void
      */
-    public function testInterfacesAndTraits()
+    public function testInterfacesAndTraits(): void
     {
         $this->assertClassUsesTraits($this->instance, \Illuminate\Support\Traits\Macroable::class);
 
@@ -46,7 +46,7 @@ class BasicStackTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testMakeMethod()
+    public function testMakeMethod(): void
     {
         $this->assertEquals(
             $this->instanceFactory(), $this->instance::make() // Test without arguments passing
@@ -58,7 +58,7 @@ class BasicStackTest extends AbstractTestCase
      *
      * @return void
      */
-    public function testStackAccessors()
+    public function testStackAccessors(): void
     {
         $this->assertCount(0, $this->instance);
 
@@ -90,7 +90,7 @@ class BasicStackTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testToArray()
+    public function testToArray(): void
     {
         $this->assertEquals($this->instance->all(), $this->instance->toArray());
     }
@@ -98,7 +98,7 @@ class BasicStackTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testFirstElementGetterThrownAnExceptionWhenStackIsEmpty()
+    public function testFirstElementGetterThrownAnExceptionWhenStackIsEmpty(): void
     {
         $this->expectException(\LogicException::class);
 

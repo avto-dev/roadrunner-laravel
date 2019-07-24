@@ -1,0 +1,21 @@
+version: '3.2'
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  composer-data:
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - .:/src:cached
+      - composer-data:/tmp/composer:cached
+    networks:
+      - app-network

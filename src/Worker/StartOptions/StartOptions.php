@@ -14,12 +14,12 @@ class StartOptions implements StartOptionsInterface
     /**
      * Options this this prefix will invert own logic (true -> false).
      */
-    const BOOL_OPTION_INVERT_LOGIC_NAME_PREFIX = 'not-';
+    protected const BOOL_OPTION_INVERT_LOGIC_NAME_PREFIX = 'not-';
 
     /**
      * Options prefix.
      */
-    const OPTIONS_PREFIX = '--';
+    protected const OPTIONS_PREFIX = '--';
 
     /**
      * Available options.

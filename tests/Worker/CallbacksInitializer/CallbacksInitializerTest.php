@@ -56,9 +56,8 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testConstants()
+    public function testConstants(): void
     {
-        $this->assertSame('init', CallbacksInitializer::RULE_METHOD_PREFIX);
         $this->assertSame('HTTPS', CallbacksInitializer::FORCE_HTTPS_HEADER_NAME);
 
         $this->assertSame('getTimestamp', CallbacksInitializer::REQUEST_TIMESTAMP_MACRO);
@@ -68,7 +67,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testInterfacesAndTraits()
+    public function testInterfacesAndTraits(): void
     {
         $this->assertClassUsesTraits(CallbacksInitializer::class, Macroable::class);
         $this->assertInstanceOf(CallbacksInitializerInterface::class, $this->initializer);
@@ -77,7 +76,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testAutoInitMethodsCalling()
+    public function testAutoInitMethodsCalling(): void
     {
         $mock                  = new class(new StartOptions(['--bla-bla']), $this->callbacks) extends CallbacksInitializer {
             public $called     = false;
@@ -104,7 +103,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testDefaultActionCollectCycles()
+    public function testDefaultActionCollectCycles(): void
     {
         $callbacks = new Callbacks;
         $this->callMethod(new CallbacksInitializer(new StartOptions, $callbacks), 'defaults', [$callbacks]);
@@ -113,8 +112,8 @@ class CallbacksInitializerTest extends AbstractTestCase
         $this->initializer->makeInit();
 
         $this->assertSame(
-            $this::getClosureHash($closure),
-            $this::getClosureHash($this->callbacks->afterLoopIterationStack()->first())
+            $this->getClosureHash($closure),
+            $this->getClosureHash($this->callbacks->afterLoopIterationStack()->first())
         );
 
         // Test call
@@ -124,7 +123,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testDefaultActionRemoveForceHttpsHeader()
+    public function testDefaultActionRemoveForceHttpsHeader(): void
     {
         $callbacks = new Callbacks;
         $this->callMethod(new CallbacksInitializer(new StartOptions, $callbacks), 'defaults', [$callbacks]);
@@ -133,8 +132,8 @@ class CallbacksInitializerTest extends AbstractTestCase
         $this->initializer->makeInit();
 
         $this->assertSame(
-            $this::getClosureHash($remove_force_https_closure),
-            $this::getClosureHash($this->callbacks->beforeHandleRequestStack()->first())
+            $this->getClosureHash($remove_force_https_closure),
+            $this->getClosureHash($this->callbacks->beforeHandleRequestStack()->first())
         );
 
         ($request = new Request)->headers->set(CallbacksInitializer::FORCE_HTTPS_HEADER_NAME, 'true');
@@ -145,7 +144,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testDefaultActionFixSymfonyFileValidation()
+    public function testDefaultActionFixSymfonyFileValidation(): void
     {
         $callbacks = new Callbacks;
         $this->callMethod(new CallbacksInitializer(new StartOptions, $callbacks), 'defaults', [$callbacks]);
@@ -154,8 +153,8 @@ class CallbacksInitializerTest extends AbstractTestCase
         $this->initializer->makeInit();
 
         $this->assertSame(
-            $this::getClosureHash($closure),
-            $this::getClosureHash($this->callbacks->beforeLoopStarts()->first())
+            $this->getClosureHash($closure),
+            $this->getClosureHash($this->callbacks->beforeLoopStarts()->first())
         );
 
         $tmp_file = \tempnam(\sys_get_temp_dir(), $file_name = Str::random(32));
@@ -174,7 +173,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testDefaultActionSkipSymfonyFileValidationFixing()
+    public function testDefaultActionSkipSymfonyFileValidationFixing(): void
     {
         $callbacks = new Callbacks;
         $this->callMethod(new CallbacksInitializer(new StartOptions([
@@ -189,7 +188,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testDefaultActionsWithForceHttpsEnvValue()
+    public function testDefaultActionsWithForceHttpsEnvValue(): void
     {
         $_ENV['APP_FORCE_HTTPS'] = true;
 
@@ -204,7 +203,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testInitForceHttpsWithPassingTrue()
+    public function testInitForceHttpsWithPassingTrue(): void
     {
         $this->callMethod($this->initializer, 'initForceHttps', [$this->callbacks, true]);
         $closure = $this->callbacks->beforeHandleRequestStack()->first();
@@ -216,7 +215,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testInitForceHttpsWithPassingFalseButExistingSpecialExternalHeader()
+    public function testInitForceHttpsWithPassingFalseButExistingSpecialExternalHeader(): void
     {
         $this->callMethod($this->initializer, 'initForceHttps', [$this->callbacks, false]);
         $closure = $this->callbacks->beforeHandleRequestStack()->first();
@@ -229,7 +228,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testInitForceHttpsWithPassingFalse()
+    public function testInitForceHttpsWithPassingFalse(): void
     {
         $this->callMethod($this->initializer, 'initForceHttps', [$this->callbacks, false]);
         $closure = $this->callbacks->beforeHandleRequestStack()->first();
@@ -241,7 +240,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testResetDbConnectionsWithPassingTrue()
+    public function testResetDbConnectionsWithPassingTrue(): void
     {
         /** @var ConfigRepository $config */
         $config = $this->app->make('config');
@@ -269,7 +268,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testResetDbConnectionsWithPassingFalse()
+    public function testResetDbConnectionsWithPassingFalse(): void
     {
         /** @var ConfigRepository $config */
         $config = $this->app->make('config');
@@ -296,7 +295,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testUpdateAppStatsWithPassingTrue()
+    public function testUpdateAppStatsWithPassingTrue(): void
     {
         /** @var Request $request */
         $request = $this->app->make('request');
@@ -324,7 +323,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testUpdateAppStatsWithPassingFalse()
+    public function testUpdateAppStatsWithPassingFalse(): void
     {
         $this->callMethod($this->initializer, 'initInjectStatsIntoRequest', [$this->callbacks, false]);
         $this->assertEmpty($this->callbacks->beforeHandleRequestStack());
@@ -333,7 +332,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testResetRedisConnectionsWithPassingTrue()
+    public function testResetRedisConnectionsWithPassingTrue(): void
     {
         $this->callMethod($this->initializer, 'initResetRedisConnections', [$this->callbacks, true]);
         $closure = $this->callbacks->afterLoopIterationStack()->first();
@@ -344,7 +343,7 @@ class CallbacksInitializerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testResetRedisConnectionsWithPassingFalse()
+    public function testResetRedisConnectionsWithPassingFalse(): void
     {
         $this->callMethod($this->initializer, 'initResetRedisConnections', [$this->callbacks, false]);
         $this->assertEmpty($this->callbacks->afterLoopIterationStack());

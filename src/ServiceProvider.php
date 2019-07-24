@@ -1,28 +1,30 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
-use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Foundation\Http\Kernel;
+use Illuminate\Contracts\Http\Kernel as KernelContract;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      * Register services and middleware.
+     *
+     * @param KernelContract $kernel
      *
      * @return void
      */
-    public function boot()
+    public function boot(KernelContract $kernel): void
     {
-        $this->registerForceHttpsMiddleware();
+        if ($kernel instanceof Kernel) {
+            // NOTE: Registering order is very important
+            // ForceHttpsMiddleware MUST be registered EARLIER then SetServerPortMiddleware (for registering used
+            // method "prependMiddleware", so, each register method push middleware to the TOP of middleware set)
+            $this->registerSetServerPortMiddleware($kernel);
+            $this->registerForceHttpsMiddleware($kernel);
+        }
     }
 
     /**
@@ -30,7 +32,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->initializePublishes();
     }
@@ -38,11 +40,25 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Register "ForceHttpsMiddleware".
      *
+     * @param Kernel $kernel
+     *
      * @return void
      */
-    protected function registerForceHttpsMiddleware()
+    protected function registerForceHttpsMiddleware(Kernel $kernel): void
     {
-        $this->app->make(Kernel::class)->pushMiddleware(Middleware\ForceHttpsMiddleware::class);
+        $kernel->prependMiddleware(Middleware\ForceHttpsMiddleware::class);
+    }
+
+    /**
+     * Register "SetServerPortMiddleware".
+     *
+     * @param Kernel $kernel
+     *
+     * @return void
+     */
+    protected function registerSetServerPortMiddleware(Kernel $kernel): void
+    {
+        $kernel->prependMiddleware(Middleware\SetServerPortMiddleware::class);
     }
 
     /**
@@ -50,7 +66,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return void
      */
-    protected function initializePublishes()
+    protected function initializePublishes(): void
     {
         $this->publishes([
             __DIR__ . '/../configs/rr' => $this->app->basePath(),

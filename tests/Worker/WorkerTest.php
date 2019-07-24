@@ -33,7 +33,7 @@ class WorkerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testInterfacesAndTraits()
+    public function testInterfacesAndTraits(): void
     {
         $this->assertInstanceOf(WorkerInterface::class, new Worker([], $this->vendor_laravel_path));
     }
@@ -41,7 +41,7 @@ class WorkerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testConstants()
+    public function testConstants(): void
     {
         $this->assertSame('APP_BASE_PATH', WorkerInterface::ENV_NAME_APP_BASE_PATH);
         $this->assertSame('APP_BOOTSTRAP_PATH', WorkerInterface::ENV_NAME_APP_BOOTSTRAP_PATH);
@@ -51,7 +51,7 @@ class WorkerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testCreateWithCustomArguments()
+    public function testCreateWithCustomArguments(): void
     {
         $worker = new Worker(['--foo', '--not-reset', 'bar'], $this->vendor_laravel_path);
 
@@ -63,7 +63,7 @@ class WorkerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testGettersAsIs()
+    public function testGettersAsIs(): void
     {
         $worker = new Worker([], $this->vendor_laravel_path);
 
@@ -77,11 +77,11 @@ class WorkerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testGettersWithAppBasePathEnvValue()
+    public function testGettersWithAppBasePathEnvValue(): void
     {
         $_ENV['APP_BASE_PATH'] = $this->vendor_laravel_path;
 
-        $worker = new Worker();
+        $worker = new Worker;
 
         $this->assertSame(\realpath($this->vendor_laravel_path), \realpath($worker->appBasePath()));
     }
@@ -89,7 +89,7 @@ class WorkerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testGettersWithWrongAppBootstrapPathEnvValue()
+    public function testGettersWithWrongAppBootstrapPathEnvValue(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -101,7 +101,7 @@ class WorkerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testGettersWithWrongAppBootstrapPath()
+    public function testGettersWithWrongAppBootstrapPath(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -111,7 +111,7 @@ class WorkerTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testStart()
+    public function testStart(): void
     {
         $this->expectException(\ErrorException::class);
 

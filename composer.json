@@ -15,24 +15,22 @@
     "require": {
         "php": "^7.1.3",
         "ext-mbstring": "*",
-        "illuminate/contracts": ">=5.8.0 <5.9.0",
-        "illuminate/support": ">=5.8.0 <5.9.0",
-        "illuminate/http": ">=5.8.0 <5.9.0",
-        "illuminate/routing": ">=5.8.0 <5.9.0",
-        "spiral/roadrunner": "^1.4",
+        "illuminate/contracts": ">=5.5.0 <5.9.0",
+        "illuminate/support": ">=5.5.0 <5.9.0",
+        "illuminate/http": ">=5.5.0 <5.9.0",
+        "illuminate/routing": ">=5.5.0 <5.9.0",
+        "spiral/roadrunner": "^1.4.6",
         "symfony/psr-http-message-bridge": "^1.1"
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
         "ext-pdo": "*",
         "ext-sqlite3": "*",
-        "avto-dev/dev-tools": "^1.9",
         "jeremeamia/superclosure": "^2.4",
-        "laravel/laravel": ">=5.8.0 <5.9.0",
-        "mockery/mockery": "0.9.* || ~1.0",
-        "phpstan/phpstan": "~0.9 || ^0.10",
-        "phpunit/phpunit": "^6.4 || ~7.0",
-        "symfony/var-dumper": "~3.2 || ^4.0"
+        "laravel/laravel": ">=5.5.0 <5.9.0",
+        "mockery/mockery": "^1.0",
+        "phpstan/phpstan": "^0.11.3",
+        "phpunit/phpunit": "^6.4 || ~7.5"
     },
     "autoload": {
         "psr-4": {
@@ -47,6 +45,19 @@
     "bin": [
         "bin/rr-worker"
     ],
+    "scripts": {
+        "phpunit": "@php ./vendor/bin/phpunit --no-coverage --colors=always",
+        "phpunit-cover": "@php ./vendor/bin/phpunit --coverage-html='./coverage/html'",
+        "phpstan": "@php ./vendor/bin/phpstan analyze -c ./phpstan.neon.dist --no-progress --ansi",
+        "test": [
+            "@phpstan",
+            "@phpunit"
+        ],
+        "test-cover": [
+            "@phpstan",
+            "@phpunit-cover"
+        ]
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -54,14 +65,10 @@
             ]
         }
     },
-    "scripts": {
-        "test": "@php ./vendor/bin/phpunit --no-coverage --color=always",
-        "test-cover": "@php ./vendor/bin/phpunit --color=always --coverage-html='./coverage/html'",
-        "phpstan": "@php ./vendor/bin/phpstan analyze --no-progress --ansi --level=max ./src"
-    },
     "suggest": {
         "illuminate/redis": "Required for dropping redis connections",
-        "illuminate/database": "Required for dropping database connections"
+        "illuminate/database": "Required for dropping database connections",
+        "avto-dev/stacked-dumper-laravel": "Stacked variables dumper for Laravel-based application"
     },
     "support": {
         "issues": "https://github.com/avto-dev/roadrunner-laravel/issues",

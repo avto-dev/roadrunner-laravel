@@ -2,7 +2,7 @@
 
 # defines environment variables for all underlying php processes
 #env:
-  #key: value
+#  key: value
 
 # rpc bus allows php application and external clients to talk to rr services.
 rpc:
@@ -11,6 +11,16 @@ rpc:
 
   # rpc connection DSN. Supported TCP and Unix sockets.
   listen: tcp://127.0.0.1:6001
+
+metrics:
+  # prometheus client address (path /metrics added automatically)
+  address: localhost:2112
+  collect:
+    app_metric:
+      type:    histogram
+      help:    "Custom application metric"
+      labels:  ["type"]
+      buckets: [0.1, 0.2, 0.3, 1.0]
 
 # http service configuration.
 http:
@@ -29,6 +39,19 @@ http:
 
     # ssl private key
     #key:      server.key
+
+  # HTTP service provides FastCGI as frontend
+  fcgi:
+    # FastCGI connection DSN. Supported TCP and Unix sockets.
+    #address: tcp://0.0.0.0:6920
+
+  # HTTP service provides HTTP2 transport
+  http2:
+    # enable HTTP/2, only with TSL
+    #enabled: true
+
+    # max transfer channels
+    #maxConcurrentStreams: 128
 
   # max POST request size, including file uploads in MB.
   maxRequestSize: 128
@@ -70,6 +93,36 @@ http:
 
       # amount of time given to worker to gracefully destruct itself.
       destroyTimeout:  60
+
+# Additional HTTP headers and CORS control.
+headers:
+  # Middleware to handle CORS requests, https://www.w3.org/TR/cors/
+  cors:
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin
+    allowedOrigin: "*"
+
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
+    allowedHeaders: "*"
+
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
+    allowedMethods: "GET,POST,PUT,DELETE,HEAD,OPTIONS"
+
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials
+    allowCredentials: true
+
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers
+    exposedHeaders: "Cache-Control,Content-Language,Content-Type,Expires,Last-Modified,Pragma"
+
+    # Max allowed age in seconds
+    maxAge: 600
+
+  # Automatically add headers to every request passed to PHP.
+  #request:
+    #"Example-Request-Header": "Value"
+
+  # Automatically add headers to every response.
+  #response:
+    #"X-Powered-By": "Microsoft-IIS/8.0"
 
 # monitors rr server(s)
 limit:

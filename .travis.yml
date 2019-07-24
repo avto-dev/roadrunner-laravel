@@ -2,54 +2,67 @@ language: php
 
 cache:
   directories:
-  - $HOME/.composer/cache
+    - $HOME/.composer/cache
 
 env:
   global:
-  - setup=basic
-  - coverage=false
+    - setup=basic
+    - coverage=false
+    - laravel=default
 
 sudo: false
 
 branches:
   except:
-  - gh-pages
-  - /analysis-.*/
+    - /analysis-.*/
 
 before_install:
-- if [[ $coverage = 'false' ]]; then phpenv config-rm xdebug.ini || true; fi
+  - if [[ $coverage = 'false' ]]; then phpenv config-rm xdebug.ini || true; fi
+  - composer global require hirak/prestissimo --update-no-dev
 
 install:
-- if [[ $setup = 'basic'  ]]; then travis_retry composer update --prefer-dist --no-interaction --no-suggest; fi
-- if [[ $setup = 'stable' ]]; then travis_retry composer update --prefer-dist --no-interaction --no-suggest --prefer-stable; fi
-- if [[ $setup = 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --no-suggest --prefer-lowest; fi
+  - if [[ $setup = 'basic'  ]]; then travis_retry composer update --prefer-dist --no-interaction --no-suggest; fi
+  - if [[ $setup = 'stable' ]]; then travis_retry composer update --prefer-dist --no-interaction --no-suggest --prefer-stable; fi
+  - if [[ $setup = 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --no-suggest --prefer-lowest; fi
+  - if [[ $laravel != 'default' ]]; then travis_retry composer require --dev --update-with-dependencies --prefer-dist --no-interaction --no-suggest laravel/laravel "$laravel"; fi
+  - composer info | grep -e laravel/laravel -e phpunit/phpunit -e phpstan/phpstan
 
 script:
-- composer phpstan
-- if [[ $coverage = 'true' ]]; then composer test-cover; else composer test; fi
+  - if [[ $coverage = 'true' ]]; then composer test-cover; else composer test; fi
 
 after_success:
-- if [[ $coverage = 'true' ]]; then bash <(curl -s https://codecov.io/bash); fi
+  - if [[ $coverage = 'true' ]]; then bash <(curl -s https://codecov.io/bash); fi
 
 matrix:
   include:
+    - php: 7.1.3
+      env: setup=lowest
+    - php: 7.1.3
+      env: laravel=5.5
+    - php: 7.1.3
+      env: laravel=5.6
+    - php: 7.1.3
+      env: laravel=5.7
+    - php: 7.1.3
+      env: coverage=true
 
-  - php: 7.1.3
-  - php: 7.1.3
-    env: setup=lowest
+    - php: 7.2
+      env: setup=lowest
+    - php: 7.2
+      env: coverage=true
 
-  - php: 7.2
-    env: coverage=true
-  - php: 7.2
-    env: setup=lowest
-  - php: 7.2
-    env: setup=stable
+    - php: 7.3
+      env: setup=lowest
+    - php: 7.3
+      env: laravel=5.5
+    - php: 7.3
+      env: laravel=5.6
+    - php: 7.3
+      env: laravel=5.7
+    - php: 7.3
+      env: coverage=true
 
-  - php: 7.3
-  - php: 7.3
-    env: setup=lowest
-
-  - php: nightly
+    - php: nightly
 
   allow_failures:
-  - php: nightly
+    - php: nightly

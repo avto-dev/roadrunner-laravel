@@ -11,7 +11,7 @@ use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
 
 /**
- * @group start_options
+ * @covers \AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions<extended>
  */
 class StartOptionsTest extends AbstractTestCase
 {
@@ -33,7 +33,7 @@ class StartOptionsTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testInterfacesAndTraits()
+    public function testInterfacesAndTraits(): void
     {
         $this->assertClassUsesTraits(StartOptions::class, Macroable::class);
         $this->assertInstanceOf(StartOptionsInterface::class, $this->start_options);
@@ -42,16 +42,7 @@ class StartOptionsTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testConstants()
-    {
-        $this->assertSame('not-', StartOptions::BOOL_OPTION_INVERT_LOGIC_NAME_PREFIX);
-        $this->assertSame('--', StartOptions::OPTIONS_PREFIX);
-    }
-
-    /**
-     * @return void
-     */
-    public function testHasOption()
+    public function testHasOption(): void
     {
         $cases = [
             $valid_options = ['--foo', '--123', '--321-not'],
@@ -86,7 +77,7 @@ class StartOptionsTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testSetAndGetOptionsPositiveMechanic()
+    public function testSetAndGetOptionsPositiveMechanic(): void
     {
         $options_list = [
             'foo-bar' => true,
@@ -109,7 +100,7 @@ class StartOptionsTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testSetAndGetOptionsNegativeMechanic()
+    public function testSetAndGetOptionsNegativeMechanic(): void
     {
         $options_list = [
             'foo-bar' => [123],
@@ -130,7 +121,7 @@ class StartOptionsTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testExceptionShouldBeThrownWhileGettingUnknownOption()
+    public function testExceptionShouldBeThrownWhileGettingUnknownOption(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessageRegExp('~Option.*not\sexists~is');
