@@ -105,7 +105,7 @@ headers:
     allowedHeaders: "*"
 
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
-    allowedMethods: "GET,POST,PUT,DELETE"
+    allowedMethods: "GET,POST,PUT,DELETE,HEAD,OPTIONS"
 
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials
     allowCredentials: true

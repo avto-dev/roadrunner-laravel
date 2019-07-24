@@ -33,7 +33,7 @@ class SetServerPortMiddlewareTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testNothingHappensWhenPostIsSetAsInteger(): void
+    public function testNothingHappensWhenPortIsSetAsInteger(): void
     {
         ($request = new Request)->server->set('SERVER_PORT', $port = 80);
 
@@ -54,7 +54,7 @@ class SetServerPortMiddlewareTest extends AbstractTestCase
     /**
      * @return void
      */
-    public function testNothingHappensWhenPostIsSetAsString(): void
+    public function testNothingHappensWhenPortIsSetAsString(): void
     {
         ($request = new Request)->server->set('SERVER_PORT', $port = '443');
 

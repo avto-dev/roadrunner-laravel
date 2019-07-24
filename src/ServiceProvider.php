@@ -20,7 +20,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         if ($kernel instanceof Kernel) {
             // NOTE: Registering order is very important
-            // ForceHttpsMiddleware MUST be registered EARLIER then SetServerPortMiddleware
+            // ForceHttpsMiddleware MUST be registered EARLIER then SetServerPortMiddleware (for registering used
+            // method "prependMiddleware", so, each register method push middleware to the TOP of middleware set)
             $this->registerSetServerPortMiddleware($kernel);
             $this->registerForceHttpsMiddleware($kernel);
         }
