@@ -49,7 +49,7 @@ matrix:
     - php: 7.2
       env: laravel=5.8
     - php: 7.2
-      env: coverage=true laravel=6.0
+      env: coverage=true laravel=6.*
 
     - php: 7.3
       env: setup=lowest
@@ -62,7 +62,7 @@ matrix:
     - php: 7.3
       env: laravel=5.8
     - php: 7.3
-      env: coverage=true laravel=6.0
+      env: coverage=true laravel=6.*
 
     - php: nightly
 
