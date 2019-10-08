@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v2.2.0
+
+### Changed
+
+- Maximal `illuminate/*` packages version now is `6.*`
+
 ## v2.1.0
 
 ### Added
