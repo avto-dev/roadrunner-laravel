@@ -7,7 +7,8 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 ## Unreleased
 
 ### Added
-
+- Using actions/cache@v1 inside workflow Github Actions
+- Using codecov/codecov-action inside workflow Github Actions
 - GitHub actions for a tests running
 
 ## v2.2.0
