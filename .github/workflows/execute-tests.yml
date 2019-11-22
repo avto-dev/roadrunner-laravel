@@ -16,6 +16,7 @@ jobs: # Docs: <https://help.github.com/en/articles/workflow-syntax-for-github-ac
     strategy:
       matrix:
         setup: ['basic', 'lowest']
+        coverage: ['true', 'false']
         php: ['7.1', '7.2', '7.3']
     steps:
       - name: Check out code
@@ -56,7 +57,15 @@ jobs: # Docs: <https://help.github.com/en/articles/workflow-syntax-for-github-ac
       - name: Execute tests
         run: composer test
 
+      - name: Execute tests with test coverage
+        if: matrix.coverage == 'true'
+        run: |
+          composer test-cover
+          ls -alt coverage/html
+
       - uses: codecov/codecov-action@v1
+        if: matrix.coverage == 'true'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/html/coverage.xml
           yml: codecov.yml
