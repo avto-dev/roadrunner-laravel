@@ -64,6 +64,7 @@ Name | Description
 `--(not-)force-https` | Force (or not) `https` schema usage (eg. for links generation)
 `--(not-)reset-db-connections` | Drop (or not) database connections after incoming request serving
 `--(not-)reset-redis-connections` | Drop (or not) Redis connections after incoming request serving
+`--(not-)reset-application` | Reset (or not) application state after incoming request serving
 `--(not-)refresh-app` | Force refresh application instance after incoming request serving
 `--(not-)inject-stats-into-request` | Inject into each `Request` object macros `::getTimestamp()` and `::getAllocatedMemory()` that returns timestamp and used allocated memory size
 `--not-fix-symfony-file-validation` | Do **not** fix `isValid` method in `\Symfony\Component\HttpFoundation\File\UploadedFile` [#10]
