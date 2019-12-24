@@ -2,6 +2,11 @@
 
 namespace AvtoDev\RoadRunnerLaravel\Worker;
 
+use AvtoDev\RoadRunnerLaravel\Resetter\ResetAuth;
+use AvtoDev\RoadRunnerLaravel\Resetter\ClearCookies;
+use AvtoDev\RoadRunnerLaravel\Resetter\ResetRequest;
+use AvtoDev\RoadRunnerLaravel\Resetter\ResetSession;
+
 interface WorkerInterface
 {
     /**
@@ -18,6 +23,13 @@ interface WorkerInterface
      * Environment value name for forcing "https" schema.
      */
     public const ENV_NAME_APP_FORCE_HTTPS = 'APP_FORCE_HTTPS';
+
+    public const APPLICATION_RESETTERS = [
+        ClearCookies::class,
+        ResetAuth::class,
+        ResetRequest::class,
+        ResetSession::class,
+    ];
 
     /**
      * Start worker events loop.

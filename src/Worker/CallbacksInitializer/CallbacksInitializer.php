@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Foundation\Application;
 use AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface;
 use Illuminate\Database\Connection as DatabaseConnection;
+use AvtoDev\RoadRunnerLaravel\Resetter\ResetterInterface;
 use Illuminate\Redis\Connections\Connection as RedisConnection;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
 use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptionsInterface;
@@ -239,6 +240,33 @@ class CallbacksInitializer implements CallbacksInitializerInterface
                                 }
                             }
                         }
+                    }
+                });
+        }
+    }
+
+    /**
+     * For option: "--reset-application".
+     *
+     * @param CallbacksInterface $callbacks
+     * @param bool|mixed         $value
+     *
+     * @return void
+     */
+    protected function initResetApplication(CallbacksInterface $callbacks, $value): void
+    {
+        if ($value === true) {
+            /** @var ResetterInterface[] $resetters */
+            $resetters = [];
+
+            foreach (WorkerInterface::APPLICATION_RESETTERS as $resetter) {
+                $resetters[$resetter] = new $resetter();
+            }
+
+            $callbacks->afterLoopIterationStack()
+                ->push(function (Application $app, Request $request, Response $response) use (&$resetters): void {
+                    foreach ($resetters as $resetter) {
+                        $resetter->reset($app);
                     }
                 });
         }
