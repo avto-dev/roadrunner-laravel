@@ -2,7 +2,7 @@
 
 namespace AvtoDev\RoadRunnerLaravel\Resetter;
 
-use Illuminate\Contracts\Container\Container;
+use Illuminate\Container\Container;
 use Illuminate\Cookie\CookieJar;
 
 class ClearCookies implements ResetterInterface

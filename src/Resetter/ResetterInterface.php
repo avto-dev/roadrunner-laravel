@@ -2,7 +2,7 @@
 
 namespace AvtoDev\RoadRunnerLaravel\Resetter;
 
-use Illuminate\Contracts\Container\Container;
+use Illuminate\Container\Container;
 
 interface ResetterInterface
 {

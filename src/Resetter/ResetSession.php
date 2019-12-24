@@ -2,7 +2,7 @@
 
 namespace AvtoDev\RoadRunnerLaravel\Resetter;
 
-use Illuminate\Contracts\Container\Container;
+use Illuminate\Container\Container;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Facade;
 use ReflectionObject;
