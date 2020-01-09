@@ -7,7 +7,7 @@ namespace AvtoDev\RoadRunnerLaravel;
 class Worker implements WorkerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function start(): void
     {
