@@ -3,6 +3,10 @@
 
 declare(strict_types = 1);
 
+use AvtoDev\RoadRunnerLaravel\Worker;
+use AvtoDev\RoadRunnerLaravel\WorkerInterface;
+use Illuminate\Contracts\Foundation\Application;
+
 \ini_set('display_errors', 'stderr');
 
 /**
@@ -23,8 +27,25 @@ $autoload = static function (): bool {
     return false;
 };
 
+/**
+ * Application factory.
+ *
+ * @return Application
+ */
+$appFactory = static function (): Application {
+    foreach (['../../..', '../..', '..', '../vendor/laravel/laravel'] as $path) {
+        $bootstrap = __DIR__ . '/' . $path . '/bootstrap/app.php';
+        if (\is_file($bootstrap)) {
+            return require $bootstrap;
+        }
+    }
+
+    throw new RuntimeException('Laravel bootstrap file (bootstrap/app.php) was not found');
+};
+
+// Load composer autoloader
 if ($autoload() !== true) {
-    fwrite(
+    \fwrite(
         STDERR,
         'You need to set up the project dependencies using the following commands:' . PHP_EOL .
         'wget http://getcomposer.org/composer.phar' . PHP_EOL .
@@ -36,4 +57,12 @@ if ($autoload() !== true) {
 
 unset($autoload);
 
-// write code here
+// Create application instance
+$app = $appFactory();
+
+/** @var WorkerInterface $worker Create worker instance (make check for registered class at first) */
+$worker = $app->bound(WorkerInterface::class)
+    ? $app->make(WorkerInterface::class)
+    : $app->make(Worker::class);
+
+$worker->start();
