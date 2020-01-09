@@ -25,7 +25,7 @@ Fixes # (issue)
 
 About your changes in `CHANGELOG.md`:
 
-* Add new version header like `## v1.x.x`, if it does not exists
+* Add new version header like `## v1.x.x` or `## UNRELEASED`, if it does not exists
 * Add description under `added`/`changed`/`fixed` sections
 * Add reference to closed issues `[#000]`
 * Add link to issue in the end of document

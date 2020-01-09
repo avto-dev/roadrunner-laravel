@@ -64,7 +64,4 @@ matrix:
     - php: 7.3
       env: coverage=true laravel=6.*
 
-    - php: nightly
-
-  allow_failures:
-    - php: nightly
+    - php: 7.4

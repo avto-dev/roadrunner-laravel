@@ -11,11 +11,6 @@ composer.lock
 # Temp dirs & trash
 /temp
 /tmp
-/tests/temp
-/tests/tmp
-/install
-/build
 /coverage
-clover-file
 .DS_Store
-.php_cs.cache
+*.cache

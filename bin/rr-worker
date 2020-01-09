@@ -3,24 +3,16 @@
 
 declare(strict_types = 1);
 
-ini_set('display_errors', 'stderr');
+\ini_set('display_errors', 'stderr');
 
 /**
  * Load autoloader.
  *
  * @return bool
  */
-$autoload = function (): bool {
-    static $auto_loads = [
-        __DIR__ . '/vendor/autoload.php',
-        __DIR__ . '/../vendor/autoload.php',
-        __DIR__ . '/../../vendor/autoload.php',
-        __DIR__ . '/../autoload.php',
-        __DIR__ . '/../../autoload.php',
-        __DIR__ . '/../../../autoload.php',
-    ];
-
-    foreach ($auto_loads as $autoload_file) {
+$autoload = static function (): bool {
+    foreach (['vendor', '../vendor', '../../vendor', '..', '../..', '../../..'] as $path) {
+        $autoload_file = __DIR__ . '/' . $path . '/autoload.php';
         if (\is_file($autoload_file)) {
             require $autoload_file;
 
@@ -42,27 +34,6 @@ if ($autoload() !== true) {
     die(1);
 }
 
-/**
- * Get worker class.
- *
- * @param string $default
- *
- * @return string
- */
-$getWorkerClass = function (string $default = AvtoDev\RoadRunnerLaravel\Worker\Worker::class): string {
-    $custom_class = getenv('RR_WORKER_CLASS');
+unset($autoload);
 
-    return is_string($custom_class) && class_exists($custom_class)
-        ? $custom_class
-        : $default;
-};
-
-global $argv;
-
-$worker_class = $getWorkerClass();
-
-unset($autoload, $getWorkerClass);
-
-/** @var AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface $worker */
-$worker = new $worker_class($argv, null);
-$worker->start();
+// write code here

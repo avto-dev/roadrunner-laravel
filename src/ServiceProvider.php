@@ -4,72 +4,58 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
-use Illuminate\Foundation\Http\Kernel;
-use Illuminate\Contracts\Http\Kernel as KernelContract;
-
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
-     * Register services and middleware.
+     * Get config root key name.
      *
-     * @param KernelContract $kernel
-     *
-     * @return void
+     * @return string
      */
-    public function boot(KernelContract $kernel): void
+    public static function getConfigRootKeyName(): string
     {
-        if ($kernel instanceof Kernel) {
-            // NOTE: Registering order is very important
-            // ForceHttpsMiddleware MUST be registered EARLIER then SetServerPortMiddleware (for registering used
-            // method "prependMiddleware", so, each register method push middleware to the TOP of middleware set)
-            $this->registerSetServerPortMiddleware($kernel);
-            $this->registerForceHttpsMiddleware($kernel);
-        }
+        return \basename(static::getConfigPath(), '.php');
     }
 
     /**
-     * Register services and etc.
+     * Returns path to the configuration file.
+     *
+     * @return string
+     */
+    public static function getConfigPath(): string
+    {
+        return __DIR__ . '/../config/roadrunner.php';
+    }
+
+    /**
+     * Register package services.
      *
      * @return void
      */
     public function register(): void
     {
-        $this->initializePublishes();
+        $this->initializeConfigs();
+        $this->registerWorker();
     }
 
     /**
-     * Register "ForceHttpsMiddleware".
-     *
-     * @param Kernel $kernel
-     *
      * @return void
      */
-    protected function registerForceHttpsMiddleware(Kernel $kernel): void
+    protected function registerWorker(): void
     {
-        $kernel->prependMiddleware(Middleware\ForceHttpsMiddleware::class);
+        $this->app->bind(WorkerInterface::class, Worker::class);
     }
 
     /**
-     * Register "SetServerPortMiddleware".
-     *
-     * @param Kernel $kernel
+     * Initialize configs.
      *
      * @return void
      */
-    protected function registerSetServerPortMiddleware(Kernel $kernel): void
+    protected function initializeConfigs(): void
     {
-        $kernel->prependMiddleware(Middleware\SetServerPortMiddleware::class);
-    }
+        $this->mergeConfigFrom(static::getConfigPath(), static::getConfigRootKeyName());
 
-    /**
-     * Initialize publishes.
-     *
-     * @return void
-     */
-    protected function initializePublishes(): void
-    {
         $this->publishes([
-            __DIR__ . '/../configs/rr' => $this->app->basePath(),
+            \realpath(static::getConfigPath()) => config_path(\basename(static::getConfigPath())),
         ], 'rr-config');
     }
 }
