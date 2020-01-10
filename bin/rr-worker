@@ -65,4 +65,5 @@ $worker = $app->bound(WorkerInterface::class)
     ? $app->make(WorkerInterface::class)
     : $app->make(Worker::class);
 
+// Start worker loop
 $worker->start();

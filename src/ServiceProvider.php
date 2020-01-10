@@ -38,6 +38,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
+     * Register worker.
+     *
      * @return void
      */
     protected function registerWorker(): void
