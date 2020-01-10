@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AvtoDev\RoadRunnerLaravel\WorkerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-final class AfterLoopIterationEvent
+final class AfterRequestHandlingEvent
 {
     /**
      * @var WorkerInterface

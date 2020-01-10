@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Events;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\HttpFoundation\Request;
 use AvtoDev\RoadRunnerLaravel\WorkerInterface;
 
-final class BeforeLoopIterationEvent
+final class BeforeRequestHandlingEvent
 {
     /**
      * @var WorkerInterface
@@ -15,17 +15,17 @@ final class BeforeLoopIterationEvent
     public $worker;
 
     /**
-     * @var ServerRequestInterface
+     * @var Request
      */
     public $request;
 
     /**
      * Create a new event instance.
      *
-     * @param WorkerInterface        $worker
-     * @param ServerRequestInterface $request
+     * @param WorkerInterface $worker
+     * @param Request         $request
      */
-    public function __construct(WorkerInterface $worker, ServerRequestInterface $request)
+    public function __construct(WorkerInterface $worker, Request $request)
     {
         $this->worker  = $worker;
         $this->request = $request;

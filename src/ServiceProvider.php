@@ -4,6 +4,11 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
+use InvalidArgumentException;
+use AvtoDev\RoadRunnerLaravel\Resetters\ResetterInterface;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
+
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
@@ -35,6 +40,41 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $this->initializeConfigs();
         $this->registerWorker();
+    }
+
+    /**
+     * Boot package services.
+     *
+     * @param ConfigRepository $config
+     * @param EventsDispatcher $events
+     *
+     * @return void
+     */
+    public function boot(ConfigRepository $config, EventsDispatcher $events): void
+    {
+        $this->bootResetters($config, $events);
+    }
+
+    /**
+     * @param ConfigRepository $config
+     * @param EventsDispatcher $events
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return void
+     */
+    protected function bootResetters(ConfigRepository $config, EventsDispatcher $events): void
+    {
+        foreach ((array) $config->get(static::getConfigRootKeyName() . '.resetters') as $resetter_class) {
+            if (\is_string($resetter_class) && \class_exists($resetter_class)) {
+                if (! isset(\class_implements($resetter_class)[ResetterInterface::class])) {
+                    throw new InvalidArgumentException("Wrong resetter class [{$resetter_class}] is set");
+                }
+
+                /** @var $resetter_class ResetterInterface */
+                $events->listen($resetter_class::listenForEvents(), $resetter_class);
+            }
+        }
     }
 
     /**

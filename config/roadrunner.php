@@ -6,7 +6,7 @@ return [
     | Containers Pre Resolving
     |--------------------------------------------------------------------------
     |
-    | Declared here containers will be resolved before events loop will be
+    | Declared here abstractions will be resolved before events loop will be
     | started.
     |
     */
@@ -23,7 +23,7 @@ return [
         'cache.store',
         'config',
         'cookie',
-        'encrypter',
+        //'encrypter', APP_KEY must be set
         'hash',
         'router',
         'translator',
@@ -31,8 +31,17 @@ return [
         'log',
     ],
 
-    'handlers' => [
-        AvtoDev\RoadRunnerLaravel\Handlers\ResetAppHandler::class,
-        AvtoDev\RoadRunnerLaravel\Handlers\TestDieHandler::class,
+    'resetters' => [
+        \AvtoDev\RoadRunnerLaravel\Resetters\ResetApplication::class,
+        \AvtoDev\RoadRunnerLaravel\Resetters\ClearInstances::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Instances here will be cleared on every request.
+    |--------------------------------------------------------------------------
+    */
+    'instances' => [
+        'auth',
     ],
 ];

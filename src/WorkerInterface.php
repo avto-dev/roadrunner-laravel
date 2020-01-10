@@ -19,6 +19,13 @@ interface WorkerInterface
     public function bootstrap(): void;
 
     /**
+     * Get worker container instance.
+     *
+     * @return Container
+     */
+    public function getContainer(): Container;
+
+    /**
      * Set worker container (application) instance.
      *
      * @param Container $container
