@@ -11,13 +11,13 @@ use Spiral\Goridge\RelayInterface;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use AvtoDev\RoadRunnerLaravel\Handlers\HandlerInterface;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 use AvtoDev\RoadRunnerLaravel\Handlers\RunAfterLoopContract as AfterLoop;
 use AvtoDev\RoadRunnerLaravel\Handlers\RunBeforeLoopContract as BeforeLoop;
-use AvtoDev\RoadRunnerLaravel\Handlers\RunAfterRequestHandleContract as AfterRequestHandle;
 use AvtoDev\RoadRunnerLaravel\Handlers\RunAfterLoopIterationContract as AfterLoopIteration;
+use AvtoDev\RoadRunnerLaravel\Handlers\RunAfterRequestHandleContract as AfterRequestHandle;
 use AvtoDev\RoadRunnerLaravel\Handlers\RunBeforeLoopIterationContract as BeforeLoopIteration;
 use AvtoDev\RoadRunnerLaravel\Handlers\RunBeforeRequestHandleContract as BeforeRequestHandle;
 
@@ -69,6 +69,68 @@ class Worker implements WorkerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function start(): void
+    {
+        $this->bootstrap();
+
+        $stream_relay  = $this->createStreamRelay();
+        $psr7_client   = $this->createPsr7Client($stream_relay);
+        $http_factory  = $this->createHttpFactory();
+        $diactoros     = $this->createDiactorosFactory();
+
+        $handlers = $this->getHandlers($this->container->make(ConfigRepository::class), $this->container);
+
+        /** @var BeforeLoop $handler */
+        foreach ($handlers[BeforeLoop::class] ?? null as $handler) {
+            $handler->handle($this);
+        }
+
+        while ($req = $psr7_client->acceptRequest()) {
+            try {
+                /** @var HttpKernel $http_kernel Bound as singleton in bootstrap file */
+                $http_kernel  = $this->container->make(HttpKernel::class);
+                $request      = Request::createFromBase($http_factory->createRequest($req));
+
+                foreach ($handlers[BeforeRequestHandle::class] ?? null as $handler) {
+                    $handler->handle($this, $request);
+                }
+
+                $response = $http_kernel->handle($request);
+
+                foreach ($handlers[AfterRequestHandle::class] ?? null as $handler) {
+                    $handler->handle($this, $request, $response);
+                }
+
+                $psr7_response = $diactoros->createResponse($response);
+                $psr7_client->respond($psr7_response);
+                $http_kernel->terminate($request, $response);
+
+                foreach ($handlers[AfterLoopIteration::class] ?? null as $handler) {
+                    $handler->handle($this, $request, $response);
+                }
+
+                unset($http_kernel);
+            } catch (Throwable $e) {
+                $psr7_client->getWorker()->error((string) $e);
+            }
+        }
+
+        foreach ($handlers[AfterLoop::class] ?? null as $handler) {
+            $handler->handle($this);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContainer(Container $container): void
+    {
+        $this->container = $container;
+    }
+
+    /**
      * @param ConfigRepository $config
      * @param Container        $container
      *
@@ -99,76 +161,13 @@ class Worker implements WorkerInterface
                         }
 
                         // Push instance into them
-                        $result[$contract][] =& $handler;
+                        $result[$contract][] =&$handler;
                     }
                 }
             }
         }
 
         return $result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function start(): void
-    {
-        $this->bootstrap();
-
-        $stream_relay = $this->createStreamRelay();
-        $psr7_client  = $this->createPsr7Client($stream_relay);
-        $http_factory  = $this->createHttpFactory();
-        $diactoros     = $this->createDiactorosFactory();
-
-        $handlers = $this->getHandlers($this->container->make(ConfigRepository::class), $this->container);
-
-        /** @var BeforeLoop $handler */
-        foreach ($handlers[BeforeLoop::class] ?? null as $handler) {
-            $handler->handle($this);
-        }
-
-        while ($req = $psr7_client->acceptRequest()) {
-            try {
-                /** @var HttpKernel $http_kernel Bound as singleton in bootstrap file */
-                $http_kernel  = $this->container->make(HttpKernel::class);
-                $request = Request::createFromBase($http_factory->createRequest($req));
-
-                foreach ($handlers[BeforeRequestHandle::class] ?? null as $handler) {
-                    $handler->handle($this, $request);
-                }
-
-                $response = $http_kernel->handle($request);
-
-                foreach ($handlers[AfterRequestHandle::class] ?? null as $handler) {
-                    $handler->handle($this, $request, $response);
-                }
-
-                $psr7_response = $diactoros->createResponse($response);
-                $psr7_client->respond($psr7_response);
-                $http_kernel->terminate($request, $response);
-
-                foreach ($handlers[AfterLoopIteration::class] ?? null as $handler) {
-                    $handler->handle($this, $request, $response);
-                }
-
-                unset($http_kernel);
-
-            } catch (Throwable $e) {
-                $psr7_client->getWorker()->error((string) $e);
-            }
-        }
-
-        foreach ($handlers[AfterLoop::class] ?? null as $handler) {
-            $handler->handle($this);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setContainer(Container $container): void
-    {
-        $this->container = $container;
     }
 
     /**
@@ -202,6 +201,7 @@ class Worker implements WorkerInterface
 
     /**
      * @return HttpMessageFactoryInterface
+     *
      * @todo Do NOT use deprecated factory class
      */
     protected function createDiactorosFactory(): HttpMessageFactoryInterface
