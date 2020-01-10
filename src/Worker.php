@@ -13,11 +13,11 @@ use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use AvtoDev\RoadRunnerLaravel\Events\AfterLoopStoppedEvent;
 use AvtoDev\RoadRunnerLaravel\Events\BeforeLoopStartedEvent;
 use AvtoDev\RoadRunnerLaravel\Events\AfterLoopIterationEvent;
+use AvtoDev\RoadRunnerLaravel\Events\BeforeLoopIterationEvent;
+use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
+use AvtoDev\RoadRunnerLaravel\Events\AfterRequestHandlingEvent;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
-use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
-use AvtoDev\RoadRunnerLaravel\Events\BeforeLoopIterationEvent;
-use AvtoDev\RoadRunnerLaravel\Events\AfterRequestHandlingEvent;
 use AvtoDev\RoadRunnerLaravel\Events\BeforeRequestHandlingEvent;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 
@@ -39,7 +39,7 @@ class Worker implements WorkerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setContainer(Container $container): void
     {
@@ -47,7 +47,7 @@ class Worker implements WorkerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getContainer(): Container
     {
@@ -55,7 +55,7 @@ class Worker implements WorkerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function bootstrap(): void
     {
@@ -82,7 +82,7 @@ class Worker implements WorkerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function start(): void
     {

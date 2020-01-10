@@ -32,7 +32,7 @@ class ResetApplication implements ResetterInterface
     /**
      * @param AfterLoopIterationEvent $event
      *
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle($event): void
     {
@@ -41,7 +41,7 @@ class ResetApplication implements ResetterInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function listenForEvents(): array
     {
