@@ -2,16 +2,18 @@
 
 namespace AvtoDev\RoadRunnerLaravel\Handlers;
 
-use Illuminate\Contracts\Container\Container;
+use Symfony\Component\HttpFoundation\Request;
 use AvtoDev\RoadRunnerLaravel\WorkerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 interface HandlerInterface
 {
     /**
-     * @param Container       $container
      * @param WorkerInterface $worker
+     * @param Request|null    $request
+     * @param Response|null   $response
      *
      * @return mixed
      */
-    public function handle(Container $container, WorkerInterface $worker);
+    public function handle(WorkerInterface $worker, ?Request $request = null, ?Response $response = null);
 }
