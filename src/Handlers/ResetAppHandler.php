@@ -47,7 +47,7 @@ class ResetAppHandler implements HandlerInterface, RunAfterLoopIterationContract
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function handle(WorkerInterface $worker, ?Request $request = null, ?Response $response = null)
     {

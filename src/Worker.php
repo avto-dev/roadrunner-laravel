@@ -8,6 +8,7 @@ use Throwable;
 use Illuminate\Http\Request;
 use Spiral\RoadRunner\PSR7Client;
 use Spiral\Goridge\RelayInterface;
+use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use AvtoDev\RoadRunnerLaravel\Handlers\HandlerInterface;
@@ -69,14 +70,17 @@ class Worker implements WorkerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function start(): void
     {
         $this->bootstrap();
 
-        $stream_relay  = $this->createStreamRelay();
-        $psr7_client   = $this->createPsr7Client($stream_relay);
+        /** @var EventsDispatcher $events */
+        $events = $this->container->make(EventsDispatcher::class);
+
+        $stream_relay = $this->createStreamRelay();
+        $psr7_client  = $this->createPsr7Client($stream_relay);
         $http_factory  = $this->createHttpFactory();
         $diactoros     = $this->createDiactorosFactory();
 
