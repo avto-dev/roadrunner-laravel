@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
-use InvalidArgumentException;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
 
@@ -38,7 +37,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register(): void
     {
         $this->initializeConfigs();
-        $this->registerWorker();
     }
 
     /**
@@ -58,8 +56,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      * @param ConfigRepository $config
      * @param EventsDispatcher $events
      *
-     * @throws InvalidArgumentException
-     *
      * @return void
      */
     protected function bootEventListeners(ConfigRepository $config, EventsDispatcher $events): void
@@ -69,16 +65,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 $events->listen($event, $listener);
             }
         }
-    }
-
-    /**
-     * Register worker.
-     *
-     * @return void
-     */
-    protected function registerWorker(): void
-    {
-        $this->app->bind(WorkerInterface::class, Worker::class);
     }
 
     /**
@@ -93,5 +79,26 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([
             \realpath(static::getConfigPath()) => config_path(\basename(static::getConfigPath())),
         ], 'config');
+
+        if (\is_string($rr_config = $this->getRoadRunnerSimpleConfigPath())) {
+            $this->publishes([
+                $rr_config => $this->app->basePath(),
+            ], 'rr-config');
+        }
+    }
+
+    /**
+     * Get path to the RoadRunner simple config file (if it possible).
+     *
+     * @return string|null
+     */
+    protected function getRoadRunnerSimpleConfigPath(): ?string
+    {
+        $vendor = \dirname((string) (new \ReflectionClass(\Composer\Autoload\ClassLoader::class))->getFileName(), 2);
+        $path   = (string) \realpath($vendor . '/spiral/roadrunner/.rr.yaml');
+
+        return \is_file($path)
+            ? $path
+            : null;
     }
 }

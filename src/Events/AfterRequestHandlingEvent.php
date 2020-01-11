@@ -6,12 +6,12 @@ namespace AvtoDev\RoadRunnerLaravel\Events;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
+use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
+use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpResponse;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
-final class AfterRequestHandlingEvent implements
-    Contracts\WithApplication,
-                                                 Contracts\WithHttpRequest,
-                                                 Contracts\WithHttpResponse
+final class AfterRequestHandlingEvent implements WithApplication, WithHttpRequest, WithHttpResponse
 {
     /**
      * @var ApplicationContract

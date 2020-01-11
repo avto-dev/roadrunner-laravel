@@ -1,6 +1,22 @@
 <?php
 
+use AvtoDev\RoadRunnerLaravel\Events;
+use AvtoDev\RoadRunnerLaravel\Listeners;
+
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Force HTTPS Schema Usage
+    |--------------------------------------------------------------------------
+    |
+    | Set this value to `true` if your application uses HTTPS (required for
+    | example for correct links generation).
+    |
+    */
+
+    'force_https' => (bool) env('APP_FORCE_HTTPS', true),
+
     /*
     |--------------------------------------------------------------------------
     | Containers Pre Resolving
@@ -43,32 +59,37 @@ return [
     */
 
     'listeners' => [
-        AvtoDev\RoadRunnerLaravel\Events\BeforeLoopStartedEvent::class => [
+        Events\BeforeLoopStartedEvent::class => [
+            Listeners\FixSymfonyFileValidationListener::class,
+        ],
+
+        Events\BeforeLoopIterationEvent::class => [
+            Listeners\RebindHttpKernelListener::class,
+            Listeners\RebindRouterListener::class,
+            Listeners\RebindViewListener::class,
+            Listeners\CloneConfigListener::class,
+            Listeners\UniqueCookiesListener::class,
+            Listeners\ResetSessionListener::class,
+        ],
+
+        Events\BeforeRequestHandlingEvent::class => [
+            Listeners\InjectStatsIntoRequestListener::class,
+            Listeners\BindRequestListener::class,
+            Listeners\SetServerPortListener::class,
+            Listeners\ForceHttpsListener::class,
+        ],
+
+        Events\AfterRequestHandlingEvent::class => [
             //
         ],
 
-        AvtoDev\RoadRunnerLaravel\Events\BeforeLoopIterationEvent::class => [
-            AvtoDev\RoadRunnerLaravel\Listeners\RebindHttpKernelListener::class,
-            AvtoDev\RoadRunnerLaravel\Listeners\RebindRouterListener::class,
-            AvtoDev\RoadRunnerLaravel\Listeners\RebindViewListener::class,
-            AvtoDev\RoadRunnerLaravel\Listeners\CloneConfigListener::class,
-            AvtoDev\RoadRunnerLaravel\Listeners\UniqueCookiesListener::class,
-            AvtoDev\RoadRunnerLaravel\Listeners\ResetSessionListener::class,
+        Events\AfterLoopIterationEvent::class => [
+            Listeners\ClearInstancesListener::class,
+            Listeners\ResetDbConnectionsListener::class,
+            Listeners\RunGarbageCollectionListener::class,
         ],
 
-        AvtoDev\RoadRunnerLaravel\Events\BeforeRequestHandlingEvent::class => [
-            AvtoDev\RoadRunnerLaravel\Listeners\BindRequestListener::class,
-        ],
-
-        AvtoDev\RoadRunnerLaravel\Events\AfterRequestHandlingEvent::class => [
-            //
-        ],
-
-        AvtoDev\RoadRunnerLaravel\Events\AfterLoopIterationEvent::class => [
-            AvtoDev\RoadRunnerLaravel\Listeners\ClearInstancesListener::class,
-        ],
-
-        AvtoDev\RoadRunnerLaravel\Events\AfterLoopStoppedEvent::class => [
+        Events\AfterLoopStoppedEvent::class => [
             //
         ],
     ],

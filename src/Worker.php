@@ -13,6 +13,7 @@ use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Foundation\Bootstrap\RegisterProviders;
 use Illuminate\Foundation\Bootstrap\SetRequestForConsole;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
@@ -21,7 +22,7 @@ use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 /**
- * Idea is taken from the package: https://github.com/swooletw/laravel-swoole.
+ * Idea is taken from the package: https://github.com/swooletw/laravel-swoole
  */
 class Worker implements WorkerInterface
 {
@@ -50,9 +51,9 @@ class Worker implements WorkerInterface
         $app = $this->createApplication($this->base_path);
         $this->bootstrapApplication($app);
 
-        $psr7_client  = $this->createPsr7Client($this->createStreamRelay());
+        $psr7_client = $this->createPsr7Client($this->createStreamRelay());
+        $psr7_factory = $this->createPsr7Factory();
         $http_factory = $this->createHttpFactory();
-        $diactoros    = $this->createDiactorosFactory();
 
         $this->fireEvent($app, new Events\BeforeLoopStartedEvent($app));
 
@@ -72,7 +73,7 @@ class Worker implements WorkerInterface
                 $response = $http_kernel->handle($request);
                 $this->fireEvent($sandbox, new Events\AfterRequestHandlingEvent($sandbox, $request, $response));
 
-                $psr7_response = $diactoros->createResponse($response);
+                $psr7_response = $psr7_factory->createResponse($response);
                 $psr7_client->respond($psr7_response);
                 $http_kernel->terminate($request, $response);
 
@@ -158,6 +159,8 @@ class Worker implements WorkerInterface
             throw new RuntimeException("Required method [{$boot_method}] does not exists on application instance");
         }
 
+        $app->register(ServiceProvider::class); // @todo: REMOVE! JUST FOR A TEST !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
         /** @var ConfigRepository $config */
         $config = $app->make(ConfigRepository::class);
 
@@ -213,9 +216,9 @@ class Worker implements WorkerInterface
     /**
      * @param RelayInterface $stream_relay
      *
-     * @return PSR7Client|mixed
+     * @return PSR7Client
      */
-    protected function createPsr7Client(RelayInterface $stream_relay)
+    protected function createPsr7Client(RelayInterface $stream_relay): PSR7Client
     {
         return new PSR7Client(new \Spiral\RoadRunner\Worker($stream_relay));
     }
@@ -230,11 +233,14 @@ class Worker implements WorkerInterface
 
     /**
      * @return HttpMessageFactoryInterface
-     *
-     * @todo Do NOT use deprecated factory class
      */
-    protected function createDiactorosFactory(): HttpMessageFactoryInterface
+    protected function createPsr7Factory(): HttpMessageFactoryInterface
     {
-        return new \Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+        return new PsrHttpFactory(
+            new \Spiral\RoadRunner\Diactoros\ServerRequestFactory,
+            new \Spiral\RoadRunner\Diactoros\StreamFactory,
+            new \Spiral\RoadRunner\Diactoros\UploadedFileFactory,
+            new \Zend\Diactoros\ResponseFactory
+        );
     }
 }
