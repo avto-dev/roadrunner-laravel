@@ -1,6 +1,6 @@
 FROM composer:1.8.6 AS composer
 
-FROM php:7.2.0-alpine
+FROM php:7.1.3-alpine
 
 ENV \
     COMPOSER_ALLOW_SUPERUSER="1" \
@@ -11,7 +11,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 RUN set -xe \
     && apk add --no-cache binutils git curl \
     && apk add --no-cache --virtual .build-deps autoconf pkgconf make g++ gcc \
-    # install xdebug (for testing with code coverage), but not enable it
+    # install xdebug (for testing with code coverage), but do not enable it
     && pecl install xdebug-2.7.2 \
     && apk del .build-deps \
     && mkdir /src ${COMPOSER_HOME} \

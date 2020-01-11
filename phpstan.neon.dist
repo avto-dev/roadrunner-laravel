@@ -2,4 +2,4 @@ parameters:
   level: 'max'
   paths:
     - src
-    - bin
+    - bin/rr-worker

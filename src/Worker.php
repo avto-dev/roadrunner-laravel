@@ -152,7 +152,7 @@ class Worker implements WorkerInterface
         }
 
         // Method `bootstrapWith` declared in interface `\Illuminate\Contracts\Foundation\Application` since
-        // `illuminate/contracts:v5.8` - https://git.io/JvfOq
+        // `illuminate/contracts:v5.8` - https://git.io/Jvflt -> https://git.io/JvfOq
         if (\method_exists($app, $boot_method = 'bootstrapWith')) {
             $app->{$boot_method}($bootstrappers);
         } else {
