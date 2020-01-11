@@ -7,17 +7,17 @@ namespace AvtoDev\RoadRunnerLaravel\Events;
 use Psr\Http\Message\ServerRequestInterface;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
-final class BeforeLoopIterationEvent
+final class BeforeLoopIterationEvent implements Contracts\WithApplication, Contracts\WithServerRequest
 {
     /**
      * @var ApplicationContract
      */
-    public $app;
+    private $app;
 
     /**
      * @var ServerRequestInterface
      */
-    public $request;
+    private $request;
 
     /**
      * Create a new event instance.
@@ -29,5 +29,21 @@ final class BeforeLoopIterationEvent
     {
         $this->app     = $app;
         $this->request = $request;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function application(): ApplicationContract
+    {
+        return $this->app;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function serverRequest(): ServerRequestInterface
+    {
+        return $this->request;
     }
 }

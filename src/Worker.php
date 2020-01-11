@@ -4,10 +4,13 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
+use RuntimeException;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 use Spiral\RoadRunner\PSR7Client;
 use Spiral\Goridge\RelayInterface;
+use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Facade;
 use Illuminate\Foundation\Bootstrap\RegisterProviders;
 use Illuminate\Foundation\Bootstrap\SetRequestForConsole;
 use AvtoDev\RoadRunnerLaravel\Events\AfterLoopStoppedEvent;
@@ -23,6 +26,9 @@ use AvtoDev\RoadRunnerLaravel\Events\BeforeRequestHandlingEvent;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
+/**
+ * Idea is taken from the package: https://github.com/swooletw/laravel-swoole
+ */
 class Worker implements WorkerInterface
 {
     /**
@@ -60,6 +66,8 @@ class Worker implements WorkerInterface
         while ($req = $psr7_client->acceptRequest()) {
             $sandbox = clone $app;
 
+            $this->setApplicationInstance($sandbox);
+
             /** @var HttpKernelContract $http_kernel */
             $http_kernel = $sandbox->make(HttpKernelContract::class);
 
@@ -80,10 +88,28 @@ class Worker implements WorkerInterface
                 $psr7_client->getWorker()->error((string) $e);
             } finally {
                 unset($http_kernel, $response, $request, $sandbox);
+
+                $this->setApplicationInstance($app);
             }
         }
 
         $this->fireEvent($app, new AfterLoopStoppedEvent($app));
+    }
+
+    /**
+     * @param ApplicationContract $app
+     *
+     * @return void
+     */
+    protected function setApplicationInstance(ApplicationContract $app): void
+    {
+        $app->instance('app', $app);
+        $app->instance(Container::class, $app);
+
+        Container::setInstance($app);
+
+        Facade::clearResolvedInstances();
+        Facade::setFacadeApplication($app);
     }
 
     /**
@@ -111,6 +137,8 @@ class Worker implements WorkerInterface
      *
      * @param ApplicationContract $app
      *
+     * @throws RuntimeException
+     *
      * @return void
      */
     protected function bootstrapApplication(ApplicationContract $app): void
@@ -133,6 +161,8 @@ class Worker implements WorkerInterface
         // `illuminate/contracts:v5.8` - https://git.io/JvfOq
         if (\method_exists($app, $boot_method = 'bootstrapWith')) {
             $app->{$boot_method}($bootstrappers);
+        } else {
+            throw new RuntimeException("Required method [{$boot_method}] does not exists on application instance");
         }
 
         /** @var ConfigRepository $config */

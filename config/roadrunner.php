@@ -31,16 +31,37 @@ return [
         'log',
     ],
 
-    'resetters' => [
-        \AvtoDev\RoadRunnerLaravel\Resetters\ClearInstances::class,
+    /*
+    |--------------------------------------------------------------------------
+    | Event Listeners
+    |--------------------------------------------------------------------------
+    |
+    | Worker provided by this package allows to interacts with request
+    | processing loop using application events. Feel free to add your own event
+    | listeners.
+    |
+    */
+
+    'listeners' => [
+        AvtoDev\RoadRunnerLaravel\Events\BeforeRequestHandlingEvent::class => [
+            AvtoDev\RoadRunnerLaravel\Listeners\BindRequestListener::class,
+        ],
+
+        AvtoDev\RoadRunnerLaravel\Events\AfterLoopIterationEvent::class => [
+            AvtoDev\RoadRunnerLaravel\Listeners\ClearInstancesListener::class,
+        ],
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Instances here will be cleared on every request.
+    | Instances Clearing
     |--------------------------------------------------------------------------
+    |
+    | Instances described here will be cleared on every request (if
+    | `ClearInstancesListener` is enabled).
+    |
     */
-    'instances' => [
+    'clear_instances' => [
         'auth',
     ],
 ];

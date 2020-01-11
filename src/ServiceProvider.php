@@ -14,7 +14,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     /**
      * Get config root key name.
      *
-     * @return string
+     * @return string roadrunner
      */
     public static function getConfigRootKey(): string
     {
@@ -52,7 +52,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot(ConfigRepository $config, EventsDispatcher $events): void
     {
-        $this->bootResetters($config, $events);
+        $this->bootEventListeners($config, $events);
     }
 
     /**
@@ -63,16 +63,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return void
      */
-    protected function bootResetters(ConfigRepository $config, EventsDispatcher $events): void
+    protected function bootEventListeners(ConfigRepository $config, EventsDispatcher $events): void
     {
-        foreach ((array) $config->get(static::getConfigRootKey() . '.resetters') as $resetter_class) {
-            if (\is_string($resetter_class) && \class_exists($resetter_class)) {
-                if (! isset(\class_implements($resetter_class)[ResetterInterface::class])) {
-                    throw new InvalidArgumentException("Wrong resetter class [{$resetter_class}] is set");
-                }
-
-                /** @var $resetter_class ResetterInterface */
-                $events->listen($resetter_class::listenForEvents(), $resetter_class);
+        foreach ((array) $config->get(static::getConfigRootKey() . '.listeners') as $event => $listeners) {
+            foreach (\array_unique($listeners) as $listener) {
+                $events->listen($event, $listener);
             }
         }
     }
@@ -98,6 +93,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         $this->publishes([
             \realpath(static::getConfigPath()) => config_path(\basename(static::getConfigPath())),
-        ], 'rr-config');
+        ], 'config');
     }
 }

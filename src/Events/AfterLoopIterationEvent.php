@@ -8,22 +8,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
-final class AfterLoopIterationEvent
+final class AfterLoopIterationEvent implements Contracts\WithApplication,
+                                               Contracts\WithHttpRequest,
+                                               Contracts\WithHttpResponse
 {
     /**
      * @var ApplicationContract
      */
-    public $app;
+    private $app;
 
     /**
      * @var Request
      */
-    public $request;
+    private $request;
 
     /**
      * @var Response
      */
-    public $response;
+    private $response;
 
     /**
      * Create a new event instance.
@@ -37,5 +39,29 @@ final class AfterLoopIterationEvent
         $this->app      = $app;
         $this->request  = $request;
         $this->response = $response;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function application(): ApplicationContract
+    {
+        return $this->app;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function httpRequest(): Request
+    {
+        return $this->request;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function httpResponse(): Response
+    {
+        return $this->response;
     }
 }

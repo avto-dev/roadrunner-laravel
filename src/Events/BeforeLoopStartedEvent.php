@@ -6,12 +6,12 @@ namespace AvtoDev\RoadRunnerLaravel\Events;
 
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
-final class BeforeLoopStartedEvent
+final class BeforeLoopStartedEvent implements Contracts\WithApplication
 {
     /**
      * @var ApplicationContract
      */
-    public $app;
+    private $app;
 
     /**
      * Create a new event instance.
@@ -21,5 +21,13 @@ final class BeforeLoopStartedEvent
     public function __construct(ApplicationContract $app)
     {
         $this->app = $app;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function application(): ApplicationContract
+    {
+        return $this->app;
     }
 }
