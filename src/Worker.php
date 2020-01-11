@@ -27,7 +27,7 @@ use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 /**
- * Idea is taken from the package: https://github.com/swooletw/laravel-swoole
+ * Idea is taken from the package: https://github.com/swooletw/laravel-swoole.
  */
 class Worker implements WorkerInterface
 {

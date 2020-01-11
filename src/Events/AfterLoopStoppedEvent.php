@@ -24,7 +24,7 @@ final class AfterLoopStoppedEvent implements Contracts\WithApplication
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function application(): ApplicationContract
     {

@@ -6,13 +6,13 @@ namespace AvtoDev\RoadRunnerLaravel\Listeners;
 
 use Illuminate\Container\Container;
 use AvtoDev\RoadRunnerLaravel\ServiceProvider;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 class ClearInstancesListener implements ListenerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle($event): void
     {

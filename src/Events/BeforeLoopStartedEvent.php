@@ -24,7 +24,7 @@ final class BeforeLoopStartedEvent implements Contracts\WithApplication
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function application(): ApplicationContract
     {

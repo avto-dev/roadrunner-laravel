@@ -32,7 +32,7 @@ final class BeforeLoopIterationEvent implements Contracts\WithApplication, Contr
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function application(): ApplicationContract
     {
@@ -40,7 +40,7 @@ final class BeforeLoopIterationEvent implements Contracts\WithApplication, Contr
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function serverRequest(): ServerRequestInterface
     {

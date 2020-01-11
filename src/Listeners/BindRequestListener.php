@@ -10,7 +10,7 @@ use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
 class BindRequestListener implements ListenerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handle($event): void
     {

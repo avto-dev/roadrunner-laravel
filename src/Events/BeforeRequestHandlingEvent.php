@@ -32,7 +32,7 @@ final class BeforeRequestHandlingEvent implements Contracts\WithApplication, Con
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function application(): ApplicationContract
     {
@@ -40,7 +40,7 @@ final class BeforeRequestHandlingEvent implements Contracts\WithApplication, Con
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function httpRequest(): Request
     {

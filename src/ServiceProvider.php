@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel;
 
 use InvalidArgumentException;
-use AvtoDev\RoadRunnerLaravel\Resetters\ResetterInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
 

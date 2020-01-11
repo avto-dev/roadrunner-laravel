@@ -8,7 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
-final class AfterRequestHandlingEvent implements Contracts\WithApplication,
+final class AfterRequestHandlingEvent implements
+    Contracts\WithApplication,
                                                  Contracts\WithHttpRequest,
                                                  Contracts\WithHttpResponse
 {
@@ -42,7 +43,7 @@ final class AfterRequestHandlingEvent implements Contracts\WithApplication,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function application(): ApplicationContract
     {
@@ -50,7 +51,7 @@ final class AfterRequestHandlingEvent implements Contracts\WithApplication,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function httpRequest(): Request
     {
@@ -58,7 +59,7 @@ final class AfterRequestHandlingEvent implements Contracts\WithApplication,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function httpResponse(): Response
     {
