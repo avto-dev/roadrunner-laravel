@@ -22,7 +22,7 @@ use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 /**
- * Idea is taken from the package: https://github.com/swooletw/laravel-swoole
+ * Idea is taken from the package: https://github.com/swooletw/laravel-swoole.
  */
 class Worker implements WorkerInterface
 {
@@ -51,7 +51,7 @@ class Worker implements WorkerInterface
         $app = $this->createApplication($this->base_path);
         $this->bootstrapApplication($app);
 
-        $psr7_client = $this->createPsr7Client($this->createStreamRelay());
+        $psr7_client  = $this->createPsr7Client($this->createStreamRelay());
         $psr7_factory = $this->createPsr7Factory();
         $http_factory = $this->createHttpFactory();
 

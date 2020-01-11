@@ -6,9 +6,9 @@ namespace AvtoDev\RoadRunnerLaravel\Listeners;
 
 use Illuminate\Routing\UrlGenerator;
 use AvtoDev\RoadRunnerLaravel\ServiceProvider;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
-use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
+use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 class ForceHttpsListener implements ListenerInterface
 {
