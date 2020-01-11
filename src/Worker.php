@@ -10,15 +10,15 @@ use Spiral\RoadRunner\PSR7Client;
 use Spiral\Goridge\RelayInterface;
 use Illuminate\Foundation\Bootstrap\RegisterProviders;
 use Illuminate\Foundation\Bootstrap\SetRequestForConsole;
-use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
 use AvtoDev\RoadRunnerLaravel\Events\AfterLoopStoppedEvent;
+use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
 use AvtoDev\RoadRunnerLaravel\Events\BeforeLoopStartedEvent;
 use AvtoDev\RoadRunnerLaravel\Events\AfterLoopIterationEvent;
 use AvtoDev\RoadRunnerLaravel\Events\BeforeLoopIterationEvent;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
+use AvtoDev\RoadRunnerLaravel\Events\AfterRequestHandlingEvent;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
-use AvtoDev\RoadRunnerLaravel\Events\AfterRequestHandlingEvent;
 use AvtoDev\RoadRunnerLaravel\Events\BeforeRequestHandlingEvent;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
@@ -40,6 +40,50 @@ class Worker implements WorkerInterface
     public function __construct(string $base_path)
     {
         $this->base_path = $base_path;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function start(): void
+    {
+        $app = $this->createApplication($this->base_path);
+
+        $this->bootstrapApplication($app);
+
+        $psr7_client  = $this->createPsr7Client($this->createStreamRelay());
+        $http_factory = $this->createHttpFactory();
+        $diactoros    = $this->createDiactorosFactory();
+
+        $this->fireEvent($app, new BeforeLoopStartedEvent($app));
+
+        while ($req = $psr7_client->acceptRequest()) {
+            $sandbox = clone $app;
+
+            /** @var HttpKernelContract $http_kernel */
+            $http_kernel = $sandbox->make(HttpKernelContract::class);
+
+            try {
+                $this->fireEvent($sandbox, new BeforeLoopIterationEvent($sandbox, $req));
+                $request = Request::createFromBase($http_factory->createRequest($req));
+
+                $this->fireEvent($sandbox, new BeforeRequestHandlingEvent($sandbox, $request));
+                $response = $http_kernel->handle($request);
+                $this->fireEvent($sandbox, new AfterRequestHandlingEvent($sandbox, $request, $response));
+
+                $psr7_response = $diactoros->createResponse($response);
+                $psr7_client->respond($psr7_response);
+                $http_kernel->terminate($request, $response);
+
+                $this->fireEvent($sandbox, new AfterLoopIterationEvent($sandbox, $request, $response));
+            } catch (\Throwable $e) {
+                $psr7_client->getWorker()->error((string) $e);
+            } finally {
+                unset($http_kernel, $response, $request, $sandbox);
+            }
+        }
+
+        $this->fireEvent($app, new AfterLoopStoppedEvent($app));
     }
 
     /**
@@ -110,50 +154,6 @@ class Worker implements WorkerInterface
         ($method = (new \ReflectionObject($kernel))->getMethod($name = 'bootstrappers'))->setAccessible(true);
 
         return (array) $method->invoke($kernel);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function start(): void
-    {
-        $app = $this->createApplication($this->base_path);
-
-        $this->bootstrapApplication($app);
-
-        $psr7_client  = $this->createPsr7Client($this->createStreamRelay());
-        $http_factory = $this->createHttpFactory();
-        $diactoros    = $this->createDiactorosFactory();
-
-        $this->fireEvent($app, new BeforeLoopStartedEvent($app));
-
-        while ($req = $psr7_client->acceptRequest()) {
-            $sandbox = clone $app;
-
-            /** @var HttpKernelContract $http_kernel */
-            $http_kernel = $sandbox->make(HttpKernelContract::class);
-
-            try {
-                $this->fireEvent($sandbox, new BeforeLoopIterationEvent($sandbox, $req));
-                $request = Request::createFromBase($http_factory->createRequest($req));
-
-                $this->fireEvent($sandbox, new BeforeRequestHandlingEvent($sandbox, $request));
-                $response = $http_kernel->handle($request);
-                $this->fireEvent($sandbox, new AfterRequestHandlingEvent($sandbox, $request, $response));
-
-                $psr7_response = $diactoros->createResponse($response);
-                $psr7_client->respond($psr7_response);
-                $http_kernel->terminate($request, $response);
-
-                $this->fireEvent($sandbox, new AfterLoopIterationEvent($sandbox, $request, $response));
-            } catch (\Throwable $e) {
-                $psr7_client->getWorker()->error((string) $e);
-            } finally {
-                unset($http_kernel, $response, $request, $sandbox);
-            }
-        }
-
-        $this->fireEvent($app, new AfterLoopStoppedEvent($app));
     }
 
     /**
