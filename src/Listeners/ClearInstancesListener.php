@@ -9,6 +9,9 @@ use AvtoDev\RoadRunnerLaravel\ServiceProvider;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
+/**
+ * @link https://github.com/swooletw/laravel-swoole/blob/master/src/Server/Resetters/ClearInstances.php
+ */
 class ClearInstancesListener implements ListenerInterface
 {
     /**
