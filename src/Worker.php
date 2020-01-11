@@ -85,7 +85,11 @@ class Worker implements WorkerInterface
             }
         }
 
-        $app->bootstrapWith($bootstrappers);
+        // Method `bootstrapWith` declared in interface `\Illuminate\Contracts\Foundation\Application` since
+        // `illuminate/contracts:v5.8` - https://git.io/JvfOq
+        if (\method_exists($app, $boot_method = 'bootstrapWith')) {
+            $app->{$boot_method}($bootstrappers);
+        }
 
         /** @var ConfigRepository $config */
         $config = $app->make(ConfigRepository::class);
