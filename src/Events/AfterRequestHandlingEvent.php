@@ -5,15 +5,15 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Events;
 
 use Symfony\Component\HttpFoundation\Request;
-use AvtoDev\RoadRunnerLaravel\WorkerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 final class AfterRequestHandlingEvent
 {
     /**
-     * @var WorkerInterface
+     * @var ApplicationContract
      */
-    public $worker;
+    public $app;
 
     /**
      * @var Request
@@ -28,13 +28,13 @@ final class AfterRequestHandlingEvent
     /**
      * Create a new event instance.
      *
-     * @param WorkerInterface $worker
-     * @param Request         $request
-     * @param Response        $response
+     * @param ApplicationContract $app
+     * @param Request             $request
+     * @param Response            $response
      */
-    public function __construct(WorkerInterface $worker, Request $request, Response $response)
+    public function __construct(ApplicationContract $app, Request $request, Response $response)
     {
-        $this->worker   = $worker;
+        $this->app      = $app;
         $this->request  = $request;
         $this->response = $response;
     }

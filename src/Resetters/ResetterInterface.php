@@ -5,7 +5,7 @@ namespace AvtoDev\RoadRunnerLaravel\Resetters;
 interface ResetterInterface
 {
     /**
-     * @param string|object|mixed $event
+     * @param string|object $event
      *
      * @return void
      */

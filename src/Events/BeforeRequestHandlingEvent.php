@@ -5,14 +5,14 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Events;
 
 use Symfony\Component\HttpFoundation\Request;
-use AvtoDev\RoadRunnerLaravel\WorkerInterface;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 final class BeforeRequestHandlingEvent
 {
     /**
-     * @var WorkerInterface
+     * @var ApplicationContract
      */
-    public $worker;
+    public $app;
 
     /**
      * @var Request
@@ -22,12 +22,12 @@ final class BeforeRequestHandlingEvent
     /**
      * Create a new event instance.
      *
-     * @param WorkerInterface $worker
-     * @param Request         $request
+     * @param ApplicationContract $app
+     * @param Request             $request
      */
-    public function __construct(WorkerInterface $worker, Request $request)
+    public function __construct(ApplicationContract $app, Request $request)
     {
-        $this->worker  = $worker;
+        $this->app     = $app;
         $this->request = $request;
     }
 }

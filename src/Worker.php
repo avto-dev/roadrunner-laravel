@@ -4,81 +4,112 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
-use Throwable;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 use Spiral\RoadRunner\PSR7Client;
 use Spiral\Goridge\RelayInterface;
-use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Bootstrap\RegisterProviders;
+use Illuminate\Foundation\Bootstrap\SetRequestForConsole;
+use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
 use AvtoDev\RoadRunnerLaravel\Events\AfterLoopStoppedEvent;
 use AvtoDev\RoadRunnerLaravel\Events\BeforeLoopStartedEvent;
 use AvtoDev\RoadRunnerLaravel\Events\AfterLoopIterationEvent;
 use AvtoDev\RoadRunnerLaravel\Events\BeforeLoopIterationEvent;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
-use AvtoDev\RoadRunnerLaravel\Events\AfterRequestHandlingEvent;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
+use AvtoDev\RoadRunnerLaravel\Events\AfterRequestHandlingEvent;
 use AvtoDev\RoadRunnerLaravel\Events\BeforeRequestHandlingEvent;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 class Worker implements WorkerInterface
 {
     /**
-     * @var Container
+     * Laravel application base path.
+     *
+     * @var string
      */
-    protected $container;
+    protected $base_path;
 
     /**
      * Create a new Worker instance.
      *
-     * @param Container $container
+     * @param string $base_path Laravel application base path
      */
-    public function __construct(Container $container)
+    public function __construct(string $base_path)
     {
-        $this->container = $container;
+        $this->base_path = $base_path;
     }
 
     /**
-     * {@inheritdoc}
+     * Create the new application instance.
+     *
+     * @param string $base_path
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return ApplicationContract
      */
-    public function setContainer(Container $container): void
+    protected function createApplication(string $base_path): ApplicationContract
     {
-        $this->container = $container;
+        $path = \implode(\DIRECTORY_SEPARATOR, [\rtrim($base_path, \DIRECTORY_SEPARATOR), 'bootstrap', 'app.php']);
+
+        if (! \is_file($path)) {
+            throw new InvalidArgumentException("Application bootstrap file was not found in [{$path}]");
+        }
+
+        return require $path;
     }
 
     /**
-     * {@inheritdoc}
+     * Bootstrap passed application.
+     *
+     * @param ApplicationContract $app
+     *
+     * @return void
      */
-    public function getContainer(): Container
+    protected function bootstrapApplication(ApplicationContract $app): void
     {
-        return $this->container;
-    }
+        /** @var \Illuminate\Foundation\Http\Kernel $http_kernel */
+        $http_kernel = $app->make(HttpKernelContract::class);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function bootstrap(): void
-    {
-        /** @var HttpKernel $http_kernel */
-        $http_kernel = $this->container->make(HttpKernel::class);
+        $bootstrappers = $this->getKernelBootstrappers($http_kernel);
 
-        // THis action is required for correct illuminate kernel working
-        /** @see \Illuminate\Foundation\Bootstrap\SetRequestForConsole */
-        $this->container->instance('request', Request::create('/', Request::METHOD_GET, [], [], [], $_SERVER));
+        // Insert `SetRequestForConsole` bootstrapper before `RegisterProviders` if it does not exists
+        if (! \in_array(SetRequestForConsole::class, $bootstrappers, true)) {
+            $register_index = \array_search(RegisterProviders::class, $bootstrappers, true);
 
-        $http_kernel->bootstrap();
-
-        $this->container->register(ServiceProvider::class); // @todo: REMOVE! DEBUG ONLY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        /** @var ConfigRepository $config */
-        $config = $this->container->make(ConfigRepository::class);
-
-        // Pre-resolve instances
-        foreach ((array) $config->get(ServiceProvider::getConfigRootKeyName() . '.pre_resolving', []) as $abstract) {
-            if (\is_string($abstract) && $this->container->bound($abstract)) {
-                $this->container->make($abstract);
+            if ($register_index !== false) {
+                \array_splice($bootstrappers, $register_index, 0, [SetRequestForConsole::class]);
             }
         }
+
+        $app->bootstrapWith($bootstrappers);
+
+        /** @var ConfigRepository $config */
+        $config = $app->make(ConfigRepository::class);
+
+        // Pre-resolve instances
+        foreach ((array) $config->get(ServiceProvider::getConfigRootKey() . '.pre_resolving', []) as $abstract) {
+            if (\is_string($abstract) && $app->bound($abstract)) {
+                $app->make($abstract);
+            }
+        }
+    }
+
+    /**
+     * Get HTTP or Console kernel bootstrappers.
+     *
+     * @param \Illuminate\Foundation\Http\Kernel|\Illuminate\Foundation\Console\Kernel $kernel
+     *
+     * @return string[] Bootstrappers class names
+     */
+    protected function getKernelBootstrappers($kernel): array
+    {
+        ($method = (new \ReflectionObject($kernel))->getMethod($name = 'bootstrappers'))->setAccessible(true);
+
+        return (array) $method->invoke($kernel);
     }
 
     /**
@@ -86,52 +117,59 @@ class Worker implements WorkerInterface
      */
     public function start(): void
     {
-        $this->bootstrap();
+        $app = $this->createApplication($this->base_path);
+
+        $this->bootstrapApplication($app);
 
         $psr7_client  = $this->createPsr7Client($this->createStreamRelay());
         $http_factory = $this->createHttpFactory();
         $diactoros    = $this->createDiactorosFactory();
 
-        $this->fireEvent(new BeforeLoopStartedEvent($this));
+        $this->fireEvent($app, new BeforeLoopStartedEvent($app));
 
         while ($req = $psr7_client->acceptRequest()) {
-            try {
-                /** @var HttpKernel $http_kernel */
-                $http_kernel = $this->container->make(HttpKernel::class);
+            $sandbox = clone $app;
 
-                $this->fireEvent(new BeforeLoopIterationEvent($this, $req));
+            /** @var HttpKernelContract $http_kernel */
+            $http_kernel = $sandbox->make(HttpKernelContract::class);
+
+            try {
+                $this->fireEvent($sandbox, new BeforeLoopIterationEvent($sandbox, $req));
                 $request = Request::createFromBase($http_factory->createRequest($req));
 
-                $this->fireEvent(new BeforeRequestHandlingEvent($this, $request));
+                $this->fireEvent($sandbox, new BeforeRequestHandlingEvent($sandbox, $request));
                 $response = $http_kernel->handle($request);
-                $this->fireEvent(new AfterRequestHandlingEvent($this, $request, $response));
+                $this->fireEvent($sandbox, new AfterRequestHandlingEvent($sandbox, $request, $response));
 
                 $psr7_response = $diactoros->createResponse($response);
                 $psr7_client->respond($psr7_response);
                 $http_kernel->terminate($request, $response);
 
-                $this->fireEvent(new AfterLoopIterationEvent($this, $request, $response));
-
-                unset($http_kernel, $request, $response);
-            } catch (Throwable $e) {
+                $this->fireEvent($sandbox, new AfterLoopIterationEvent($sandbox, $request, $response));
+            } catch (\Throwable $e) {
                 $psr7_client->getWorker()->error((string) $e);
+            } finally {
+                unset($http_kernel, $response, $request, $sandbox);
             }
         }
 
-        $this->fireEvent(new AfterLoopStoppedEvent($this));
+        $this->fireEvent($app, new AfterLoopStoppedEvent($app));
     }
 
     /**
-     * @param string|object $event
+     * @param ApplicationContract $app
+     * @param object              $event
      *
      * @return void
      */
-    protected function fireEvent($event): void
+    protected function fireEvent(ApplicationContract $app, $event): void
     {
-        /** @var EventsDispatcher $events Always extract actual events dispatcher instance */
-        $events = $this->container->make(EventsDispatcher::class);
+        /** @var EventsDispatcher $events */
+        $events = $app->make(EventsDispatcher::class);
 
-        $events->dispatch($event);
+        if ($events->hasListeners(\get_class($event))) {
+            $events->dispatch($event);
+        }
     }
 
     /**

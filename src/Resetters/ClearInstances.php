@@ -13,17 +13,17 @@ class ClearInstances implements ResetterInterface
     /**
      * @param AfterLoopIterationEvent $event
      *
-     * {@inheritdoc}
+     * @return void
      */
     public function handle($event): void
     {
-        $container = $event->worker->getContainer();
+        if ($event->app instanceof \Illuminate\Container\Container) {
+            /** @var ConfigRepository $config */
+            $config = $event->app->make(ConfigRepository::class);
 
-        /** @var ConfigRepository $config */
-        $config = $container->make(ConfigRepository::class);
-
-        foreach ((array) $config->get(ServiceProvider::getConfigRootKeyName() . '.instances', []) as $abstract) {
-            $container->forgetInstance($abstract);
+            foreach ((array) $config->get(ServiceProvider::getConfigRootKey() . '.instances', []) as $abstract) {
+                $event->app->forgetInstance($abstract);
+            }
         }
     }
 

@@ -4,22 +4,22 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Events;
 
-use AvtoDev\RoadRunnerLaravel\WorkerInterface;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 final class AfterLoopStoppedEvent
 {
     /**
-     * @var WorkerInterface
+     * @var ApplicationContract
      */
-    public $worker;
+    public $app;
 
     /**
      * Create a new event instance.
      *
-     * @param WorkerInterface $worker
+     * @param ApplicationContract $app
      */
-    public function __construct(WorkerInterface $worker)
+    public function __construct(ApplicationContract $app)
     {
-        $this->worker = $worker;
+        $this->app = $app;
     }
 }

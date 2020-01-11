@@ -32,7 +32,6 @@ return [
     ],
 
     'resetters' => [
-        \AvtoDev\RoadRunnerLaravel\Resetters\ResetApplication::class,
         \AvtoDev\RoadRunnerLaravel\Resetters\ClearInstances::class,
     ],
 

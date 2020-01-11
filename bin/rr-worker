@@ -3,67 +3,75 @@
 
 declare(strict_types = 1);
 
-use AvtoDev\RoadRunnerLaravel\Worker;
-use AvtoDev\RoadRunnerLaravel\WorkerInterface;
-use Illuminate\Contracts\Foundation\Application;
+\define('RR_WORKER_START', \microtime(true));
 
 \ini_set('display_errors', 'stderr');
 
-/**
- * Load autoloader.
- *
- * @return bool
- */
-$autoload = static function (): bool {
-    foreach (['vendor', '../vendor', '../../vendor', '..', '../..', '../../..'] as $path) {
-        $autoload_file = __DIR__ . '/' . $path . '/autoload.php';
-        if (\is_file($autoload_file)) {
-            require $autoload_file;
+/*
+|--------------------------------------------------------------------------
+| Register The Auto Loader
+|--------------------------------------------------------------------------
+|
+| Composer provides a convenient, automatically generated class loader
+| for our application. We just need to utilize it! We'll require it
+| into the script here so that we do not have to worry about the
+| loading of any our classes "manually". Feels great to relax.
+|
+*/
 
-            return true;
-        }
+$loaded = false;
+
+foreach (['vendor', '../vendor', '../../vendor', '..', '../..', '../../..'] as $path) {
+    if (\is_file($autoload_file = __DIR__ . '/' . $path . '/autoload.php')) {
+        require $autoload_file;
+        $loaded = true;
+        break;
     }
-
-    return false;
-};
-
-/**
- * Application factory.
- *
- * @return Application
- */
-$appFactory = static function (): Application {
-    foreach (['../../..', '../..', '..', '../vendor/laravel/laravel'] as $path) {
-        $bootstrap = __DIR__ . '/' . $path . '/bootstrap/app.php';
-        if (\is_file($bootstrap)) {
-            return require $bootstrap;
-        }
-    }
-
-    throw new RuntimeException('Laravel bootstrap file (bootstrap/app.php) was not found');
-};
-
-// Load composer autoloader
-if ($autoload() !== true) {
-    \fwrite(
-        STDERR,
-        'You need to set up the project dependencies using the following commands:' . PHP_EOL .
-        'wget http://getcomposer.org/composer.phar' . PHP_EOL .
-        'php composer.phar install' . PHP_EOL
-    );
-
-    die(1);
 }
 
-unset($autoload);
+if ($loaded !== true) {
+    \fwrite(STDERR, 'Composer autoload file was not found. Try to install project dependencies' . PHP_EOL);
+    exit(10);
+}
 
-// Create application instance
-$app = $appFactory();
+/*
+|--------------------------------------------------------------------------
+| Find Application Base Path
+|--------------------------------------------------------------------------
+|
+| This file can be located in package `./bin` directory, used as a symbolic
+| link or something else. In this case we will try to find application
+| base directory using the most obvious application locations.
+|
+*/
 
-/** @var WorkerInterface $worker Create worker instance (make check for registered class at first) */
-$worker = $app->bound(WorkerInterface::class)
-    ? $app->make(WorkerInterface::class)
-    : $app->make(Worker::class);
+$base_path = null;
 
-// Start worker loop
+foreach (['../../..', '../..', '../../../..', '..', '../vendor/laravel/laravel'] as $path) {
+    if (\is_file(__DIR__ . '/' . $path . '/bootstrap/app.php')) {
+        $base_path = \realpath(__DIR__ . '/' . $path);
+        break;
+    }
+}
+
+if (! \is_string($base_path)) {
+    \fwrite(STDERR, 'Cannot find application base path' . PHP_EOL);
+    exit(11);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Create Worker Instance
+|--------------------------------------------------------------------------
+*/
+
+// @todo: Make possible to use another worker class
+$worker = new \AvtoDev\RoadRunnerLaravel\Worker($base_path);
+
+/*
+|--------------------------------------------------------------------------
+| Start Worker Loop
+|--------------------------------------------------------------------------
+*/
+
 $worker->start();

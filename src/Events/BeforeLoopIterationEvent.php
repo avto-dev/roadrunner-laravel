@@ -5,14 +5,14 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Events;
 
 use Psr\Http\Message\ServerRequestInterface;
-use AvtoDev\RoadRunnerLaravel\WorkerInterface;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 final class BeforeLoopIterationEvent
 {
     /**
-     * @var WorkerInterface
+     * @var ApplicationContract
      */
-    public $worker;
+    public $app;
 
     /**
      * @var ServerRequestInterface
@@ -22,12 +22,12 @@ final class BeforeLoopIterationEvent
     /**
      * Create a new event instance.
      *
-     * @param WorkerInterface        $worker
+     * @param ApplicationContract    $app
      * @param ServerRequestInterface $request
      */
-    public function __construct(WorkerInterface $worker, ServerRequestInterface $request)
+    public function __construct(ApplicationContract $app, ServerRequestInterface $request)
     {
-        $this->worker  = $worker;
+        $this->app     = $app;
         $this->request = $request;
     }
 }

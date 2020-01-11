@@ -16,7 +16,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      *
      * @return string
      */
-    public static function getConfigRootKeyName(): string
+    public static function getConfigRootKey(): string
     {
         return \basename(static::getConfigPath(), '.php');
     }
@@ -65,7 +65,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     protected function bootResetters(ConfigRepository $config, EventsDispatcher $events): void
     {
-        foreach ((array) $config->get(static::getConfigRootKeyName() . '.resetters') as $resetter_class) {
+        foreach ((array) $config->get(static::getConfigRootKey() . '.resetters') as $resetter_class) {
             if (\is_string($resetter_class) && \class_exists($resetter_class)) {
                 if (! isset(\class_implements($resetter_class)[ResetterInterface::class])) {
                     throw new InvalidArgumentException("Wrong resetter class [{$resetter_class}] is set");
@@ -94,7 +94,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     protected function initializeConfigs(): void
     {
-        $this->mergeConfigFrom(static::getConfigPath(), static::getConfigRootKeyName());
+        $this->mergeConfigFrom(static::getConfigPath(), static::getConfigRootKey());
 
         $this->publishes([
             \realpath(static::getConfigPath()) => config_path(\basename(static::getConfigPath())),
