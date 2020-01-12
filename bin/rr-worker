@@ -21,7 +21,7 @@ declare(strict_types = 1);
 
 $loaded = false;
 
-foreach (['../vendor', 'vendor', '../../vendor', '..', '../..', '../../..'] as $path) {
+foreach (['../../..', '../..', '..', 'vendor', '../vendor', '../../vendor'] as $path) {
     if (\is_file($autoload_file = __DIR__ . '/' . $path . '/autoload.php')) {
         require $autoload_file;
         $loaded = true;
@@ -47,7 +47,7 @@ if ($loaded !== true) {
 
 $base_path = null;
 
-foreach (['../../..', '../..', '../../../..', '..', '../vendor/laravel/laravel'] as $path) {
+foreach (['../../../..', '../../..', '../..', '..', '../vendor/laravel/laravel'] as $path) {
     if (\is_file(__DIR__ . '/' . $path . '/bootstrap/app.php')) {
         $base_path = \realpath(__DIR__ . '/' . $path);
         break;

@@ -32,9 +32,14 @@ class RebindRouterListener implements ListenerInterface
                     /** @var mixed $route */
                     $route = $this->{'routes'}->match($request);
 
-                    // clear resolved controller
+                    // rebind resolved controller
                     if (\property_exists($route, $container_property = 'container')) {
-                        $route->{$container_property} = null;
+                        $rebindClosure = function () use ($container_property, $app) {
+                            $this->{$container_property} = $app;
+                        };
+
+                        $rebind = $rebindClosure->bindTo($route, $route);
+                        $rebind();
                     }
 
                     // rebind matched route's container

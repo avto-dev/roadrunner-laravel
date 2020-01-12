@@ -82,7 +82,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         if (\is_string($rr_config = $this->getRoadRunnerSimpleConfigPath())) {
             $this->publishes([
-                $rr_config => $this->app->basePath(),
+                $rr_config => $this->app->basePath() . DIRECTORY_SEPARATOR . '.rr.yaml.dist',
             ], 'rr-config');
         }
     }

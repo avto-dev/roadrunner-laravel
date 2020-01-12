@@ -65,7 +65,6 @@ return [
 
         Events\BeforeLoopIterationEvent::class => [
             Listeners\RebindHttpKernelListener::class,
-            Listeners\RebindRouterListener::class,
             Listeners\RebindViewListener::class,
             Listeners\CloneConfigListener::class,
             Listeners\UniqueCookiesListener::class,
@@ -73,6 +72,7 @@ return [
         ],
 
         Events\BeforeRequestHandlingEvent::class => [
+            Listeners\RebindRouterListener::class,
             Listeners\InjectStatsIntoRequestListener::class,
             Listeners\BindRequestListener::class,
             Listeners\SetServerPortListener::class,
