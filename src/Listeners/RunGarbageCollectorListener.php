@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Listeners;
 
-class RunGarbageCollectionListener implements ListenerInterface
+class RunGarbageCollectorListener implements ListenerInterface
 {
     /**
      * {@inheritdoc}
