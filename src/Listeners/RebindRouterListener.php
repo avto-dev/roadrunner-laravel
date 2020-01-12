@@ -34,11 +34,11 @@ class RebindRouterListener implements ListenerInterface
 
                     // rebind resolved controller
                     if (\property_exists($route, $container_property = 'container')) {
-                        $rebindClosure = function () use ($container_property, $app) {
+                        $rebind_closure = function () use ($container_property, $app) {
                             $this->{$container_property} = $app;
                         };
 
-                        $rebind = $rebindClosure->bindTo($route, $route);
+                        $rebind = $rebind_closure->bindTo($route, $route);
                         $rebind();
                     }
 
@@ -50,8 +50,8 @@ class RebindRouterListener implements ListenerInterface
             };
 
             // Black magic in action
-            $resetRouter = $closure->bindTo($router, $router);
-            $resetRouter();
+            $reset_router = $closure->bindTo($router, $router);
+            $reset_router();
         }
     }
 }
