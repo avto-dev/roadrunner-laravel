@@ -115,5 +115,5 @@ return [
     */
     'providers' => [
         Illuminate\Auth\AuthServiceProvider::class,
-    ]
+    ],
 ];
