@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Listeners;
 
-use PDO;
 use Mockery as m;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Config\Repository as ConfigRepository;
