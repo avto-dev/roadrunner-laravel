@@ -108,12 +108,19 @@ return [
     'clear_instances' => [
         'auth',
     ],
+
     /*
     |--------------------------------------------------------------------------
-    | Providers that will be registered on every request (if ResetProvidersListener is enabled).
+    | Reset Providers
     |--------------------------------------------------------------------------
+    |
+    | Providers that will be registered on every request (if
+    | `ResetProvidersListener` is enabled).
+    |
     */
-    'providers' => [
+
+    'reset_providers' => [
         Illuminate\Auth\AuthServiceProvider::class,
+        // App\Your\Custom\AuthServiceProvider::class,
     ],
 ];

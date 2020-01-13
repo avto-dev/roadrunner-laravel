@@ -5,8 +5,9 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Listeners;
 
 use AvtoDev\RoadRunnerLaravel\ServiceProvider;
-use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
+use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 /**
  * @link https://github.com/swooletw/laravel-swoole/blob/master/src/Server/Resetters/ResetProviders.php
@@ -20,18 +21,23 @@ class ResetProvidersListener implements ListenerInterface
     {
         if ($event instanceof WithApplication) {
             $app = $event->application();
+
             /** @var ConfigRepository $config */
             $config    = $app->make(ConfigRepository::class);
-            $providers = (array) $config->get(ServiceProvider::getConfigRootKey() . '.providers', []);
+            $providers = (array) $config->get(ServiceProvider::getConfigRootKey() . '.reset_providers', []);
 
-            foreach ($providers as $provider) {
-                $providerClass = new $provider($app);
-                $this->rebindProviderContainer($app, $providerClass);
-                if (method_exists($providerClass, 'register')) {
-                    $providerClass->register();
+            foreach (\array_unique($providers) as $provider_class) {
+                /** @var \Illuminate\Support\ServiceProvider $provider */
+                $provider = new $provider_class($app);
+
+                $this->rebindProviderContainer($app, $provider);
+
+                if (\method_exists($provider, $register_method = 'register')) {
+                    $provider->{$register_method}();
                 }
-                if (method_exists($providerClass, 'boot')) {
-                    $app->call([$providerClass, 'boot']);
+
+                if (\method_exists($provider, $boot_method = 'boot')) {
+                    $app->call([$provider, $boot_method]);
                 }
             }
         }
@@ -40,15 +46,18 @@ class ResetProvidersListener implements ListenerInterface
     /**
      * Rebind service provider's container.
      *
-     * @param $app
-     * @param $provider
+     * @param ApplicationContract $app
+     * @param object              $provider
+     *
+     * @return void
      */
-    protected function rebindProviderContainer($app, $provider)
+    protected function rebindProviderContainer(ApplicationContract $app, $provider): void
     {
         $closure = function () use ($app) {
-            $this->app = $app;
+            $this->{'app'} = $app;
         };
-        $resetProvider = $closure->bindTo($provider, $provider);
-        $resetProvider();
+
+        $reseter = $closure->bindTo($provider, $provider);
+        $reseter();
     }
 }
