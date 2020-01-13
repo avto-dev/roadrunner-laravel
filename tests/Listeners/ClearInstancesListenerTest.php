@@ -22,6 +22,13 @@ class ClearInstancesListenerTest extends AbstractListenerTestCase
         /** @var ConfigRepository $config */
         $config = $this->app->make(ConfigRepository::class);
 
+        /** @var m\MockInterface|WithApplication $event_mock */
+        $event_mock = m::mock(WithApplication::class)
+            ->makePartial()
+            ->expects('application')
+            ->andReturn($this->app)
+            ->getMock();
+
         // Define custom container abstracts
         $abstracts = ['foo', 'bar'];
 
@@ -39,11 +46,6 @@ class ClearInstancesListenerTest extends AbstractListenerTestCase
         // Set config value for instances clearing
         $config->set('roadrunner.clear_instances', $abstracts);
 
-        $event_mock = m::mock(WithApplication::class)
-            ->makePartial()
-            ->expects('application')
-            ->andReturn($this->app)
-            ->getMock();
 
         $this->listenerFactory()->handle($event_mock);
 

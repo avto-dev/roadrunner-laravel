@@ -31,6 +31,7 @@
         <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
     </logging>
     <php>
-        <server name="APP_KEY" value="base64:+hY09mlBag/d7Qhq2SjE/i2iUzZBS1dGObLqcHZU2Ac="/>
+        <env name="APP_KEY" value="base64:+hY09mlBag/d7Qhq2SjE/i2iUzZBS1dGObLqcHZU2Ac="/>
+        <env name="APP_URL" value="http://unit-test"/>
     </php>
 </phpunit>

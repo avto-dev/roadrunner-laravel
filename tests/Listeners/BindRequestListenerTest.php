@@ -22,7 +22,10 @@ class BindRequestListenerTest extends AbstractListenerTestCase
     {
         /** @var Request $modified_request */
         $modified_request = clone $this->app->make('request');
+        /** @var Request $original_request */
+        $original_request = $this->app->make('request');
 
+        /** @var m\MockInterface|WithApplication|WithHttpRequest $event_mock */
         $event_mock = m::mock(\implode(',', [WithApplication::class, WithHttpRequest::class]))
             ->makePartial()
             ->expects('application')
@@ -34,7 +37,7 @@ class BindRequestListenerTest extends AbstractListenerTestCase
 
         $this->listenerFactory()->handle($event_mock);
 
-        $this->assertSame($modified_request, $this->app->make('request'));
+        $this->assertNotSame($original_request, $this->app->make('request'));
     }
 
     /**
