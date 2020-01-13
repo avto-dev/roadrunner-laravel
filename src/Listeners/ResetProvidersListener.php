@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Listeners;
 
 use AvtoDev\RoadRunnerLaravel\ServiceProvider;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 /**
