@@ -69,6 +69,7 @@ return [
             Listeners\CloneConfigListener::class,
             Listeners\UniqueCookiesListener::class,
             Listeners\ResetSessionListener::class,
+            Listeners\ResetProvidersListener::class,
         ],
 
         Events\BeforeRequestHandlingEvent::class => [
@@ -107,4 +108,12 @@ return [
     'clear_instances' => [
         'auth',
     ],
+    /*
+    |--------------------------------------------------------------------------
+    | Providers that will be registered on every request (if ResetProvidersListener is enabled).
+    |--------------------------------------------------------------------------
+    */
+    'providers' => [
+        Illuminate\Auth\AuthServiceProvider::class,
+    ]
 ];
