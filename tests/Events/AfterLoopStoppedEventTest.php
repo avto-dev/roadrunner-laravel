@@ -25,7 +25,7 @@ class AfterLoopStoppedEventTest extends AbstractEventTestCase
     protected $event_class = AfterLoopStoppedEvent::class;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function testConstructor(): void
     {

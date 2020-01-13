@@ -31,7 +31,7 @@ class AfterLoopIterationEventTest extends AbstractEventTestCase
     protected $event_class = AfterLoopIterationEvent::class;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function testConstructor(): void
     {

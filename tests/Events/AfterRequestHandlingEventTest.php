@@ -6,8 +6,8 @@ namespace AvtoDev\RoadRunnerLaravel\Tests\Events;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Events\AfterRequestHandlingEvent;
+use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpResponse;
 
@@ -31,7 +31,7 @@ class AfterRequestHandlingEventTest extends AbstractEventTestCase
     protected $event_class = AfterRequestHandlingEvent::class;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function testConstructor(): void
     {

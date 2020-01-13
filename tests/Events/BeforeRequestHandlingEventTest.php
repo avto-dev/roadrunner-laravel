@@ -28,7 +28,7 @@ class BeforeRequestHandlingEventTest extends AbstractEventTestCase
     protected $event_class = BeforeRequestHandlingEvent::class;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function testConstructor(): void
     {

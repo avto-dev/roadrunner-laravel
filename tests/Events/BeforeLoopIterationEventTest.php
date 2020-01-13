@@ -28,7 +28,7 @@ class BeforeLoopIterationEventTest extends AbstractEventTestCase
     protected $event_class = BeforeLoopIterationEvent::class;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function testConstructor(): void
     {

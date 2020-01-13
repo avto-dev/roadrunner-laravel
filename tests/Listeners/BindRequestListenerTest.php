@@ -16,15 +16,7 @@ use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
 class BindRequestListenerTest extends AbstractListenerTestCase
 {
     /**
-     * @return BindRequestListener
-     */
-    protected function listenerFactory(): BindRequestListener
-    {
-        return new BindRequestListener;
-    }
-
-    /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function testHandle(): void
     {
@@ -43,5 +35,13 @@ class BindRequestListenerTest extends AbstractListenerTestCase
         $this->listenerFactory()->handle($event_mock);
 
         $this->assertSame($modified_request, $this->app->make('request'));
+    }
+
+    /**
+     * @return BindRequestListener
+     */
+    protected function listenerFactory(): BindRequestListener
+    {
+        return new BindRequestListener;
     }
 }

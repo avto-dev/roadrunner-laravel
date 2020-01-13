@@ -5,9 +5,9 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Tests\Listeners;
 
 use Mockery as m;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Listeners\ClearInstancesListener;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Listeners\ClearInstancesListener<extended>
@@ -15,15 +15,7 @@ use AvtoDev\RoadRunnerLaravel\Listeners\ClearInstancesListener;
 class ClearInstancesListenerTest extends AbstractListenerTestCase
 {
     /**
-     * @return ClearInstancesListener
-     */
-    protected function listenerFactory(): ClearInstancesListener
-    {
-        return new ClearInstancesListener;
-    }
-
-    /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function testHandle(): void
     {
@@ -59,5 +51,13 @@ class ClearInstancesListenerTest extends AbstractListenerTestCase
         foreach ($abstracts as $abstract) {
             $this->assertFalse($this->app->bound($abstract));
         }
+    }
+
+    /**
+     * @return ClearInstancesListener
+     */
+    protected function listenerFactory(): ClearInstancesListener
+    {
+        return new ClearInstancesListener;
     }
 }
