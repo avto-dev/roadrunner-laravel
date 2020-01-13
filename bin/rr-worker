@@ -74,4 +74,4 @@ $worker = new \AvtoDev\RoadRunnerLaravel\Worker($base_path);
 |--------------------------------------------------------------------------
 */
 
-$worker->start();
+$worker->start((bool) \getenv('APP_REFRESH'));

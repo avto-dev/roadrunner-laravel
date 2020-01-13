@@ -46,7 +46,7 @@ class Worker implements WorkerInterface
     /**
      * {@inheritdoc}
      */
-    public function start(): void
+    public function start(bool $refresh_app = false): void
     {
         $app = $this->createApplication($this->base_path);
         $this->bootstrapApplication($app);
@@ -58,7 +58,12 @@ class Worker implements WorkerInterface
         $this->fireEvent($app, new Events\BeforeLoopStartedEvent($app));
 
         while ($req = $psr7_client->acceptRequest()) {
-            $sandbox = clone $app;
+            if ($refresh_app === true) {
+                $sandbox = $this->createApplication($this->base_path);
+                $this->bootstrapApplication($sandbox);
+            } else {
+                $sandbox = clone $app;
+            }
 
             $this->setApplicationInstance($sandbox);
 
@@ -158,8 +163,6 @@ class Worker implements WorkerInterface
         } else {
             throw new RuntimeException("Required method [{$boot_method}] does not exists on application instance");
         }
-
-        $app->register(ServiceProvider::class); // @todo: REMOVE! JUST FOR A TEST !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         /** @var ConfigRepository $config */
         $config = $app->make(ConfigRepository::class);

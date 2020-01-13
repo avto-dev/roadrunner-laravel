@@ -39,7 +39,7 @@ return [
         'cache.store',
         'config',
         'cookie',
-        //'encrypter', APP_KEY must be set // @todo: uncomment
+        'encrypter',
         'hash',
         'router',
         'translator',
@@ -122,5 +122,6 @@ return [
     'reset_providers' => [
         Illuminate\Auth\AuthServiceProvider::class,
         // App\Your\Custom\AuthServiceProvider::class,
+        Illuminate\Pagination\PaginationServiceProvider::class,
     ],
 ];

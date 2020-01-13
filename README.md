@@ -20,7 +20,7 @@ Require this package with composer using the one of next commands.
 For Laravel versions `5.5.x`..`6.x` with minimal PHP version 7.1.3 and above:
 
 ```shell
-$ composer require avto-dev/roadrunner-laravel "^2.0"
+$ composer require avto-dev/roadrunner-laravel "^3.0"
 ```
 
 > Installed `composer` is required ([how to install composer][getcomposer]).
@@ -54,6 +54,8 @@ If you wants to disable package service-provider auto discover, just add into yo
 ```
 
 ## Usage
+
+Environment variable `APP_REFRESH` forces application refreshing.
 
 ...
 
