@@ -7,7 +7,7 @@ interface WorkerInterface
     /**
      * Start worker loop.
      *
-     * @param bool $refresh_app
+     * @param bool|false $refresh_app
      *
      * @return void
      */
