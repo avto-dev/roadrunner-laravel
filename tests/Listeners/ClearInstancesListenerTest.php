@@ -46,7 +46,6 @@ class ClearInstancesListenerTest extends AbstractListenerTestCase
         // Set config value for instances clearing
         $config->set('roadrunner.clear_instances', $abstracts);
 
-
         $this->listenerFactory()->handle($event_mock);
 
         // Assert that instances are not presents in container after listener handling

@@ -8,9 +8,9 @@ use Mockery as m;
 use Illuminate\Routing\UrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use AvtoDev\RoadRunnerLaravel\Listeners\ForceHttpsListener;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Listeners\ForceHttpsListener<extended>
@@ -33,7 +33,7 @@ class ForceHttpsListenerTest extends AbstractListenerTestCase
     protected $config;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function setUp(): void
     {

@@ -7,8 +7,8 @@ namespace AvtoDev\RoadRunnerLaravel\Tests\Listeners;
 use Mockery as m;
 use Illuminate\Support\Str;
 use AvtoDev\RoadRunnerLaravel\Listeners\CloneConfigListener;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Listeners\CloneConfigListener<extended>
