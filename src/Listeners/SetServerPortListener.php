@@ -9,8 +9,10 @@ use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
 class SetServerPortListener implements ListenerInterface
 {
     public const
-        SERVER_PORT_ATTRIBUTE = 'SERVER_PORT',
-        HTTPS_PORT = 443,
+        SERVER_PORT_ATTRIBUTE = 'SERVER_PORT';
+    public const
+        HTTPS_PORT = 443;
+    public const
         HTTP_PORT = 80;
 
     /**

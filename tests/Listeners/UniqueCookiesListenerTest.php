@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Tests\Listeners;
 
 use Mockery as m;
-use AvtoDev\RoadRunnerLaravel\Listeners\UnqueueCookiesListener;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
+use AvtoDev\RoadRunnerLaravel\Listeners\UnqueueCookiesListener;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Listeners\UnqueueCookiesListener<extended>
