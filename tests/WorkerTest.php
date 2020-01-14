@@ -199,9 +199,8 @@ class WorkerTest extends AbstractTestCase
                             if (! isset($fired_events[$event_class])) {
                                 $fired_events[$event_class] = 1;
                             } else {
-                                ++$fired_events[$event_class];
+                                $fired_events[$event_class]++;
                             }
-
 
                             return true;
                         })
