@@ -54,7 +54,7 @@ class WorkerTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->out              = \fopen('/dev/null', 'rb');
+        $this->out              = \fopen('php://temp', 'rb+');
         $this->requests_factory = new ServerRequestFactory;
         $this->rr_worker        = new RRWorker(new StreamRelay(\STDIN, $this->out));
     }
@@ -197,10 +197,11 @@ class WorkerTest extends AbstractTestCase
                             $event_class = \get_class($event);
 
                             if (! isset($fired_events[$event_class])) {
-                                $fired_events[$event_class] = 0;
+                                $fired_events[$event_class] = 1;
+                            } else {
+                                ++$fired_events[$event_class];
                             }
 
-                            $fired_events[$event_class]++;
 
                             return true;
                         })
