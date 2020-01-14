@@ -8,10 +8,36 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 
 ### Changed
 
-- ...
+- **Package was totally rewrote**
 
 ### Added
 
+- Events for interaction with worker loop:
+  * `BeforeLoopStartedEvent`
+  * `BeforeLoopIterationEvent`
+  * `BeforeRequestHandlingEvent`
+  * `AfterRequestHandlingEvent`
+  * `AfterLoopIterationEvent`
+  * `AfterLoopStoppedEvent`
+- Listeners:
+  * `BindRequestListener`
+  * `ClearInstancesListener`
+  * `CloneConfigListener`
+  * `FixSymfonyFileValidationListener`
+  * `ForceHttpsListener`
+  * `InjectStatsIntoRequestListener`
+  * `RebindHttpKernelListener`
+  * `RebindRouterListener`
+  * `RebindViewListener`
+  * `ResetDbConnectionsListener`
+  * `ResetProvidersListener`
+  * `ResetSessionListener`
+  * `RunGarbageCollectorListener`
+  * `SetServerPortListener`
+  * `UnqueueCookiesListener`
+- Environment variable `APP_REFRESH` supports
+- Package configuration file
+- PHP `7.4` supports
 - GitHub actions for a tests running
 
 ## v2.2.0

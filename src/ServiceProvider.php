@@ -61,7 +61,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function bootEventListeners(ConfigRepository $config, EventsDispatcher $events): void
     {
         foreach ((array) $config->get(static::getConfigRootKey() . '.listeners') as $event => $listeners) {
-            foreach (\array_unique($listeners) as $listener) {
+            foreach (\array_filter(\array_unique($listeners)) as $listener) {
                 $events->listen($event, $listener);
             }
         }

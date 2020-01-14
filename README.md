@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://laravel.com/assets/img/components/logo-laravel.svg" alt="Laravel" width="240" />
+  <img src="https://hsto.org/webt/xl/pr/89/xlpr891cyv9ux3gm7dtzwjse_5a.png" alt="logo" width="420" />
 </p>
 
 # [RoadRunner][roadrunner] ⇆ Laravel bridge
@@ -11,7 +11,7 @@
 [![Downloads count][badge_downloads_count]][link_packagist]
 [![License][badge_license]][link_license]
 
-Easy way for connecting [RoadRunner][roadrunner] and Laravel applications.
+Easy way for connecting [RoadRunner][roadrunner] and [Laravel][laravel] applications.
 
 ## Install
 
@@ -27,16 +27,18 @@ $ composer require avto-dev/roadrunner-laravel "^3.0"
 
 > You need to fix the major version of package.
 
-> For Laravel versions `5.5.x`..`5.7.x` with minimal PHP version 7.0 (version `1.x` is abandoned):
->
-> ```shell
-> $ composer require avto-dev/roadrunner-laravel "^1.4"
-> ```
+> Previous major versions still available, but it's development is abandoned. Use only latest major version!
 
-After that you can "publish" package configuration file using next command:
+After that you can "publish" package configuration file (`./config/roadrunner.php`) using next command:
 
 ```bash
-$ php ./artisan vendor:publish --tag=rr-config
+$ php ./artisan vendor:publish --provider='AvtoDev\RoadRunnerLaravel\ServiceProvider' --tag=config
+```
+
+And basic RoadRunner configuration file (`./.rr.yaml.dist`):
+
+```bash
+$ php ./artisan vendor:publish --provider='AvtoDev\RoadRunnerLaravel\ServiceProvider' --tag=rr-config
 ```
 
 If you wants to disable package service-provider auto discover, just add into your `composer.json` next lines:
@@ -53,11 +55,35 @@ If you wants to disable package service-provider auto discover, just add into yo
 }
 ```
 
+After that you can modify configuration files as you wish.
+
+**Important**: despite the fact that worker allows you to refresh application instance on each HTTP request _(if environment variable `APP_REFRESH` set to `true`)_, we strongly recommend to avoid this for performance reasons. Large applications can be hard to integrate with RoadRunner _(you must decide which of service providers must be reloaded on each request, avoid "static optimization" in some cases)_, but it's worth it.
+
 ## Usage
 
-Environment variable `APP_REFRESH` forces application refreshing.
+After package installation you can use provided "binary" file as RoadRunner worker: `./vendor/bin/rr-worker`. This worker allows you to interact with incoming requests and outcoming responses using [laravel events system][laravel_events]. Also events contains _(each event contains link to the application instance)_:
 
-...
+Event classname              | HTTP server request | HTTP request | HTTP response 
+---------------------------- | :-----------------: | :----------: | :-----------:
+`BeforeLoopStartedEvent`     |                     |              |
+`BeforeLoopIterationEvent`   |          ✔          |              |
+`BeforeRequestHandlingEvent` |                     |       ✔      |
+`AfterRequestHandlingEvent`  |                     |       ✔      |       ✔
+`AfterLoopIterationEvent`    |                     |       ✔      |       ✔
+`AfterLoopStoppedEvent`      |                     |              |
+
+### Listeners
+
+This package provides event listeners for resetings application state without full application reload _(like cookies, HTTP request, application instance, service-providers and other)_. Some of them already declared in configuration file, but you can declare own without any limitations.
+
+### Environment variables
+
+You can use the following environment variables:
+
+Variable name     | Description
+----------------- | -----------
+`APP_FORCE_HTTPS` | (declared in configuration file) Forces application HTTPS schema usage
+`APP_REFRESH`     | Refresh application instance on every request
 
 ### Testing
 
@@ -109,4 +135,6 @@ This is open-sourced software licensed under the [MIT License][link_license].
 [link_license]:https://github.com/avto-dev/roadrunner-laravel/blob/master/LICENSE
 [getcomposer]:https://getcomposer.org/download/
 [roadrunner]:https://github.com/spiral/roadrunner
+[laravel]:https://laravel.com
+[laravel_events]:https://laravel.com/docs/events
 [#10]:https://github.com/avto-dev/roadrunner-laravel/issues/10
