@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Listeners;
 
-use ReflectionObject;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Listeners\ListenerInterface;
 
@@ -40,10 +39,16 @@ abstract class AbstractListenerTestCase extends AbstractTestCase
      */
     protected function getProperty($object, string $property)
     {
-        $property = (new ReflectionObject($object))->getProperty($property);
-        $property->setAccessible(true);
+        $result = null;
 
-        return $property->getValue($object);
+        $closure = function () use ($property, &$result) {
+            $result = $this->{$property};
+        };
+
+        $getter = $closure->bindTo($object, $object);
+        $getter();
+
+        return $result;
     }
 
     /**
@@ -55,8 +60,11 @@ abstract class AbstractListenerTestCase extends AbstractTestCase
      */
     protected function setProperty($object, string $property, $value): void
     {
-        $property = (new ReflectionObject($object))->getProperty($property);
-        $property->setAccessible(true);
-        $property->setValue($object, $value);
+        $closure = function () use ($property, &$value) {
+            $this->{$property} = $value;
+        };
+
+        $setter = $closure->bindTo($object, $object);
+        $setter();
     }
 }
