@@ -67,7 +67,7 @@ return [
             Listeners\RebindHttpKernelListener::class,
             Listeners\RebindViewListener::class,
             Listeners\CloneConfigListener::class,
-            Listeners\UniqueCookiesListener::class,
+            Listeners\UnqueueCookiesListener::class,
             Listeners\ResetSessionListener::class,
             Listeners\ResetProvidersListener::class,
         ],

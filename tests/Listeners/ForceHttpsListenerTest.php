@@ -65,6 +65,7 @@ class ForceHttpsListenerTest extends AbstractListenerTestCase
 
         $this->assertSame('https://unit-test', $this->url_generator->current());
         $this->assertSame('on', $this->request->server->get('HTTPS'));
+        $this->assertTrue($this->request->isSecure());
     }
 
     /**
@@ -85,6 +86,7 @@ class ForceHttpsListenerTest extends AbstractListenerTestCase
 
         $this->assertSame('http://unit-test', $this->url_generator->current());
         $this->assertNull($this->request->server->get('HTTPS'));
+        $this->assertFalse($this->request->isSecure());
     }
 
     /**

@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Listeners;
 
+/**
+ * @deprecated Rewrite using mock object
+ */
 class FakeServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**

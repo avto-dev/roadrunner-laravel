@@ -8,6 +8,11 @@ use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
 
 class SetServerPortListener implements ListenerInterface
 {
+    public const
+        SERVER_PORT_ATTRIBUTE = 'SERVER_PORT',
+        HTTPS_PORT = 443,
+        HTTP_PORT = 80;
+
     /**
      * {@inheritdoc}
      */
@@ -21,9 +26,9 @@ class SetServerPortListener implements ListenerInterface
 
             if ($port === null || $port === '') {
                 if ($request->getScheme() === 'https') {
-                    $request->server->set('SERVER_PORT', 443);
+                    $request->server->set(static::SERVER_PORT_ATTRIBUTE, static::HTTPS_PORT);
                 } elseif ($request->getScheme() === 'http') {
-                    $request->server->set('SERVER_PORT', 80);
+                    $request->server->set(static::SERVER_PORT_ATTRIBUTE, static::HTTP_PORT);
                 }
             }
         }

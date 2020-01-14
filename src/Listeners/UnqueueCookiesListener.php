@@ -9,7 +9,7 @@ use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 /**
  * @link https://github.com/swooletw/laravel-swoole/blob/master/src/Server/Resetters/ResetCookie.php
  */
-class UniqueCookiesListener implements ListenerInterface
+class UnqueueCookiesListener implements ListenerInterface
 {
     /**
      * {@inheritdoc}
