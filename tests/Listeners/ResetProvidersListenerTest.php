@@ -6,9 +6,9 @@ namespace AvtoDev\RoadRunnerLaravel\Tests\Listeners;
 
 use Mockery as m;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Listeners\ResetProvidersListener;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Listeners\ResetProvidersListener<extended>
@@ -16,7 +16,7 @@ use AvtoDev\RoadRunnerLaravel\Listeners\ResetProvidersListener;
 class ResetProvidersListenerTest extends AbstractListenerTestCase
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function setUp(): void
     {
