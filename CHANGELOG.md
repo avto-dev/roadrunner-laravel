@@ -35,10 +35,13 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
   * `RunGarbageCollectorListener`
   * `SetServerPortListener`
   * `UnqueueCookiesListener`
+- `Spiral\RoadRunner\PSR7Client` instance in application containers (closes [#21])
 - Environment variable `APP_REFRESH` supports
 - Package configuration file
 - PHP `7.4` supports
 - GitHub actions for a tests running
+
+[#21]:https://github.com/avto-dev/roadrunner-laravel/issues/21
 
 ## v2.2.0
 

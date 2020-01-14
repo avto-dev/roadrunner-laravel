@@ -104,6 +104,15 @@ class WorkerTest extends AbstractTestCase
             ->withArgs($this->getAfterBootstrapClosure())
             ->passthru()
             ->getMock()
+            ->shouldReceive('preResolveApplicationAbstracts')
+            ->withArgs(function (Application $app): bool {
+                $this->assertInstanceOf(PSR7Client::class, $client = $app->make(PSR7Client::class));
+                $this->assertSame($client, $app->make(PSR7Client::class));
+
+                return true;
+            })
+            ->passthru()
+            ->getMock()
             ->shouldReceive('createApplication')
             ->once() // <-- important
             ->passthru()
@@ -137,6 +146,15 @@ class WorkerTest extends AbstractTestCase
             ->getMock()
             ->shouldReceive('preResolveApplicationAbstracts')
             ->withArgs($this->getAfterBootstrapClosure())
+            ->passthru()
+            ->getMock()
+            ->shouldReceive('preResolveApplicationAbstracts')
+            ->withArgs(function (Application $app): bool {
+                $this->assertInstanceOf(PSR7Client::class, $client = $app->make(PSR7Client::class));
+                $this->assertSame($client, $app->make(PSR7Client::class));
+
+                return true;
+            })
             ->passthru()
             ->getMock()
             ->shouldReceive('createApplication')

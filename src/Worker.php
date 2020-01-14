@@ -48,19 +48,19 @@ class Worker implements WorkerInterface
      */
     public function start(bool $refresh_app = false): void
     {
-        $app = $this->createApplication($this->base_path);
-        $this->bootstrapApplication($app);
-
         $psr7_client  = $this->createPsr7Client($this->createStreamRelay());
         $psr7_factory = $this->createPsr7Factory();
         $http_factory = $this->createHttpFactory();
+
+        $app = $this->createApplication($this->base_path);
+        $this->bootstrapApplication($app, $psr7_client);
 
         $this->fireEvent($app, new Events\BeforeLoopStartedEvent($app));
 
         while ($req = $psr7_client->acceptRequest()) {
             if ($refresh_app === true) {
                 $sandbox = $this->createApplication($this->base_path);
-                $this->bootstrapApplication($sandbox);
+                $this->bootstrapApplication($sandbox, $psr7_client);
             } else {
                 $sandbox = clone $app;
             }
@@ -135,12 +135,13 @@ class Worker implements WorkerInterface
      * Bootstrap passed application.
      *
      * @param ApplicationContract $app
+     * @param PSR7Client          $psr7_client
      *
      * @throws RuntimeException
      *
      * @return void
      */
-    protected function bootstrapApplication(ApplicationContract $app): void
+    protected function bootstrapApplication(ApplicationContract $app, PSR7Client $psr7_client): void
     {
         /** @var \Illuminate\Foundation\Http\Kernel $http_kernel */
         $http_kernel = $app->make(HttpKernelContract::class);
@@ -163,6 +164,9 @@ class Worker implements WorkerInterface
         } else {
             throw new RuntimeException("Required method [{$boot_method}] does not exists on application instance");
         }
+
+        // Put PSR7 client into container
+        $app->instance(PSR7Client::class, $psr7_client);
 
         $this->preResolveApplicationAbstracts($app);
     }
