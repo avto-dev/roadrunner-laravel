@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use Spiral\RoadRunner\Worker as RRWorker;
 use Psr\Http\Message\ServerRequestInterface;
 use AvtoDev\RoadRunnerLaravel\ServiceProvider;
+use AvtoDev\RoadRunnerLaravel\WorkerInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Spiral\RoadRunner\Diactoros\ServerRequestFactory;
 
@@ -66,6 +67,14 @@ class WorkerTest extends AbstractTestCase
         \fclose($this->out);
 
         parent::tearDown();
+    }
+
+    /**
+     * @return void
+     */
+    public function testImplementation(): void
+    {
+        $this->assertInstanceOf(WorkerInterface::class, new Worker($this->base_dir));
     }
 
     /**
