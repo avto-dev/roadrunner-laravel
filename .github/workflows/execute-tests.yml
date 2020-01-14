@@ -14,6 +14,7 @@ jobs: # Docs: <https://help.github.com/en/articles/workflow-syntax-for-github-ac
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
+      fail-fast: false
       matrix:
         setup: ['basic', 'lowest']
         php: ['7.1', '7.2', '7.3', '7.4']
