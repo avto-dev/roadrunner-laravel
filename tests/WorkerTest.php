@@ -9,8 +9,8 @@ use RuntimeException;
 use Illuminate\Support\Str;
 use Spiral\Goridge\StreamRelay;
 use Spiral\RoadRunner\PSR7Client;
-use AvtoDev\RoadRunnerLaravel\Worker;
 use AvtoDev\RoadRunnerLaravel\Events;
+use AvtoDev\RoadRunnerLaravel\Worker;
 use Psr\Http\Message\ResponseInterface;
 use Spiral\RoadRunner\Worker as RRWorker;
 use Psr\Http\Message\ServerRequestInterface;
@@ -47,7 +47,7 @@ class WorkerTest extends AbstractTestCase
     protected $base_dir = __DIR__ . '/../vendor/laravel/laravel';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function setUp(): void
     {
@@ -59,7 +59,7 @@ class WorkerTest extends AbstractTestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function tearDown(): void
     {
@@ -191,7 +191,7 @@ class WorkerTest extends AbstractTestCase
                                 $fired_events[$event_class] = 0;
                             }
 
-                            ++$fired_events[$event_class];
+                            $fired_events[$event_class]++;
 
                             return true;
                         })
