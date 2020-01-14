@@ -8,7 +8,6 @@ use Mockery as m;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Listeners\RebindHttpKernelListener;
-use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Listeners\RebindHttpKernelListener<extended>
@@ -20,17 +19,11 @@ class RebindHttpKernelListenerTest extends AbstractListenerTestCase
      */
     public function testHandle(): void
     {
-        $fake_kernel = new class {
-            /** @var ApplicationContract|null */
-            private $app;
+        /** @var HttpKernel $kernel */
+        $kernel = $this->app->make(HttpKernel::class);
 
-            public function _getApp(): ?ApplicationContract
-            {
-                return $this->app;
-            }
-        };
-
-        $this->app->instance(HttpKernel::class, $fake_kernel);
+        // Set "wrong" app instance in kernel
+        $this->setProperty($kernel, 'app', clone $this->app);
 
         /** @var m\MockInterface|WithApplication $event_mock */
         $event_mock = m::mock(WithApplication::class)
@@ -39,11 +32,11 @@ class RebindHttpKernelListenerTest extends AbstractListenerTestCase
             ->andReturn($this->app)
             ->getMock();
 
-        $this->assertNull($this->app->make(HttpKernel::class)->_getApp());
+        $this->assertNotSame($this->app, $kernel->getApplication());
 
         $this->listenerFactory()->handle($event_mock);
 
-        $this->assertSame($this->app, $this->app->make(HttpKernel::class)->_getApp());
+        $this->assertSame($this->app, $kernel->getApplication());
     }
 
     /**

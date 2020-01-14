@@ -47,7 +47,7 @@ class ResetDbConnectionsListenerTest extends AbstractListenerTestCase
 
         $this->listenerFactory()->handle($event_mock);
 
-        $this->assertNull($db_manager->connection($connection_name)->getPdo());
+        $this->assertNull($db_manager->connection($connection_name)->getPdo(), 'DB not disconnected');
     }
 
     /**
