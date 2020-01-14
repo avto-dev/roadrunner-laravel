@@ -15,6 +15,16 @@ use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
 class SetServerPortListenerTest extends AbstractListenerTestCase
 {
     /**
+     * @return void
+     */
+    public function testConstants(): void
+    {
+        $this->assertSame('SERVER_PORT', SetServerPortListener::SERVER_PORT_ATTRIBUTE);
+        $this->assertSame(443, SetServerPortListener::HTTPS_PORT);
+        $this->assertSame(80, SetServerPortListener::HTTP_PORT);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function testHandle(): void

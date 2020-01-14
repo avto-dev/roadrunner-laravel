@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace AvtoDev\RoadRunnerLaravel\Tests;
+
+/**
+ * @coversNothing
+ */
+class WorkerBinaryTest extends AbstractTestCase
+{
+    /**
+     * @var string
+     */
+    protected $binary_location = __DIR__ . '/../bin/rr-worker';
+
+    /**
+     * @return void
+     */
+    public function testFileLocationAndAttributes(): void
+    {
+        $this->assertFileExists($this->binary_location);
+        $this->assertTrue(\is_executable($this->binary_location));
+    }
+}

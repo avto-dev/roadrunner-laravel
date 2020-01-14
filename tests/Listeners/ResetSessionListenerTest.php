@@ -24,15 +24,15 @@ class ResetSessionListenerTest extends AbstractListenerTestCase
         $session_mock = m::mock($session)
             ->makePartial()
             ->expects('driver')
-            ->withArgs([])
+            ->withNoArgs()
             ->andReturn(
                 m::mock($session->driver())
                     ->makePartial()
                     ->expects('flush')
-                    ->withArgs([])
+                    ->withNoArgs()
                     ->getMock()
                     ->expects('regenerate')
-                    ->withArgs([])
+                    ->withNoArgs()
                     ->getMock()
             )
             ->getMock();

@@ -164,6 +164,18 @@ class Worker implements WorkerInterface
             throw new RuntimeException("Required method [{$boot_method}] does not exists on application instance");
         }
 
+        $this->preResolveApplicationAbstracts($app);
+    }
+
+    /**
+     * Make configured abstracts pre-resolving.
+     *
+     * @param ApplicationContract $app
+     *
+     * @return void
+     */
+    protected function preResolveApplicationAbstracts(ApplicationContract $app): void
+    {
         /** @var ConfigRepository $config */
         $config = $app->make(ConfigRepository::class);
 
@@ -200,9 +212,7 @@ class Worker implements WorkerInterface
         /** @var EventsDispatcher $events */
         $events = $app->make(EventsDispatcher::class);
 
-        if ($events->hasListeners(\get_class($event))) {
-            $events->dispatch($event);
-        }
+        $events->dispatch($event);
     }
 
     /**
