@@ -54,7 +54,7 @@ class WorkerTest extends AbstractTestCase
     {
         parent::setUp();
 
-        $this->out              = \fopen('php://temp', 'rb+');
+        $this->out              = \fopen('php://memory', 'rb+');
         $this->requests_factory = new ServerRequestFactory;
         $this->rr_worker        = new RRWorker(new StreamRelay(\STDIN, $this->out));
     }
