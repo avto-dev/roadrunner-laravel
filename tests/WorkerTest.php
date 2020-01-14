@@ -216,9 +216,15 @@ class WorkerTest extends AbstractTestCase
         $worker->start();
 
         foreach ($expected_events as $expected_event) {
-            $this->assertSame(1, $fired_events[$expected_event], isset($fired_events[$expected_event])
-                ? "Event [{$expected_event}] was fired {$fired_events[$expected_event]} times (instead once)"
-                : "Event [{$expected_event}] was not fired");
+            if (! isset($fired_events[$expected_event])) {
+                $this->fail("Event [{$expected_event}] was not fired");
+            } else {
+                $this->assertSame(
+                    1,
+                    $fired_events[$expected_event],
+                    "Event [{$expected_event}] was fired {$fired_events[$expected_event]} times (instead once)"
+                );
+            }
         }
     }
 
