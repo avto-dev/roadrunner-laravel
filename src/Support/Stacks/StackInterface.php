@@ -3,8 +3,8 @@
 namespace AvtoDev\RoadRunnerLaravel\Support\Stacks;
 
 use Countable;
-use IteratorAggregate;
 use Illuminate\Contracts\Support\Arrayable;
+use IteratorAggregate;
 
 interface StackInterface extends Countable, Arrayable, IteratorAggregate
 {

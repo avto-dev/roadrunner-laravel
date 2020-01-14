@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
-use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Contracts\Http\Kernel as KernelContract;
+use Illuminate\Foundation\Http\Kernel;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {

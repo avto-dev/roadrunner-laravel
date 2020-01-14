@@ -4,18 +4,18 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker\CallbacksInitializer;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Database\DatabaseManager;
-use Illuminate\Support\Traits\Macroable;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
-use Illuminate\Config\Repository as ConfigRepository;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
-use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
 use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer;
 use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\StartOptions\StartOptions;
+use Illuminate\Config\Repository as ConfigRepository;
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializer

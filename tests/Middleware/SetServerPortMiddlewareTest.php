@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Middleware;
 
-use Illuminate\Http\Request;
-use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Middleware\SetServerPortMiddleware;
+use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
+use Illuminate\Http\Request;
 
 /**
  * @group  middleware

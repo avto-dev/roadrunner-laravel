@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Features;
 
+use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Route;
-use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 
 /**
  * @coversNothing

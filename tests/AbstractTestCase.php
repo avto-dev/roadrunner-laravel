@@ -4,16 +4,16 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests;
 
+use AvtoDev\RoadRunnerLaravel\ServiceProvider;
 use Closure;
 use Exception;
-use ReflectionClass;
-use ReflectionException;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\TestCase;
-use AvtoDev\RoadRunnerLaravel\ServiceProvider;
 use PHPUnit\Framework\ExpectationFailedException;
-use SuperClosure\Serializer as ClosureSerializer;
+use ReflectionClass;
+use ReflectionException;
 use SebastianBergmann\RecursionContext\InvalidArgumentException;
+use SuperClosure\Serializer as ClosureSerializer;
 
 abstract class AbstractTestCase extends TestCase
 {

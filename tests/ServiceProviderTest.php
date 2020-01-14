@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests;
 
-use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
 use AvtoDev\RoadRunnerLaravel\Middleware\SetServerPortMiddleware;
+use Illuminate\Contracts\Http\Kernel as HttpKernel;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\ServiceProvider

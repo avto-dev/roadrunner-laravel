@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker\Callbacks;
 
-use Illuminate\Support\Traits\Macroable;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
+use Illuminate\Support\Traits\Macroable;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Worker\Callbacks\Callbacks<extended>

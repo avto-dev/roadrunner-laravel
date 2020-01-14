@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Support\Stacks;
 
 use ArrayIterator;
-use LogicException;
 use Illuminate\Support\Traits\Macroable;
+use LogicException;
 
 abstract class AbstractStack implements StackInterface
 {

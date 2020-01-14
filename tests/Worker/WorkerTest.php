@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Worker;
 
-use AvtoDev\RoadRunnerLaravel\Worker\Worker;
-use Illuminate\Contracts\Foundation\Application;
 use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
-use AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface;
 use AvtoDev\RoadRunnerLaravel\Worker\Callbacks\CallbacksInterface;
+use AvtoDev\RoadRunnerLaravel\Worker\Worker;
+use AvtoDev\RoadRunnerLaravel\Worker\WorkerInterface;
+use Illuminate\Contracts\Foundation\Application;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Worker\Worker

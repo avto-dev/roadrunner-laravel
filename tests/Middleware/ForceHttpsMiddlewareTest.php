@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests\Middleware;
 
+use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
+use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
 use Illuminate\Http\Request;
 use Illuminate\Routing\UrlGenerator;
-use AvtoDev\RoadRunnerLaravel\Tests\AbstractTestCase;
-use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
 
 /**
  * @group  middleware

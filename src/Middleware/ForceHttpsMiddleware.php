@@ -2,10 +2,10 @@
 
 namespace AvtoDev\RoadRunnerLaravel\Middleware;
 
+use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Routing\UrlGenerator;
-use AvtoDev\RoadRunnerLaravel\Worker\CallbacksInitializer\CallbacksInitializerInterface;
 
 class ForceHttpsMiddleware
 {

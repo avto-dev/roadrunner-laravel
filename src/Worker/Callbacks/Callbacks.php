@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Worker\Callbacks;
 
-use Illuminate\Support\Traits\Macroable;
 use AvtoDev\RoadRunnerLaravel\Support\Stacks\CallbacksStack;
+use Illuminate\Support\Traits\Macroable;
 
 class Callbacks implements CallbacksInterface
 {
