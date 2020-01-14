@@ -194,7 +194,9 @@ class WorkerTest extends AbstractTestCase
                     m::mock($app->make('events'))
                         ->shouldReceive('dispatch')
                         ->withArgs(static function ($event) use (&$fired_events): bool {
-                            $event_class = \get_class($event);
+                            $event_class = \is_object($event)
+                                ? \get_class($event)
+                                : (string) $event;
 
                             if (! isset($fired_events[$event_class])) {
                                 $fired_events[$event_class] = 1;
