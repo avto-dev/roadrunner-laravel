@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Tests\Listeners;
 
 use Mockery as m;
+use RuntimeException;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use AvtoDev\RoadRunnerLaravel\Listeners\RebindRouterListener;
@@ -62,6 +64,38 @@ class RebindRouterListenerTest extends AbstractListenerTestCase
             ->makePartial()
             ->expects('getRoutes')
             ->andThrow(new MethodNotAllowedHttpException(['UPDATE']))
+            ->getMock();
+
+        $this->app->instance('router', $router);
+
+        /** @var m\MockInterface|WithApplication|WithHttpRequest $event_mock */
+        $event_mock = m::mock(\implode(',', [WithApplication::class, WithHttpRequest::class]))
+            ->makePartial()
+            ->expects('application')
+            ->andReturn($this->app)
+            ->getMock()
+            ->expects('httpRequest')
+            ->andReturn($request)
+            ->getMock();
+
+        $this->listenerFactory()->handle($event_mock);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function testHandlePassthruNonHttpException(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage($exception_message = 'passthru ' . Str::random());
+
+        /** @var Request $request */
+        $request = $this->app->make('request');
+        /** @var m\MockInterface|Router $router */
+        $router = m::mock($this->app->make('router'))
+            ->makePartial()
+            ->expects('getRoutes')
+            ->andThrow(new RuntimeException($exception_message))
             ->getMock();
 
         $this->app->instance('router', $router);
