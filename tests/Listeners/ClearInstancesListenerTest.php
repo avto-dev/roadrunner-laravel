@@ -30,7 +30,7 @@ class ClearInstancesListenerTest extends AbstractListenerTestCase
             ->getMock();
 
         // Define custom container abstracts
-        $abstracts = ['foo', 'bar'];
+        $abstracts          = ['foo', 'bar'];
         $singleton_abstract = 'baz';
 
         // Make instances ("bind") in container
