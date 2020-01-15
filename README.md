@@ -17,8 +17,6 @@ Easy way for connecting [RoadRunner][roadrunner] and [Laravel][laravel] applicat
 
 Require this package with composer using the one of next commands.
 
-For Laravel versions `5.5.x`..`6.x` with minimal PHP version 7.1.3 and above:
-
 ```shell
 $ composer require avto-dev/roadrunner-laravel "^3.0"
 ```
@@ -61,16 +59,16 @@ After that you can modify configuration files as you wish.
 
 ## Usage
 
-After package installation you can use provided "binary" file as RoadRunner worker: `./vendor/bin/rr-worker`. This worker allows you to interact with incoming requests and outcoming responses using [laravel events system][laravel_events]. Also events contains _(each event contains link to the application instance)_:
+After package installation you can use provided "binary" file as RoadRunner worker: `./vendor/bin/rr-worker`. This worker allows you to interact with incoming requests and outcoming responses using [laravel events system][laravel_events]. Also events contains:
 
-Event classname              | HTTP server request | HTTP request | HTTP response 
----------------------------- | :-----------------: | :----------: | :-----------:
-`BeforeLoopStartedEvent`     |                     |              |
-`BeforeLoopIterationEvent`   |          ✔          |              |
-`BeforeRequestHandlingEvent` |                     |       ✔      |
-`AfterRequestHandlingEvent`  |                     |       ✔      |       ✔
-`AfterLoopIterationEvent`    |                     |       ✔      |       ✔
-`AfterLoopStoppedEvent`      |                     |              |
+Event classname              | Application object | HTTP server request | HTTP request | HTTP response 
+---------------------------- | :----------------: | :-----------------: | :----------: | :-----------:
+`BeforeLoopStartedEvent`     |          ✔         |                     |              |
+`BeforeLoopIterationEvent`   |          ✔         |          ✔          |              |
+`BeforeRequestHandlingEvent` |          ✔         |                     |       ✔      |
+`AfterRequestHandlingEvent`  |          ✔         |                     |       ✔      |       ✔
+`AfterLoopIterationEvent`    |          ✔         |                     |       ✔      |       ✔
+`AfterLoopStoppedEvent`      |          ✔         |                     |              |
 
 ### Listeners
 
@@ -82,7 +80,7 @@ You can use the following environment variables:
 
 Variable name     | Description
 ----------------- | -----------
-`APP_FORCE_HTTPS` | (declared in configuration file) Forces application HTTPS schema usage
+`APP_FORCE_HTTPS` | _(declared in configuration file)_ Forces application HTTPS schema usage
 `APP_REFRESH`     | Refresh application instance on every request
 
 ### Testing
