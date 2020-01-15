@@ -10,6 +10,7 @@ use Illuminate\Routing\Router;
 use AvtoDev\RoadRunnerLaravel\Listeners\RebindRouterListener;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 /**
  * @covers \AvtoDev\RoadRunnerLaravel\Listeners\RebindRouterListener<extended>
@@ -47,6 +48,35 @@ class RebindRouterListenerTest extends AbstractListenerTestCase
 
         $this->assertSame($this->app, $this->getProperty($router, $container_prop));
         $this->assertSame($this->app, $this->getProperty($router->getRoutes()->match($request), $container_prop));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function testHandleWithSomeAnotherHttpException(): void
+    {
+        /** @var Request $request */
+        $request = $this->app->make('request');
+        /** @var m\MockInterface|Router $router */
+        $router = m::mock($this->app->make('router'))
+            ->makePartial()
+            ->expects('getRoutes')
+            ->andThrow(new MethodNotAllowedHttpException(['UPDATE']))
+            ->getMock();
+
+        $this->app->instance('router', $router);
+
+        /** @var m\MockInterface|WithApplication|WithHttpRequest $event_mock */
+        $event_mock = m::mock(\implode(',', [WithApplication::class, WithHttpRequest::class]))
+            ->makePartial()
+            ->expects('application')
+            ->andReturn($this->app)
+            ->getMock()
+            ->expects('httpRequest')
+            ->andReturn($request)
+            ->getMock();
+
+        $this->listenerFactory()->handle($event_mock);
     }
 
     /**

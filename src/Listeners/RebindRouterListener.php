@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Listeners;
 
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @link https://github.com/swooletw/laravel-swoole/blob/master/src/Server/Resetters/RebindRouterContainer.php
@@ -18,7 +18,7 @@ class RebindRouterListener implements ListenerInterface
      */
     public function handle($event): void
     {
-        if ($event instanceof WithApplication && $event instanceof WithHttpRequest) {
+        if (\is_object($event) && $event instanceof WithApplication && $event instanceof WithHttpRequest) {
             $app     = $event->application();
             $request = $event->httpRequest();
 
@@ -30,7 +30,7 @@ class RebindRouterListener implements ListenerInterface
 
                 try {
                     /** @var mixed $route */
-                    $route = $this->{'routes'}->match($request);
+                    $route = $this->{'getRoutes'}()->match($request);
 
                     // rebind resolved controller
                     if (\property_exists($route, $container_property = 'container')) {
@@ -44,7 +44,7 @@ class RebindRouterListener implements ListenerInterface
 
                     // rebind matched route's container
                     $route->setContainer($app);
-                } catch (NotFoundHttpException $e) {
+                } catch (HttpException $e) {
                     // do nothing
                 }
             };
