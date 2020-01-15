@@ -31,11 +31,16 @@ class ClearInstancesListenerTest extends AbstractListenerTestCase
 
         // Define custom container abstracts
         $abstracts = ['foo', 'bar'];
+        $singleton_abstract = 'baz';
 
         // Make instances ("bind") in container
         foreach ($abstracts as $abstract) {
             $this->app->instance($abstract, $abstract . '-for-test');
         }
+        $this->app->singleton($singleton_abstract, static function () {
+            return new \stdClass;
+        });
+        $singleton = $this->app->make($singleton_abstract);
 
         // Assert that instances are presents in container
         foreach ($abstracts as $abstract) {
@@ -44,7 +49,7 @@ class ClearInstancesListenerTest extends AbstractListenerTestCase
         }
 
         // Set config value for instances clearing
-        $config->set('roadrunner.clear_instances', $abstracts);
+        $config->set('roadrunner.clear_instances', \array_merge($abstracts, [$singleton_abstract]));
 
         $this->listenerFactory()->handle($event_mock);
 
@@ -52,6 +57,7 @@ class ClearInstancesListenerTest extends AbstractListenerTestCase
         foreach ($abstracts as $abstract) {
             $this->assertFalse($this->app->bound($abstract));
         }
+        $this->assertNotSame($singleton, $this->app->make($singleton_abstract));
     }
 
     /**
