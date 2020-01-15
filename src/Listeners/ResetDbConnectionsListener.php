@@ -15,7 +15,7 @@ class ResetDbConnectionsListener implements ListenerInterface
      */
     public function handle($event): void
     {
-        if ($event instanceof WithApplication) {
+        if (\is_object($event) && $event instanceof WithApplication) {
             $manager = $event->application()->make('db');
 
             if ($manager instanceof DatabaseManager) {

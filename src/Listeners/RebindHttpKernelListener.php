@@ -17,7 +17,7 @@ class RebindHttpKernelListener implements ListenerInterface
      */
     public function handle($event): void
     {
-        if ($event instanceof WithApplication) {
+        if (\is_object($event) && $event instanceof WithApplication) {
             $app = $event->application();
 
             /** @var HttpKernel $kernel */
@@ -28,8 +28,8 @@ class RebindHttpKernelListener implements ListenerInterface
             };
 
             // Black magic in action
-            $resetKernel = $closure->bindTo($kernel, $kernel);
-            $resetKernel();
+            $reseter = $closure->bindTo($kernel, $kernel);
+            $reseter();
         }
     }
 }

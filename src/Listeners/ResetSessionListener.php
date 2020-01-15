@@ -16,7 +16,7 @@ class ResetSessionListener implements ListenerInterface
      */
     public function handle($event): void
     {
-        if ($event instanceof WithApplication) {
+        if (\is_object($event) && $event instanceof WithApplication) {
             $app = $event->application();
 
             if ($app->bound('session')) {
