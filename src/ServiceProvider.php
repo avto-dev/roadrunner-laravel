@@ -4,72 +4,101 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
-use Illuminate\Foundation\Http\Kernel;
-use Illuminate\Contracts\Http\Kernel as KernelContract;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
-     * Register services and middleware.
+     * Get config root key name.
      *
-     * @param KernelContract $kernel
-     *
-     * @return void
+     * @return string roadrunner
      */
-    public function boot(KernelContract $kernel): void
+    public static function getConfigRootKey(): string
     {
-        if ($kernel instanceof Kernel) {
-            // NOTE: Registering order is very important
-            // ForceHttpsMiddleware MUST be registered EARLIER then SetServerPortMiddleware (for registering used
-            // method "prependMiddleware", so, each register method push middleware to the TOP of middleware set)
-            $this->registerSetServerPortMiddleware($kernel);
-            $this->registerForceHttpsMiddleware($kernel);
-        }
+        return \basename(static::getConfigPath(), '.php');
     }
 
     /**
-     * Register services and etc.
+     * Returns path to the configuration file.
+     *
+     * @return string
+     */
+    public static function getConfigPath(): string
+    {
+        return __DIR__ . '/../config/roadrunner.php';
+    }
+
+    /**
+     * Register package services.
      *
      * @return void
      */
     public function register(): void
     {
-        $this->initializePublishes();
+        $this->initializeConfigs();
     }
 
     /**
-     * Register "ForceHttpsMiddleware".
+     * Boot package services.
      *
-     * @param Kernel $kernel
+     * @param ConfigRepository $config
+     * @param EventsDispatcher $events
      *
      * @return void
      */
-    protected function registerForceHttpsMiddleware(Kernel $kernel): void
+    public function boot(ConfigRepository $config, EventsDispatcher $events): void
     {
-        $kernel->prependMiddleware(Middleware\ForceHttpsMiddleware::class);
+        $this->bootEventListeners($config, $events);
     }
 
     /**
-     * Register "SetServerPortMiddleware".
-     *
-     * @param Kernel $kernel
+     * @param ConfigRepository $config
+     * @param EventsDispatcher $events
      *
      * @return void
      */
-    protected function registerSetServerPortMiddleware(Kernel $kernel): void
+    protected function bootEventListeners(ConfigRepository $config, EventsDispatcher $events): void
     {
-        $kernel->prependMiddleware(Middleware\SetServerPortMiddleware::class);
+        foreach ((array) $config->get(static::getConfigRootKey() . '.listeners') as $event => $listeners) {
+            foreach (\array_filter(\array_unique($listeners)) as $listener) {
+                $events->listen($event, $listener);
+            }
+        }
     }
 
     /**
-     * Initialize publishes.
+     * Initialize configs.
      *
      * @return void
      */
-    protected function initializePublishes(): void
+    protected function initializeConfigs(): void
     {
+        $this->mergeConfigFrom(static::getConfigPath(), static::getConfigRootKey());
+
         $this->publishes([
-            __DIR__ . '/../configs/rr' => $this->app->basePath(),
-        ], 'rr-config');
+            \realpath(static::getConfigPath()) => config_path(\basename(static::getConfigPath())),
+        ], 'config');
+
+        if (\is_string($rr_config = $this->getRoadRunnerSimpleConfigPath())) {
+            $this->publishes([
+                $rr_config => $this->app->basePath() . DIRECTORY_SEPARATOR . '.rr.yaml.dist',
+            ], 'rr-config');
+        }
+    }
+
+    /**
+     * Get path to the RoadRunner simple config file (if it possible).
+     *
+     * @return string|null
+     */
+    protected function getRoadRunnerSimpleConfigPath(): ?string
+    {
+        $vendor = \dirname((string) (new \ReflectionClass(\Composer\Autoload\ClassLoader::class))->getFileName(), 2);
+        $path   = (string) \realpath($vendor . '/spiral/roadrunner/.rr.yaml');
+
+        return \is_file($path)
+            ? $path
+            : null;
     }
 }

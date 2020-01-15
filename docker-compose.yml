@@ -1,9 +1,5 @@
 version: '3.2'
 
-networks:
-  app-network:
-    driver: bridge
-
 volumes:
   composer-data:
 
@@ -17,5 +13,3 @@ services:
       - /etc/group:/etc/group:ro
       - .:/src:cached
       - composer-data:/tmp/composer:cached
-    networks:
-      - app-network

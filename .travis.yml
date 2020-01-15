@@ -1,4 +1,5 @@
 language: php
+os: linux
 
 cache:
   directories:
@@ -9,8 +10,6 @@ env:
     - setup=basic
     - coverage=false
     - laravel=default
-
-sudo: false
 
 branches:
   except:
@@ -33,16 +32,12 @@ script:
 after_success:
   - if [[ $coverage = 'true' ]]; then bash <(curl -s https://codecov.io/bash); fi
 
-matrix:
+jobs:
   include:
     - php: 7.1.3
       env: setup=lowest
     - php: 7.1.3
-      env: laravel=5.5
-    - php: 7.1.3
-      env: laravel=5.6
-    - php: 7.1.3
-      env: coverage=true
+      env: coverage=true laravel=5.8
 
     - php: 7.2
       env: setup=lowest
@@ -53,8 +48,6 @@ matrix:
 
     - php: 7.3
       env: setup=lowest
-    - php: 7.3
-      env: laravel=5.5
     - php: 7.3
       env: laravel=5.6
     - php: 7.3
@@ -64,7 +57,7 @@ matrix:
     - php: 7.3
       env: coverage=true laravel=6.*
 
-    - php: nightly
-
-  allow_failures:
-    - php: nightly
+    - php: 7.4
+      env: setup=lowest
+    - php: 7.4
+      env: coverage=true laravel=6.*

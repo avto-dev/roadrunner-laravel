@@ -17,8 +17,10 @@ enabled:
   - phpdoc_return_self_reference
   - align_equals
   - concat_with_spaces
+  - length_ordered_imports
 
 disabled:
   - unalign_equals
   - concat_without_spaces
   - declare_equal_normalize
+  - alpha_ordered_imports

@@ -4,64 +4,86 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests;
 
-use Illuminate\Contracts\Http\Kernel as HttpKernel;
-use AvtoDev\RoadRunnerLaravel\Middleware\ForceHttpsMiddleware;
-use AvtoDev\RoadRunnerLaravel\Middleware\SetServerPortMiddleware;
+use AvtoDev\RoadRunnerLaravel\ServiceProvider;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
+use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 
 /**
- * @covers \AvtoDev\RoadRunnerLaravel\ServiceProvider
+ * @covers \AvtoDev\RoadRunnerLaravel\ServiceProvider<extended>
  */
 class ServiceProviderTest extends AbstractTestCase
 {
     /**
-     * @var \Illuminate\Foundation\Http\Kernel
+     * @return void
      */
-    protected $http_kernel;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
+    public function testGetConfigRootKey(): void
     {
-        parent::setUp();
-
-        $this->http_kernel = $this->app->make(HttpKernel::class);
+        $this->assertSame('roadrunner', ServiceProvider::getConfigRootKey());
     }
 
     /**
      * @return void
      */
-    public function testForceHttpsMiddlewareRegistered(): void
+    public function testGetConfigPath(): void
     {
-        $this->assertTrue($this->http_kernel->hasMiddleware(ForceHttpsMiddleware::class));
-    }
-
-    /**
-     * @return void
-     */
-    public function testSetServerPortMiddlewareRegistered(): void
-    {
-        $this->assertTrue($this->http_kernel->hasMiddleware(SetServerPortMiddleware::class));
-    }
-
-    /**
-     * @small
-     *
-     * @return void
-     */
-    public function testMiddlewareOrder(): void
-    {
-        /** @var string[] $middleware */
-        $middleware = $this->getObjectAttribute($this->http_kernel, 'middleware');
-
-        $force_https_index = \array_search(ForceHttpsMiddleware::class, $middleware);
-        $set_port_index    = \array_search(SetServerPortMiddleware::class, $middleware);
-
-        $this->assertNotEquals($force_https_index, $set_port_index);
-
-        $this->assertTrue(
-            $force_https_index < $set_port_index,
-            'ForceHttpsMiddleware MUST be registered EARLIER then SetServerPortMiddleware'
+        $this->assertSame(
+            \realpath(__DIR__ . '/../config/roadrunner.php'),
+            \realpath($path = ServiceProvider::getConfigPath())
         );
+
+        $this->assertFileExists($path);
+    }
+
+    /**
+     * @return void
+     */
+    public function testRegisterConfigs(): void
+    {
+        $package_config_src    = \realpath(ServiceProvider::getConfigPath());
+        $package_config_target = $this->app->configPath(\basename(ServiceProvider::getConfigPath()));
+
+        $this->assertSame(
+            $package_config_target,
+            IlluminateServiceProvider::$publishes[ServiceProvider::class][$package_config_src]
+        );
+
+        $this->assertSame(
+            $package_config_target,
+            IlluminateServiceProvider::$publishGroups['config'][$package_config_src],
+            "Publishing group value {$package_config_target} was not found"
+        );
+
+        $rr_bin_config_src    = \realpath(__DIR__ . '/../vendor/spiral/roadrunner/.rr.yaml');
+        $rr_bin_config_target = $this->app->basePath('.rr.yaml.dist');
+
+        $this->assertSame(
+            $rr_bin_config_target,
+            IlluminateServiceProvider::$publishes[ServiceProvider::class][$rr_bin_config_src]
+        );
+
+        $this->assertSame(
+            $rr_bin_config_target,
+            IlluminateServiceProvider::$publishGroups['rr-config'][$rr_bin_config_src],
+            "Publishing group value {$rr_bin_config_target} was not found"
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testEventListenersBooting(): void
+    {
+        /** @var ConfigRepository $config */
+        $config = $this->app->make(ConfigRepository::class);
+
+        /** @var EventsDispatcher $events */
+        $events = $this->app->make(EventsDispatcher::class);
+
+        foreach ($config->get('roadrunner.listeners') as $event => $listeners) {
+            if (! empty($listeners)) {
+                $this->assertTrue($events->hasListeners($event), "Event [{$event}] has no listeners");
+            }
+        }
     }
 }

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://laravel.com/assets/img/components/logo-laravel.svg" alt="Laravel" width="240" />
+  <img src="https://hsto.org/webt/xl/pr/89/xlpr891cyv9ux3gm7dtzwjse_5a.png" alt="logo" width="420" />
 </p>
 
 # [RoadRunner][roadrunner] ⇆ Laravel bridge
@@ -11,29 +11,29 @@
 [![Downloads count][badge_downloads_count]][link_packagist]
 [![License][badge_license]][link_license]
 
-Easy way for connecting [RoadRunner][roadrunner] and Laravel applications.
+Easy way for connecting [RoadRunner][roadrunner] and [Laravel][laravel] applications.
 
 ## Install
 
-Require this package with composer using the one of next commands.
-
-For Laravel versions `5.5.x`..`5.7.x` with minimal PHP version 7.0 (version `1.x` is abandoned):
+Require this package with composer using next commands:
 
 ```shell
-$ composer require avto-dev/roadrunner-laravel "^1.4"
-```
-
-For Laravel versions `5.5.x`..`5.8.x` with minimal PHP version 7.1.3 and above:
-
-```shell
-$ composer require avto-dev/roadrunner-laravel "^2.0"
+$ composer require avto-dev/roadrunner-laravel "^3.0"
 ```
 
 > Installed `composer` is required ([how to install composer][getcomposer]).
 
 > You need to fix the major version of package.
 
-After that you can optionally "publish" default RoadRunner configuration files into your application root directory using next command:
+> Previous major versions still available, but it's development is abandoned. Use only latest major version!
+
+After that you can "publish" package configuration file (`./config/roadrunner.php`) using next command:
+
+```bash
+$ php ./artisan vendor:publish --provider='AvtoDev\RoadRunnerLaravel\ServiceProvider' --tag=config
+```
+
+And basic RoadRunner configuration file (`./.rr.yaml.dist`):
 
 ```bash
 $ php ./artisan vendor:publish --provider='AvtoDev\RoadRunnerLaravel\ServiceProvider' --tag=rr-config
@@ -53,47 +53,43 @@ If you wants to disable package service-provider auto discover, just add into yo
 }
 ```
 
+After that you can modify configuration files as you wish.
+
+**Important**: despite the fact that worker allows you to refresh application instance on each HTTP request _(if environment variable `APP_REFRESH` set to `true`)_, we strongly recommend to avoid this for performance reasons. Large applications can be hard to integrate with RoadRunner _(you must decide which of service providers must be reloaded on each request, avoid "static optimization" in some cases)_, but it's worth it.
+
 ## Usage
 
-This package allows you to use "production ready" worker for RoadRunner, that you can extend as you want.
+After package installation you can use provided "binary" file as RoadRunner worker: `./vendor/bin/rr-worker`. This worker allows you to interact with incoming requests and outcoming responses using [laravel events system][laravel_events]. Also events contains:
 
-Out of the box it supports next run parameters:
+Event classname              | Application object | HTTP server request | HTTP request | HTTP response 
+---------------------------- | :----------------: | :-----------------: | :----------: | :-----------:
+`BeforeLoopStartedEvent`     |          ✔         |                     |              |
+`BeforeLoopIterationEvent`   |          ✔         |          ✔          |              |
+`BeforeRequestHandlingEvent` |          ✔         |                     |       ✔      |
+`AfterRequestHandlingEvent`  |          ✔         |                     |       ✔      |       ✔
+`AfterLoopIterationEvent`    |          ✔         |                     |       ✔      |       ✔
+`AfterLoopStoppedEvent`      |          ✔         |                     |              |
 
-Name | Description
-------------- | --------
-`--(not-)force-https` | Force (or not) `https` schema usage (eg. for links generation)
-`--(not-)reset-db-connections` | Drop (or not) database connections after incoming request serving
-`--(not-)reset-redis-connections` | Drop (or not) Redis connections after incoming request serving
-`--(not-)refresh-app` | Force refresh application instance after incoming request serving
-`--(not-)inject-stats-into-request` | Inject into each `Request` object macros `::getTimestamp()` and `::getAllocatedMemory()` that returns timestamp and used allocated memory size
-`--not-fix-symfony-file-validation` | Do **not** fix `isValid` method in `\Symfony\Component\HttpFoundation\File\UploadedFile` [#10]
+### Listeners
 
-> Parameters should be declared in RR configuration file (eg. `./.rr.local.yml`) in `http.workers.command`, eg. `php ./vendor/bin/rr-worker --some-parameter`
+This package provides event listeners for resetings application state without full application reload _(like cookies, HTTP request, application instance, service-providers and other)_. Some of them already declared in configuration file, but you can declare own without any limitations.
 
-Also you can use next environment variables:
+### Environment variables
 
-Environment name | Description
------------------------- | --------
-`APP_BASE_PATH` | Base path to the application
-`APP_BOOTSTRAP_PATH` | Path to the application bootstrap file _(default: `/bootstrap/app.php`)_
-`APP_FORCE_HTTPS` | Force `https` schema usage (eg. for links generation)
-`RR_WORKER_CLASS` | Worker class name _(default: `\AvtoDev\RoadRunnerLaravel\Worker\Worker`)_
+You can use the following environment variables:
 
-### Additional HTTP-headers 
-
-For forcing `https` schema usage you can pass special HTTP header `FORCE-HTTPS` with any non-empty value.
-
-### Extending
-
-You can extend this worker as you wish, for more information - "Look into the sources, Luke!".
+Variable name     | Description
+----------------- | -----------
+`APP_FORCE_HTTPS` | _(declared in configuration file)_ Forces application HTTPS schema usage
+`APP_REFRESH`     | Refresh application instance on every request
 
 ### Testing
 
-For package testing we use `phpunit` framework. Just write into your terminal _(installed `docker-ce` is required)_:
+For package testing we use `phpunit` framework and `docker-ce` + `docker-compose` as develop environment. So, just write into your terminal after repository cloning:
 
-```bash
-$ git clone git@github.com:avto-dev/roadrunner-laravel.git ./roadrunner-laravel && cd $_
-$ make install
+```shell
+$ make build
+$ make latest # or 'make lowest'
 $ make test
 ```
 
@@ -137,4 +133,6 @@ This is open-sourced software licensed under the [MIT License][link_license].
 [link_license]:https://github.com/avto-dev/roadrunner-laravel/blob/master/LICENSE
 [getcomposer]:https://getcomposer.org/download/
 [roadrunner]:https://github.com/spiral/roadrunner
+[laravel]:https://laravel.com
+[laravel_events]:https://laravel.com/docs/events
 [#10]:https://github.com/avto-dev/roadrunner-laravel/issues/10

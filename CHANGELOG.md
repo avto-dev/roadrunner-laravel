@@ -4,11 +4,44 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
-## Unreleased
+## v3.0.0
+
+### Changed
+
+- **Package was totally rewrote**
 
 ### Added
 
+- Events for interaction with worker loop:
+  * `BeforeLoopStartedEvent`
+  * `BeforeLoopIterationEvent`
+  * `BeforeRequestHandlingEvent`
+  * `AfterRequestHandlingEvent`
+  * `AfterLoopIterationEvent`
+  * `AfterLoopStoppedEvent`
+- Listeners:
+  * `BindRequestListener`
+  * `ClearInstancesListener`
+  * `CloneConfigListener`
+  * `FixSymfonyFileValidationListener`
+  * `ForceHttpsListener`
+  * `InjectStatsIntoRequestListener`
+  * `RebindHttpKernelListener`
+  * `RebindRouterListener`
+  * `RebindViewListener`
+  * `ResetDbConnectionsListener`
+  * `ResetProvidersListener`
+  * `ResetSessionListener`
+  * `RunGarbageCollectorListener`
+  * `SetServerPortListener`
+  * `UnqueueCookiesListener`
+- `Spiral\RoadRunner\PSR7Client` instance in application containers (closes [#21])
+- Environment variable `APP_REFRESH` supports
+- Package configuration file
+- PHP `7.4` supports
 - GitHub actions for a tests running
+
+[#21]:https://github.com/avto-dev/roadrunner-laravel/issues/21
 
 ## v2.2.0
 
