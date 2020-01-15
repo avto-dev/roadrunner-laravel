@@ -28,7 +28,7 @@ class SetServerPortListener implements ListenerInterface
      */
     public function handle($event): void
     {
-        if (\is_object($event) && $event instanceof WithHttpRequest) {
+        if ($event instanceof WithHttpRequest) {
             $request = $event->httpRequest();
 
             /** @var int|string|null $port */

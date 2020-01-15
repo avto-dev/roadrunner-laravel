@@ -18,7 +18,7 @@ class RebindRouterListener implements ListenerInterface
      */
     public function handle($event): void
     {
-        if (\is_object($event) && $event instanceof WithApplication && $event instanceof WithHttpRequest) {
+        if ($event instanceof WithApplication && $event instanceof WithHttpRequest) {
             $app     = $event->application();
             $request = $event->httpRequest();
 

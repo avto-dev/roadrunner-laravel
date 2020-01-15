@@ -102,8 +102,7 @@ class WorkerTest extends AbstractTestCase
             ->getMock()
             ->shouldReceive('preResolveApplicationAbstracts')
             ->withArgs(function (Application $app): bool {
-                // Register package service-provider
-                $app->register(ServiceProvider::class);
+                $this->getAfterBootstrapClosure()($app);
 
                 $this->assertInstanceOf(PSR7Client::class, $client = $app->make(PSR7Client::class));
                 $this->assertSame($client, $app->make(PSR7Client::class));
@@ -145,8 +144,7 @@ class WorkerTest extends AbstractTestCase
             ->getMock()
             ->shouldReceive('preResolveApplicationAbstracts')
             ->withArgs(function (Application $app): bool {
-                // Register package service-provider
-                $app->register(ServiceProvider::class);
+                $this->getAfterBootstrapClosure()($app);
 
                 $this->assertInstanceOf(PSR7Client::class, $client = $app->make(PSR7Client::class));
                 $this->assertSame($client, $app->make(PSR7Client::class));

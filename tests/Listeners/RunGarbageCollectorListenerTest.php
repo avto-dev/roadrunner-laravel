@@ -18,7 +18,7 @@ class RunGarbageCollectorListenerTest extends AbstractListenerTestCase
     {
         $this->listenerFactory()->handle(new \stdClass);
 
-        $this->assertTrue(true, 'There is no legal way for handle method testing.');
+        $this->markTestIncomplete('There is no legal way for handle method testing.');
     }
 
     /**

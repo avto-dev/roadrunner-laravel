@@ -22,4 +22,12 @@ class WorkerBinaryTest extends AbstractTestCase
         $this->assertFileExists($this->binary_location);
         $this->assertTrue(\is_executable($this->binary_location));
     }
+
+    /**
+     * @return void
+     */
+    public function testExecution(): void
+    {
+        $this->markTestIncomplete('There is no legal way for execution testing.');
+    }
 }

@@ -17,7 +17,7 @@ class ForceHttpsListener implements ListenerInterface
      */
     public function handle($event): void
     {
-        if (\is_object($event) && $event instanceof WithHttpRequest && $event instanceof WithApplication) {
+        if ($event instanceof WithHttpRequest && $event instanceof WithApplication) {
             $app = $event->application();
 
             /** @var ConfigRepository $config */
