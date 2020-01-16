@@ -10,6 +10,11 @@ use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 
+/**
+ * This listener must be registered BEFORE `SetServerPortListener` for correct links generation.
+ *
+ * @see SetServerPortListener
+ */
 class ForceHttpsListener implements ListenerInterface
 {
     /**

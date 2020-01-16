@@ -76,8 +76,8 @@ return [
             Listeners\RebindRouterListener::class,
             Listeners\InjectStatsIntoRequestListener::class,
             Listeners\BindRequestListener::class,
-            Listeners\SetServerPortListener::class,
             Listeners\ForceHttpsListener::class,
+            Listeners\SetServerPortListener::class,
         ],
 
         Events\AfterRequestHandlingEvent::class => [
