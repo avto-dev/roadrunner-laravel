@@ -7,6 +7,7 @@ namespace AvtoDev\RoadRunnerLaravel\Tests;
 use Mockery as m;
 use RuntimeException;
 use Illuminate\Support\Str;
+use Illuminate\Routing\Router;
 use Spiral\Goridge\StreamRelay;
 use Spiral\RoadRunner\PSR7Client;
 use AvtoDev\RoadRunnerLaravel\Events;
@@ -16,6 +17,7 @@ use Spiral\RoadRunner\Worker as RRWorker;
 use Psr\Http\Message\ServerRequestInterface;
 use AvtoDev\RoadRunnerLaravel\ServiceProvider;
 use AvtoDev\RoadRunnerLaravel\WorkerInterface;
+use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Contracts\Foundation\Application;
 use Spiral\RoadRunner\Diactoros\ServerRequestFactory;
 

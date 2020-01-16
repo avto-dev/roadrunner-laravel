@@ -6,6 +6,11 @@ namespace AvtoDev\RoadRunnerLaravel\Listeners;
 
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
 
+/**
+ * This listener must be registered AFTER `ForceHttpsListener` for correct links generation.
+ *
+ * @see ForceHttpsListener
+ */
 class SetServerPortListener implements ListenerInterface
 {
     /**
