@@ -30,11 +30,11 @@ class InjectStatsIntoRequestListener implements ListenerInterface
                 $current_time     = (float) \microtime(true);
                 $allocated_memory = (int) \memory_get_usage();
 
-                $request::macro(self::REQUEST_TIMESTAMP_MACRO, static function () use ($current_time): float {
+                $request::macro(self::REQUEST_TIMESTAMP_MACRO, function () use ($current_time): float {
                     return $current_time;
                 });
 
-                $request::macro(self::REQUEST_ALLOCATED_MEMORY_MACRO, static function () use ($allocated_memory): int {
+                $request::macro(self::REQUEST_ALLOCATED_MEMORY_MACRO, function () use ($allocated_memory): int {
                     return $allocated_memory;
                 });
             }
