@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 
 ### Fixed
 
-- Mixins in `InjectStatsIntoRequestListener` (functions now not-static)
+- Macroses binds in `InjectStatsIntoRequestListener` (functions now not-static)
 
 ## v3.0.1
 
