@@ -27,28 +27,28 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 ### Added
 
 - Events for interaction with worker loop:
-  * `BeforeLoopStartedEvent`
-  * `BeforeLoopIterationEvent`
-  * `BeforeRequestHandlingEvent`
-  * `AfterRequestHandlingEvent`
-  * `AfterLoopIterationEvent`
-  * `AfterLoopStoppedEvent`
+  - `BeforeLoopStartedEvent`
+  - `BeforeLoopIterationEvent`
+  - `BeforeRequestHandlingEvent`
+  - `AfterRequestHandlingEvent`
+  - `AfterLoopIterationEvent`
+  - `AfterLoopStoppedEvent`
 - Listeners:
-  * `BindRequestListener`
-  * `ClearInstancesListener`
-  * `CloneConfigListener`
-  * `FixSymfonyFileValidationListener`
-  * `ForceHttpsListener`
-  * `InjectStatsIntoRequestListener`
-  * `RebindHttpKernelListener`
-  * `RebindRouterListener`
-  * `RebindViewListener`
-  * `ResetDbConnectionsListener`
-  * `ResetProvidersListener`
-  * `ResetSessionListener`
-  * `RunGarbageCollectorListener`
-  * `SetServerPortListener`
-  * `UnqueueCookiesListener`
+  - `BindRequestListener`
+  - `ClearInstancesListener`
+  - `CloneConfigListener`
+  - `FixSymfonyFileValidationListener`
+  - `ForceHttpsListener`
+  - `InjectStatsIntoRequestListener`
+  - `RebindHttpKernelListener`
+  - `RebindRouterListener`
+  - `RebindViewListener`
+  - `ResetDbConnectionsListener`
+  - `ResetProvidersListener`
+  - `ResetSessionListener`
+  - `RunGarbageCollectorListener`
+  - `SetServerPortListener`
+  - `UnqueueCookiesListener`
 - `Spiral\RoadRunner\PSR7Client` instance in application containers (closes [#21])
 - Environment variable `APP_REFRESH` supports
 - Package configuration file
