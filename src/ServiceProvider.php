@@ -104,7 +104,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             return \rtrim($this->app->make($config_path_abstract), DIRECTORY_SEPARATOR) . $path; // old laravel
         }
 
-        return $this->app->basePath("config/{$path}"); // fallback
+        return \rtrim($this->app->basePath(), DIRECTORY_SEPARATOR) . "config/{$path}"; // fallback
     }
 
     /**

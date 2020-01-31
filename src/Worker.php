@@ -120,7 +120,7 @@ class Worker implements WorkerInterface
      *
      * @return ApplicationContract
      */
-    protected function createApplication(string $base_path): ApplicationContract
+    protected function createApplication(string $base_path)
     {
         $path = \implode(\DIRECTORY_SEPARATOR, [\rtrim($base_path, \DIRECTORY_SEPARATOR), 'bootstrap', 'app.php']);
 
@@ -141,7 +141,7 @@ class Worker implements WorkerInterface
      *
      * @return void
      */
-    protected function bootstrapApplication(ApplicationContract $app, PSR7Client $psr7_client): void
+    protected function bootstrapApplication($app, PSR7Client $psr7_client): void
     {
         /** @var \Illuminate\Foundation\Http\Kernel $http_kernel */
         $http_kernel = $app->make(HttpKernelContract::class);
