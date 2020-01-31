@@ -77,7 +77,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->mergeConfigFrom(static::getConfigPath(), static::getConfigRootKey());
 
         $this->publishes([
-            \realpath(static::getConfigPath()) => config_path(\basename(static::getConfigPath())),
+            \realpath(static::getConfigPath()) => $this->getConfigsPath(\basename(static::getConfigPath())),
         ], 'config');
 
         if (\is_string($rr_config = $this->getRoadRunnerSimpleConfigPath())) {
@@ -85,6 +85,26 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 $rr_config => $this->app->basePath() . DIRECTORY_SEPARATOR . '.rr.yaml.dist',
             ], 'rr-config');
         }
+    }
+
+    /**
+     * Get configs directory path.
+     *
+     * @param string|null $path
+     *
+     * @return string
+     */
+    protected function getConfigsPath(?string $path = null): string
+    {
+        if (\method_exists($this->app, $config_path_method = 'configPath')) {
+            return $this->app->{$config_path_method}($path); // last laravel|lumen version
+        }
+
+        if ($this->app->bound($config_path_abstract = 'path.config')) {
+            return \rtrim($this->app->make($config_path_abstract), DIRECTORY_SEPARATOR) . $path; // old laravel
+        }
+
+        return $this->app->basePath("config/{$path}"); // fallback
     }
 
     /**
