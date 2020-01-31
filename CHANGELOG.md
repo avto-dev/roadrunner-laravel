@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v3.1.0
+
+### Added
+
+- Lumen framework supports [#29]
+
+[#29]:https://github.com/avto-dev/roadrunner-laravel/issues/29
+
 ## v3.0.2
 
 ### Fixed
