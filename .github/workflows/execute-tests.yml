@@ -75,6 +75,7 @@ jobs: # Docs: <https://help.github.com/en/articles/workflow-syntax-for-github-ac
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage/clover.xml
+          fail_ci_if_error: false
 
   lint-changelog:
     name: Lint changelog file
