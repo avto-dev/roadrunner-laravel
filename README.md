@@ -70,6 +70,27 @@ Event classname              | Application object | HTTP server request | HTTP r
 `AfterLoopIterationEvent`    |          ✔         |                     |       ✔      |       ✔
 `AfterLoopStoppedEvent`      |          ✔         |                     |              |
 
+Simple `.rr.yaml` config example:
+
+```yaml
+env:
+  #APP_REFRESH: true
+
+http:
+  address: 0.0.0.0:8080
+  workers:
+    command: 'php ./vendor/bin/rr-worker'
+
+static:
+  dir: 'public'
+```
+
+Roadrunner server starting in detached mode:
+
+```bash
+$ rr -c ./.rr.yaml serve -d
+```
+
 ### Listeners
 
 This package provides event listeners for resetings application state without full application reload _(like cookies, HTTP request, application instance, service-providers and other)_. Some of them already declared in configuration file, but you can declare own without any limitations.
