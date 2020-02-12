@@ -70,18 +70,25 @@ Event classname              | Application object | HTTP server request | HTTP r
 `AfterLoopIterationEvent`    |          ✔         |                     |       ✔      |       ✔
 `AfterLoopStoppedEvent`      |          ✔         |                     |              |
 
-.rr.yaml example
+Simple `.rr.yaml` config example:
 
-```
+```yaml
+env:
+  #APP_REFRESH: true
+
 http:
   address: 0.0.0.0:8080
   workers:
-    command:  "./vendor/bin/rr-worker"
+    command: 'php ./vendor/bin/rr-worker'
+
+static:
+  dir: 'public'
 ```
 
-start roadrunner server in detached mode
-```
-rr -c .rr.yaml serve -d
+Roadrunner server starting in detached mode:
+
+```bash
+$ rr -c .rr.yaml serve -d
 ```
 
 ### Listeners
