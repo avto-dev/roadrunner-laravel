@@ -88,7 +88,7 @@ static:
 Roadrunner server starting in detached mode:
 
 ```bash
-$ rr -c /.rr.yaml serve -d
+$ rr -c ./.rr.yaml serve -d
 ```
 
 ### Listeners
