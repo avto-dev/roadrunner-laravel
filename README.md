@@ -85,7 +85,7 @@ static:
   dir: 'public'
 ```
 
-Roadrunner server starting in detached mode:
+Roadrunner server starting:
 
 ```bash
 $ rr -c ./.rr.yaml serve -d
