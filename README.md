@@ -17,7 +17,7 @@ Easy way for connecting [RoadRunner][roadrunner] and [Laravel][laravel] applicat
 
 Require this package with composer using next commands:
 
-```shell
+```shell script
 $ composer require avto-dev/roadrunner-laravel "^3.0"
 ```
 
@@ -29,13 +29,13 @@ $ composer require avto-dev/roadrunner-laravel "^3.0"
 
 After that you can "publish" package configuration file (`./config/roadrunner.php`) using next command:
 
-```bash
+```shell script
 $ php ./artisan vendor:publish --provider='AvtoDev\RoadRunnerLaravel\ServiceProvider' --tag=config
 ```
 
 And basic RoadRunner configuration file (`./.rr.yaml.dist`):
 
-```bash
+```shell script
 $ php ./artisan vendor:publish --provider='AvtoDev\RoadRunnerLaravel\ServiceProvider' --tag=rr-config
 ```
 
@@ -108,7 +108,7 @@ Variable name     | Description
 
 For package testing we use `phpunit` framework and `docker-ce` + `docker-compose` as develop environment. So, just write into your terminal after repository cloning:
 
-```shell
+```shell script
 $ make build
 $ make latest # or 'make lowest'
 $ make test
