@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 
 ## v3.1.0
 
-### Added
+### Changed
 
 - Maximal `illuminate/*` packages version now is `7.*`
 
