@@ -87,7 +87,7 @@ static:
 
 Roadrunner server starting:
 
-```bash
+```shell script
 $ rr -c ./.rr.yaml serve -d
 ```
 

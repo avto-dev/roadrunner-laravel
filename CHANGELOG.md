@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v3.1.0
+
+### Changed
+
+- Maximal `illuminate/*` packages version now is `7.*`
+
+### Removed
+
+- Unused dev-dependency `jeremeamia/superclosure`
+
 ## v3.0.2
 
 ### Fixed
