@@ -4,7 +4,7 @@ namespace Symfony\Component\HttpFoundation\File {
 
     /**
      * ***************************************************************************
-     * ******* WARNING **** WARNING **** WARNING **** WARNING **** WARNING *******
+     * ******* WARNING **** WARNING **** WARNING **** WARNING **** WARNING *******.
      * ***************************************************************************
      * *******                                                             *******
      * *******        THIS FUNCTION OVERLOADING IS NECESSARY MEASURE       *******
