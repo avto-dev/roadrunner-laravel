@@ -13,9 +13,9 @@
 
 Easy way for connecting [RoadRunner][roadrunner] and [Laravel][laravel] applications.
 
-## Install
+## Installation
 
-Require this package with composer using next commands:
+Require this package with composer using next command:
 
 ```shell script
 $ composer require avto-dev/roadrunner-laravel "^3.0"
@@ -37,20 +37,6 @@ And basic RoadRunner configuration file (`./.rr.yaml.dist`):
 
 ```shell script
 $ php ./artisan vendor:publish --provider='AvtoDev\RoadRunnerLaravel\ServiceProvider' --tag=rr-config
-```
-
-If you wants to disable package service-provider auto discover, just add into your `composer.json` next lines:
-
-```json
-{
-    "extra": {
-        "laravel": {
-            "dont-discover": [
-                "avto-dev/roadrunner-laravel"
-            ]
-        }
-    }
-}
 ```
 
 After that you can modify configuration files as you wish.
@@ -103,6 +89,71 @@ Variable name     | Description
 ----------------- | -----------
 `APP_FORCE_HTTPS` | _(declared in configuration file)_ Forces application HTTPS schema usage
 `APP_REFRESH`     | Refresh application instance on every request
+
+### Known issues
+
+#### Controller constructors
+
+You should avoid to use HTTP controller constructors _(created or resolved instances in constructor can be shared between different requests)_. Use dependencies resolving in controller **methods** instead.
+
+Bad:
+
+```php
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
+
+class UserController extends Controller
+{
+    /**
+     * The user repository instance.
+     */
+    protected $users;
+
+    /**
+     * @param  UserRepository $users
+     * @return void
+     */
+    public function __construct(UserRepository $users)
+    {
+        $this->users = $users;
+    }
+    
+    /**
+     * @param  Request  $request
+     * @return Response
+     */
+    public function store(Request $request): Response
+    {
+        $user = $this->users->getById($request->id);
+        
+        // ...
+    }
+}
+```
+
+Good:
+
+```php
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
+
+class UserController extends Controller
+{
+    /**
+     * @param  Request        $request
+     * @param  UserRepository $users
+     * @return Response
+     */
+    public function store(Request $request, UserRepository $users): Response
+    {
+        $user = $users->getById($request->id);
+        
+        // ...
+    }
+}
+```
 
 ### Testing
 
