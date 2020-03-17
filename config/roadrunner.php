@@ -64,7 +64,7 @@ return [
         ],
 
         Events\BeforeLoopIterationEvent::class => [
-            Listeners\RebindHttpKernelListener::class,
+            Listeners\RebindHttpKernelListener::class, // Laravel 7 issue: <https://git.io/JvPpf>
             Listeners\RebindViewListener::class,
             Listeners\CloneConfigListener::class,
             Listeners\UnqueueCookiesListener::class,
