@@ -111,8 +111,7 @@ class UserController extends Controller
     protected $users;
 
     /**
-     * @param  UserRepository $users
-     * @return void
+     * @param UserRepository $users
      */
     public function __construct(UserRepository $users)
     {
@@ -121,6 +120,7 @@ class UserController extends Controller
     
     /**
      * @param  Request  $request
+     *
      * @return Response
      */
     public function store(Request $request): Response
@@ -144,6 +144,7 @@ class UserController extends Controller
     /**
      * @param  Request        $request
      * @param  UserRepository $users
+     *
      * @return Response
      */
     public function store(Request $request, UserRepository $users): Response
@@ -151,6 +152,77 @@ class UserController extends Controller
         $user = $users->getById($request->id);
         
         // ...
+    }
+}
+```
+
+#### Middleware constructors
+
+You should never to use middleware constructor for `session`, `session.store`, `auth` or auth `Guard` instances resolving and **storing** in properties _(for example)_. Use method-injection or access them through `Request` instance.
+
+Bad:
+
+```php
+use Illuminate\Http\Request;
+use Illuminate\Session\Store;
+
+class Middleware
+{
+    /**
+     * @var Store
+     */
+    protected $session;
+
+    /**
+     * @param Store $session
+     */
+    public function __construct(Store $session)
+    {
+        $this->session = $session;
+    }
+    
+    /**
+     * Handle an incoming request.
+     *
+     * @param Request  $request
+     * @param \Closure $next
+     *
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        $name = $this->session->getName();
+        
+        // ...
+        
+        return $next($request);
+    }
+}
+```
+
+Good:
+
+```php
+use Illuminate\Http\Request;
+
+class Middleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param Request  $request
+     * @param \Closure $next
+     *
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        $name = $request->session()->getName();
+        // $name = resolve('session')->getName();
+        
+        // ...
+        
+        return $next($request);
     }
 }
 ```
