@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## v3.2.0
+
+### Changed
+
+- Dependency `zendframework/zend-diactoros` replaced with `laminas/laminas-diactoros`
+- Worker PSR7 fabric method uses `Laminas\Diactoros\ResponseFactory` as ResponseFactory (instead `Zend\Diactoros\ResponseFactory`)
+- Minimal required version of `spiral/roadrunner` package changed from `~1.6` to `~1.7`
+
 ## v3.1.0
 
 ### Changed

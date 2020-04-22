@@ -7,7 +7,7 @@ dc_bin := $(shell command -v docker-compose 2> /dev/null)
 SHELL = /bin/sh
 RUN_APP_ARGS = --rm --user "$(shell id -u):$(shell id -g)" app
 
-.PHONY : help build latest install lowest test test-cover 'shell' clean
+.PHONY : help build latest install lowest test test-cover clean
 .DEFAULT_GOAL : help
 
 # This will output the help for each task. thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -34,8 +34,7 @@ test-cover: ## Execute php tests with coverage
 	$(dc_bin) run --rm --user "0:0" app sh -c 'docker-php-ext-enable xdebug && su $(shell whoami) -s /bin/sh -c "composer phpunit-cover"'
 
 shell: ## Start shell into container with php
-	$(dc_bin) run -e "PS1=\[\033[1;32m\]\[\033[1;36m\][\u@docker] \[\033[1;34m\]\w\[\033[0;35m\] \[\033[1;36m\]# \[\033[0m\]" \
-    $(RUN_APP_ARGS) sh
+	$(dc_bin) run -e "PS1=\[\033[1;32m\]\[\033[1;36m\][\u@docker] \[\033[1;34m\]\w\[\033[0;35m\] \[\033[1;36m\]# \[\033[0m\]" $(RUN_APP_ARGS) sh
 
 clean: ## Remove all dependencies and unimportant files
 	-rm -Rf ./composer.lock ./vendor ./coverage
