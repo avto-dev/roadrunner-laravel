@@ -257,7 +257,7 @@ class Worker implements WorkerInterface
             new \Spiral\RoadRunner\Diactoros\ServerRequestFactory,
             new \Spiral\RoadRunner\Diactoros\StreamFactory,
             new \Spiral\RoadRunner\Diactoros\UploadedFileFactory,
-            new \Zend\Diactoros\ResponseFactory
+            new \Laminas\Diactoros\ResponseFactory
         );
     }
 }
