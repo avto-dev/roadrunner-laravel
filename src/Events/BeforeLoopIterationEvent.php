@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Events;
 
-use Illuminate\Contracts\Foundation\Application;
 use Psr\Http\Message\ServerRequestInterface;
+use Illuminate\Contracts\Foundation\Application;
 
 final class BeforeLoopIterationEvent implements Contracts\WithApplication, Contracts\WithServerRequest
 {
@@ -22,8 +22,8 @@ final class BeforeLoopIterationEvent implements Contracts\WithApplication, Contr
     /**
      * Create a new event instance.
      *
-     * @param Application|\Laravel\Lumen\Application    $app
-     * @param ServerRequestInterface $request
+     * @param Application|\Laravel\Lumen\Application $app
+     * @param ServerRequestInterface                 $request
      */
     public function __construct($app, ServerRequestInterface $request)
     {

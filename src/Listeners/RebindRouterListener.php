@@ -5,26 +5,25 @@ declare(strict_types=1);
 namespace AvtoDev\RoadRunnerLaravel\Listeners;
 
 use Closure;
-use Illuminate\Contracts\Foundation\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Contracts\Foundation\Application;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use function AvtoDev\RoadRunnerLaravel\isLumenEnvironment;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
-use function AvtoDev\RoadRunnerLaravel\isLumenEnvironment;
 
 /**
  * @link https://github.com/swooletw/laravel-swoole/blob/master/src/Server/Resetters/RebindRouterContainer.php
  */
 class RebindRouterListener implements ListenerInterface
 {
-
     /**
      * {@inheritdoc}
      */
     public function handle($event): void
     {
         if ($event instanceof WithApplication && $event instanceof WithHttpRequest) {
-            $app = $event->application();
+            $app     = $event->application();
             $request = $event->httpRequest();
 
             /** @var \Illuminate\Routing\Router|\Laravel\Lumen\Routing\Router $router */
@@ -44,7 +43,8 @@ class RebindRouterListener implements ListenerInterface
 
     /**
      * @param Application|\Laravel\Lumen\Application $app
-     * @param Request $request
+     * @param Request                                $request
+     *
      * @return Closure
      */
     private static function getRebindRouteClosure($app, $request): Closure

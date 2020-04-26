@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
-use Illuminate\Contracts\Foundation\Application;
 use RuntimeException;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -12,6 +11,7 @@ use Spiral\RoadRunner\PSR7Client;
 use Spiral\Goridge\RelayInterface;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Bootstrap\RegisterProviders;
 use Illuminate\Foundation\Bootstrap\SetRequestForConsole;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
@@ -81,7 +81,7 @@ class Worker implements WorkerInterface
                 $psr7_response = $psr7_factory->createResponse($response);
                 $psr7_client->respond($psr7_response);
 
-                if (!isLumenEnvironment()) {
+                if (! isLumenEnvironment()) {
                     $http_kernel->terminate($request, $response); // @phpstan-ignore-line
                 }
 
@@ -138,7 +138,7 @@ class Worker implements WorkerInterface
      * Bootstrap passed application.
      *
      * @param Application|\Laravel\Lumen\Application $app
-     * @param PSR7Client          $psr7_client
+     * @param PSR7Client                             $psr7_client
      *
      * @throws RuntimeException
      *
@@ -219,7 +219,7 @@ class Worker implements WorkerInterface
 
     /**
      * @param Application|\Laravel\Lumen\Application $app
-     * @param object              $event
+     * @param object                                 $event
      *
      * @return void
      */

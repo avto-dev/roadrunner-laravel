@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Events;
 
-use Illuminate\Contracts\Foundation\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Contracts\Foundation\Application;
 
 final class BeforeRequestHandlingEvent implements Contracts\WithApplication, Contracts\WithHttpRequest
 {
@@ -23,7 +23,7 @@ final class BeforeRequestHandlingEvent implements Contracts\WithApplication, Con
      * Create a new event instance.
      *
      * @param Application|\Laravel\Lumen\Application $app
-     * @param Request             $request
+     * @param Request                                $request
      */
     public function __construct($app, Request $request)
     {

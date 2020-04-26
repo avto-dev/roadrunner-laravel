@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace AvtoDev\RoadRunnerLaravel\Listeners;
 
-use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use function AvtoDev\RoadRunnerLaravel\getHttpKernel;
+use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 
 /**
  * @link https://github.com/swooletw/laravel-swoole/blob/master/src/Server/Resetters/RebindKernelContainer.php
  */
 class RebindHttpKernelListener implements ListenerInterface
 {
-
     /**
      * {@inheritdoc}
      */
@@ -34,5 +33,4 @@ class RebindHttpKernelListener implements ListenerInterface
             $reseter();
         }
     }
-
 }
