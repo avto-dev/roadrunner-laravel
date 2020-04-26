@@ -4,13 +4,13 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Events;
 
+use Illuminate\Contracts\Foundation\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 final class BeforeRequestHandlingEvent implements Contracts\WithApplication, Contracts\WithHttpRequest
 {
     /**
-     * @var ApplicationContract
+     * @var Application|\Laravel\Lumen\Application
      */
     private $app;
 
@@ -22,10 +22,10 @@ final class BeforeRequestHandlingEvent implements Contracts\WithApplication, Con
     /**
      * Create a new event instance.
      *
-     * @param ApplicationContract $app
+     * @param Application|\Laravel\Lumen\Application $app
      * @param Request             $request
      */
-    public function __construct(ApplicationContract $app, Request $request)
+    public function __construct($app, Request $request)
     {
         $this->app     = $app;
         $this->request = $request;
@@ -34,7 +34,7 @@ final class BeforeRequestHandlingEvent implements Contracts\WithApplication, Con
     /**
      * {@inheritdoc}
      */
-    public function application(): ApplicationContract
+    public function application()
     {
         return $this->app;
     }

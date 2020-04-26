@@ -4,17 +4,17 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Events;
 
+use Illuminate\Contracts\Foundation\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpRequest;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithHttpResponse;
-use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 final class AfterRequestHandlingEvent implements WithApplication, WithHttpRequest, WithHttpResponse
 {
     /**
-     * @var ApplicationContract
+     * @var Application|\Laravel\Lumen\Application
      */
     private $app;
 
@@ -31,11 +31,11 @@ final class AfterRequestHandlingEvent implements WithApplication, WithHttpReques
     /**
      * Create a new event instance.
      *
-     * @param ApplicationContract $app
+     * @param Application|\Laravel\Lumen\Application $app
      * @param Request             $request
      * @param Response            $response
      */
-    public function __construct(ApplicationContract $app, Request $request, Response $response)
+    public function __construct($app, Request $request, Response $response)
     {
         $this->app      = $app;
         $this->request  = $request;
@@ -45,7 +45,7 @@ final class AfterRequestHandlingEvent implements WithApplication, WithHttpReques
     /**
      * {@inheritdoc}
      */
-    public function application(): ApplicationContract
+    public function application()
     {
         return $this->app;
     }

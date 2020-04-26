@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
+use Illuminate\Contracts\Foundation\Application;
 use RuntimeException;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -19,7 +20,6 @@ use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
 use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
-use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 /**
  * Idea is taken from the package: https://github.com/swooletw/laravel-swoole.
@@ -67,8 +67,8 @@ class Worker implements WorkerInterface
 
             $this->setApplicationInstance($sandbox);
 
-            /** @var HttpKernelContract $http_kernel */
-            $http_kernel = $sandbox->make(HttpKernelContract::class);
+            /** @var HttpKernelContract|\Laravel\Lumen\Application $http_kernel */
+            $http_kernel = getHttpKernel($sandbox);
 
             try {
                 $this->fireEvent($sandbox, new Events\BeforeLoopIterationEvent($sandbox, $req));
@@ -80,7 +80,10 @@ class Worker implements WorkerInterface
 
                 $psr7_response = $psr7_factory->createResponse($response);
                 $psr7_client->respond($psr7_response);
-                $http_kernel->terminate($request, $response);
+
+                if (!isLumenEnvironment()) {
+                    $http_kernel->terminate($request, $response); // @phpstan-ignore-line
+                }
 
                 $this->fireEvent($sandbox, new Events\AfterLoopIterationEvent($sandbox, $request, $response));
             } catch (\Throwable $e) {
@@ -96,11 +99,11 @@ class Worker implements WorkerInterface
     }
 
     /**
-     * @param ApplicationContract $app
+     * @param Application|\Laravel\Lumen\Application $app
      *
      * @return void
      */
-    protected function setApplicationInstance(ApplicationContract $app): void
+    protected function setApplicationInstance($app): void
     {
         $app->instance('app', $app);
         $app->instance(Container::class, $app);
@@ -108,7 +111,7 @@ class Worker implements WorkerInterface
         Container::setInstance($app);
 
         Facade::clearResolvedInstances();
-        Facade::setFacadeApplication($app);
+        Facade::setFacadeApplication($app); // @phpstan-ignore-line
     }
 
     /**
@@ -118,9 +121,9 @@ class Worker implements WorkerInterface
      *
      * @throws InvalidArgumentException
      *
-     * @return ApplicationContract
+     * @return Application|\Laravel\Lumen\Application
      */
-    protected function createApplication(string $base_path): ApplicationContract
+    protected function createApplication(string $base_path)
     {
         $path = \implode(\DIRECTORY_SEPARATOR, [\rtrim($base_path, \DIRECTORY_SEPARATOR), 'bootstrap', 'app.php']);
 
@@ -134,17 +137,26 @@ class Worker implements WorkerInterface
     /**
      * Bootstrap passed application.
      *
-     * @param ApplicationContract $app
+     * @param Application|\Laravel\Lumen\Application $app
      * @param PSR7Client          $psr7_client
      *
      * @throws RuntimeException
      *
      * @return void
      */
-    protected function bootstrapApplication(ApplicationContract $app, PSR7Client $psr7_client): void
+    protected function bootstrapApplication($app, PSR7Client $psr7_client): void
     {
-        /** @var \Illuminate\Foundation\Http\Kernel $http_kernel */
-        $http_kernel = $app->make(HttpKernelContract::class);
+        if (isLumenEnvironment()) {
+            // Put PSR7 client into container
+            $app->instance(PSR7Client::class, $psr7_client);
+
+            $this->preResolveApplicationAbstracts($app);
+
+            return;
+        }
+
+        /** @var HttpKernelContract|\Laravel\Lumen\Application $http_kernel */
+        $http_kernel = getHttpKernel($app);
 
         $bootstrappers = $this->getKernelBootstrappers($http_kernel);
 
@@ -174,11 +186,11 @@ class Worker implements WorkerInterface
     /**
      * Make configured abstracts pre-resolving.
      *
-     * @param ApplicationContract $app
+     * @param Application|\Laravel\Lumen\Application $app
      *
      * @return void
      */
-    protected function preResolveApplicationAbstracts(ApplicationContract $app): void
+    protected function preResolveApplicationAbstracts($app): void
     {
         /** @var ConfigRepository $config */
         $config = $app->make(ConfigRepository::class);
@@ -194,7 +206,7 @@ class Worker implements WorkerInterface
     /**
      * Get HTTP or Console kernel bootstrappers.
      *
-     * @param \Illuminate\Foundation\Http\Kernel|\Illuminate\Foundation\Console\Kernel $kernel
+     * @param \Illuminate\Contracts\Http\Kernel|\Laravel\Lumen\Application $kernel
      *
      * @return string[] Bootstrappers class names
      */
@@ -206,12 +218,12 @@ class Worker implements WorkerInterface
     }
 
     /**
-     * @param ApplicationContract $app
+     * @param Application|\Laravel\Lumen\Application $app
      * @param object              $event
      *
      * @return void
      */
-    protected function fireEvent(ApplicationContract $app, $event): void
+    protected function fireEvent($app, $event): void
     {
         /** @var EventsDispatcher $events */
         $events = $app->make(EventsDispatcher::class);

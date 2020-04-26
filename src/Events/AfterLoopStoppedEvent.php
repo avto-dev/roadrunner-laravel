@@ -4,21 +4,21 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Events;
 
-use Illuminate\Contracts\Foundation\Application as ApplicationContract;
+use Illuminate\Contracts\Foundation\Application;
 
 final class AfterLoopStoppedEvent implements Contracts\WithApplication
 {
     /**
-     * @var ApplicationContract
+     * @var Application|\Laravel\Lumen\Application
      */
     private $app;
 
     /**
      * Create a new event instance.
      *
-     * @param ApplicationContract $app
+     * @param Application|\Laravel\Lumen\Application $app
      */
-    public function __construct(ApplicationContract $app)
+    public function __construct($app)
     {
         $this->app = $app;
     }
@@ -26,7 +26,7 @@ final class AfterLoopStoppedEvent implements Contracts\WithApplication
     /**
      * {@inheritdoc}
      */
-    public function application(): ApplicationContract
+    public function application()
     {
         return $this->app;
     }
