@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
+## 3.2.1
+
+### Changed
+
+- Upgraded to use symfony/psr-http-message-bridge ^2.0
+
 ## v3.2.0
 
 ### Changed
