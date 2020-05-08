@@ -20,7 +20,7 @@
         "illuminate/http": "^5.5 || ~6.0 || ~7.0",
         "illuminate/routing": "^5.5 || ~6.0 || ~7.0",
         "spiral/roadrunner": "~1.7",
-        "symfony/psr-http-message-bridge": "^2.0",
+        "symfony/psr-http-message-bridge": "^1.2 || ^2.0",
         "laminas/laminas-diactoros": "^2"
     },
     "require-dev": {

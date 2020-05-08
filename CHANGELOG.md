@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 
 ### Changed
 
-- Upgraded to use symfony/psr-http-message-bridge ^2.0
+- Updated symfony/psr-http-message-bridge to allow ^2.0
 
 ## v3.2.0
 
