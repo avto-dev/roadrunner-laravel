@@ -4,11 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog] and this project adheres to [Semantic Versioning][semver].
 
-## 3.2.1
+## v3.2.1
 
 ### Changed
 
-- Updated symfony/psr-http-message-bridge to allow ^2.0
+- Updated `symfony/psr-http-message-bridge` to allow `^2.0` [#41]
+
+[#41]:https://github.com/avto-dev/roadrunner-laravel/pull/41
 
 ## v3.2.0
 
