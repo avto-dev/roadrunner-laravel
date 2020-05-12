@@ -15,11 +15,11 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 ### Changed
 
 - Default package configuration includes `LoopErrorOccurredEvent` event listeners: `SendExceptionToStderrListener` and `StopWorkerListener`
-- When "debug mode" (`app.debug`) is not enabled - client will get only `Internal server error` string instead exception with stacktrace
+- When "debug mode" (`app.debug`) is **not** enabled - client will get only `Internal server error` string instead exception with stacktrace
 
 ### Fixed
 
-- Double response sending on request processing error (using `$psr7_client->respond` and `$psr7_client->getWorker()->error` after that)
+- Double response sending on request processing error (calling `$psr7_client->respond` and `$psr7_client->getWorker()->error` after that)
 
 ## v3.2.1
 
