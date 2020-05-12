@@ -95,7 +95,7 @@ class Worker implements WorkerInterface
                     $psr7_client->getWorker()->error($this->exceptionToString($e, $this->isDebugModeEnabled($config)));
                 }
 
-                $this->fireEvent($sandbox, new Events\LoopErrorOccurred($sandbox, $req, $e));
+                $this->fireEvent($sandbox, new Events\LoopErrorOccurredEvent($sandbox, $req, $e));
             } finally {
                 unset($http_kernel, $response, $request, $sandbox);
 

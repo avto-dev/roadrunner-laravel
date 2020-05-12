@@ -5,13 +5,13 @@ declare(strict_types = 1);
 namespace AvtoDev\RoadRunnerLaravel\Tests\Events;
 
 use Zend\Diactoros\ServerRequest;
-use AvtoDev\RoadRunnerLaravel\Events\LoopErrorOccurred;
+use AvtoDev\RoadRunnerLaravel\Events\LoopErrorOccurredEvent;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithException;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithServerRequest;
 
 /**
- * @covers \AvtoDev\RoadRunnerLaravel\Events\LoopErrorOccurred<extended>
+ * @covers \AvtoDev\RoadRunnerLaravel\Events\LoopErrorOccurredEvent<extended>
  */
 class LoopErrorOccurredTest extends AbstractEventTestCase
 {
@@ -27,14 +27,14 @@ class LoopErrorOccurredTest extends AbstractEventTestCase
     /**
      * @var string
      */
-    protected $event_class = LoopErrorOccurred::class;
+    protected $event_class = LoopErrorOccurredEvent::class;
 
     /**
      * {@inheritdoc}
      */
     public function testConstructor(): void
     {
-        $event = new LoopErrorOccurred(
+        $event = new LoopErrorOccurredEvent(
             $this->app,
             $request = new ServerRequest,
             $exception = new \Exception('foo')
