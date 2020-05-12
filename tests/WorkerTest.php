@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests;
 
+use Illuminate\Support\Facades\App;
 use Mockery as m;
 use RuntimeException;
 use Illuminate\Support\Str;
@@ -236,6 +237,8 @@ class WorkerTest extends AbstractTestCase
 
         $psr_worker = (new PSR7Client($this->rr_worker))->getWorker();
 
+        $mock_event_closure = $this->getMockEventsClosure($fired_events);
+
         /** @var m\MockInterface|Worker $worker */
         $worker = m::mock(Worker::class, [$this->base_dir])
             ->makePartial()
@@ -266,11 +269,16 @@ class WorkerTest extends AbstractTestCase
                     ->getMock()
             )
             ->getMock()
-            ->shouldReceive('isDebugModeEnabled')
-            ->andReturnTrue()
-            ->getMock()
             ->shouldReceive('preResolveApplicationAbstracts')
-            ->withArgs($this->getMockEventsClosure($fired_events))
+            ->withArgs(static function (Application $app) use ($mock_event_closure):bool{
+                $mock_event_closure($app);
+
+                $config = $app->make('config');
+
+                $config->set('app.debug',true);
+
+                return true;
+            })
             ->passthru()
             ->getMock();
 
@@ -287,6 +295,57 @@ class WorkerTest extends AbstractTestCase
                 );
             }
         }
+    }
+
+    /**
+     * @return void
+     */
+    public function testWorkerErrorHandlingWithMaskedException(): void
+    {
+        /** @var int[] $fired_events Key is event class, value - firing count */
+        $fired_events = [];
+
+        $psr_worker = (new PSR7Client($this->rr_worker))->getWorker();
+
+        /** @var m\MockInterface|Worker $worker */
+        $worker = m::mock(Worker::class, [$this->base_dir])
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods()
+            ->expects('createPsr7Client')
+            ->andReturn(
+                m::mock(PSR7Client::class, [$this->rr_worker])
+                    ->makePartial()
+                    ->shouldReceive('acceptRequest')
+                    ->andReturnUsing($this->getOnceRequestGenerationClosure())
+                    ->getMock()
+                    ->shouldReceive('respond')
+                    ->andThrow(new RuntimeException('all is ok ' . Str::random()))
+                    ->getMock()
+                    ->shouldReceive('getWorker')
+                    ->andReturn(
+                        m::mock($psr_worker)
+                            ->makePartial()
+                            ->shouldReceive('error')
+                            ->once()
+                            ->withArgs(function ($error_text): bool {
+                                $this->assertContains('Internal server error', $error_text);
+
+                                return true;
+                            })
+                            ->getMock()
+                    )
+                    ->getMock()
+            )
+            ->getMock()
+            ->shouldReceive('isDebugModeEnabled')
+            ->andReturnFalse()
+            ->getMock()
+            ->shouldReceive('preResolveApplicationAbstracts')
+            ->withArgs($this->getMockEventsClosure($fired_events))
+            ->passthru()
+            ->getMock();
+
+        $worker->start();
     }
 
     public function testWorkerErrorHandlingAfterRespond(): void
