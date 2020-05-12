@@ -15,15 +15,7 @@ use AvtoDev\RoadRunnerLaravel\Events\Contracts\WithApplication;
 class StopWorkerListenerTest extends AbstractListenerTestCase
 {
     /**
-     * @inheritDoc
-     */
-    protected function listenerFactory()
-    {
-        return new StopWorkerListener;
-    }
-
-    /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function testHandle(): void
     {
@@ -53,5 +45,13 @@ class StopWorkerListenerTest extends AbstractListenerTestCase
             ->getMock();
 
         $this->listenerFactory()->handle($event_mock);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function listenerFactory()
+    {
+        return new StopWorkerListener;
     }
 }
