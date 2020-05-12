@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel\Tests;
 
-use Illuminate\Support\Facades\App;
 use Mockery as m;
 use RuntimeException;
 use Illuminate\Support\Str;
@@ -270,12 +269,12 @@ class WorkerTest extends AbstractTestCase
             )
             ->getMock()
             ->shouldReceive('preResolveApplicationAbstracts')
-            ->withArgs(static function (Application $app) use ($mock_event_closure):bool{
+            ->withArgs(static function (Application $app) use ($mock_event_closure): bool {
                 $mock_event_closure($app);
 
                 $config = $app->make('config');
 
-                $config->set('app.debug',true);
+                $config->set('app.debug', true);
 
                 return true;
             })
