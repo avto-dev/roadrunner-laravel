@@ -150,9 +150,9 @@ class Worker implements WorkerInterface
      *
      * @param string $base_path
      *
-     * @return ApplicationContract
      * @throws InvalidArgumentException
      *
+     * @return ApplicationContract
      */
     protected function createApplication(string $base_path): ApplicationContract
     {
@@ -171,9 +171,9 @@ class Worker implements WorkerInterface
      * @param ApplicationContract $app
      * @param PSR7Client          $psr7_client
      *
-     * @return void
      * @throws RuntimeException
      *
+     * @return void
      */
     protected function bootstrapApplication(ApplicationContract $app, PSR7Client $psr7_client): void
     {

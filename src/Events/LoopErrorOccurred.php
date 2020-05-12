@@ -6,7 +6,6 @@ namespace AvtoDev\RoadRunnerLaravel\Events;
 
 use Throwable;
 use Psr\Http\Message\ServerRequestInterface;
-use AvtoDev\RoadRunnerLaravel\Events\Contracts;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 final class LoopErrorOccurred implements Contracts\WithApplication, Contracts\WithException, Contracts\WithServerRequest

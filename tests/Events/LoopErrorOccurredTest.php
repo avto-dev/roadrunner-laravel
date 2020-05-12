@@ -37,7 +37,7 @@ class LoopErrorOccurredTest extends AbstractEventTestCase
         $event = new LoopErrorOccurred(
             $this->app,
             $request = new ServerRequest,
-            $exception = new \Exception("foo")
+            $exception = new \Exception('foo')
         );
 
         $this->assertSame($this->app, $event->application());
