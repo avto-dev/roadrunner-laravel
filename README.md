@@ -18,7 +18,7 @@ Easy way for connecting [RoadRunner][roadrunner] and [Laravel][laravel] applicat
 Require this package with composer using next command:
 
 ```shell script
-$ composer require avto-dev/roadrunner-laravel "^3.0"
+$ composer require avto-dev/roadrunner-laravel "^3.3"
 ```
 
 > Installed `composer` is required ([how to install composer][getcomposer]).
