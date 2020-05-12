@@ -182,6 +182,8 @@ class WorkerTest extends AbstractTestCase
             Events\BeforeRequestHandlingEvent::class,
         ];
 
+        // @todo: @jetexe We need to disable all event listeners
+
         /** @var m\MockInterface|Worker $worker */
         $worker = m::mock(Worker::class, [$this->base_dir])
             ->makePartial()
@@ -280,6 +282,9 @@ class WorkerTest extends AbstractTestCase
                     )
                     ->getMock()
             )
+            ->getMock()
+            ->shouldReceive('isDebugModeEnabled')
+            ->andReturnTrue()
             ->getMock()
             ->shouldReceive('preResolveApplicationAbstracts')
             ->withArgs($this->getAfterBootstrapClosure())

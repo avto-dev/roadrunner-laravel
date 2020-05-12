@@ -93,6 +93,11 @@ return [
         Events\AfterLoopStoppedEvent::class => [
             //
         ],
+
+        Events\LoopErrorOccurred::class => [
+            Listeners\SendExceptionToStderrListener::class,
+            Listeners\StopWorkerListener::class,
+        ],
     ],
 
     /*

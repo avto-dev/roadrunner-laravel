@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace AvtoDev\RoadRunnerLaravel;
 
+use Throwable;
 use RuntimeException;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -58,6 +59,8 @@ class Worker implements WorkerInterface
         $this->fireEvent($app, new Events\BeforeLoopStartedEvent($app));
 
         while ($req = $psr7_client->acceptRequest()) {
+            $responded = false;
+
             if ($refresh_app === true) {
                 $sandbox = $this->createApplication($this->base_path);
                 $this->bootstrapApplication($sandbox, $psr7_client);
@@ -80,11 +83,19 @@ class Worker implements WorkerInterface
 
                 $psr7_response = $psr7_factory->createResponse($response);
                 $psr7_client->respond($psr7_response);
+                $responded = true;
                 $http_kernel->terminate($request, $response);
 
                 $this->fireEvent($sandbox, new Events\AfterLoopIterationEvent($sandbox, $request, $response));
-            } catch (\Throwable $e) {
-                $psr7_client->getWorker()->error((string) $e);
+            } catch (Throwable $e) {
+                if ($responded !== true) {
+                    /** @var ConfigRepository $config */
+                    $config = $sandbox->make(ConfigRepository::class);
+
+                    $psr7_client->getWorker()->error($this->exceptionToString($e, $this->isDebugModeEnabled($config)));
+                }
+
+                $this->fireEvent($sandbox, new Events\LoopErrorOccurred($sandbox, $e));
             } finally {
                 unset($http_kernel, $response, $request, $sandbox);
 
@@ -93,6 +104,29 @@ class Worker implements WorkerInterface
         }
 
         $this->fireEvent($app, new Events\AfterLoopStoppedEvent($app));
+    }
+
+    /**
+     * @param Throwable $e
+     * @param bool      $is_debug
+     *
+     * @return string
+     */
+    protected function exceptionToString(Throwable $e, bool $is_debug): string
+    {
+        return $is_debug
+            ? (string) $e
+            : 'Internal server error';
+    }
+
+    /**
+     * @param ConfigRepository $config
+     *
+     * @return bool
+     */
+    protected function isDebugModeEnabled(ConfigRepository $config): bool
+    {
+        return $config->get('app.debug', false) === true;
     }
 
     /**
