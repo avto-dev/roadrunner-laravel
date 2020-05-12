@@ -203,7 +203,7 @@ class WorkerTest extends AbstractTestCase
             ->getMock()
             ->shouldReceive('preResolveApplicationAbstracts')
             ->withArgs($this->getAfterBootstrapClosure())
-            ->withArgs($this->mockEventsClosure($fired_events))
+            ->withArgs($this->getMockEventsClosure($fired_events))
             ->passthru()
             ->getMock();
 
@@ -270,7 +270,7 @@ class WorkerTest extends AbstractTestCase
             ->andReturnTrue()
             ->getMock()
             ->shouldReceive('preResolveApplicationAbstracts')
-            ->withArgs($this->mockEventsClosure($fired_events))
+            ->withArgs($this->getMockEventsClosure($fired_events))
             ->passthru()
             ->getMock();
 
@@ -298,7 +298,7 @@ class WorkerTest extends AbstractTestCase
             Events\LoopErrorOccurredEvent::class,
         ];
 
-        $event_closure = $this->mockEventsClosure($fired_events);
+        $event_closure = $this->getMockEventsClosure($fired_events);
 
         /** @var m\MockInterface|Worker $worker */
         $worker = m::mock(Worker::class, [$this->base_dir])
@@ -457,7 +457,7 @@ class WorkerTest extends AbstractTestCase
      *
      * @return \Closure
      */
-    private function mockEventsClosure(&$fired_events)
+    private function getMockEventsClosure(&$fired_events): callable
     {
         return static function (Application $app) use (&$fired_events): bool {
             $app->instance(

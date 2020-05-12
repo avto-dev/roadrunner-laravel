@@ -55,6 +55,7 @@ Event classname              | Application object | HTTP server request | HTTP r
 `AfterRequestHandlingEvent`  |          ✔         |                     |       ✔      |       ✔
 `AfterLoopIterationEvent`    |          ✔         |                     |       ✔      |       ✔
 `AfterLoopStoppedEvent`      |          ✔         |                     |              |
+`LoopErrorOccurredEvent`     |          ✔         |          ✔          |              |
 
 Simple `.rr.yaml` config example:
 

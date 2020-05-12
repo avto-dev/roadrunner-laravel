@@ -72,6 +72,8 @@ class Worker implements WorkerInterface
 
             /** @var HttpKernelContract $http_kernel */
             $http_kernel = $sandbox->make(HttpKernelContract::class);
+            /** @var ConfigRepository $config */
+            $config = $sandbox->make(ConfigRepository::class);
 
             try {
                 $this->fireEvent($sandbox, new Events\BeforeLoopIterationEvent($sandbox, $req));
@@ -89,9 +91,6 @@ class Worker implements WorkerInterface
                 $this->fireEvent($sandbox, new Events\AfterLoopIterationEvent($sandbox, $request, $response));
             } catch (Throwable $e) {
                 if ($responded !== true) {
-                    /** @var ConfigRepository $config */
-                    $config = $sandbox->make(ConfigRepository::class);
-
                     $psr7_client->getWorker()->error($this->exceptionToString($e, $this->isDebugModeEnabled($config)));
                 }
 
