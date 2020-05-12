@@ -14,12 +14,14 @@ The format is based on [Keep a Changelog][keepachangelog] and this project adher
 
 ### Changed
 
-- Default package configuration includes `LoopErrorOccurredEvent` event listeners: `SendExceptionToStderrListener` and `StopWorkerListener`
-- When "debug mode" (`app.debug`) is **not** enabled - client will get only `Internal server error` string instead exception with stacktrace
+- Default package configuration includes `LoopErrorOccurredEvent` event listeners: `SendExceptionToStderrListener` and `StopWorkerListener` [#42]
+- When "debug mode" (`app.debug`) is **not** enabled - client will get only `Internal server error` string instead exception with stacktrace [#42]
 
 ### Fixed
 
 - Double response sending on request processing error (calling `$psr7_client->respond` and `$psr7_client->getWorker()->error` after that)
+
+[#42]:https://github.com/avto-dev/roadrunner-laravel/issues/42
 
 ## v3.2.1
 
