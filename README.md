@@ -100,6 +100,8 @@ You should avoid to use HTTP controller constructors _(created or resolved insta
 Bad:
 
 ```php
+<?php
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -110,23 +112,28 @@ class UserController extends Controller
      * The user repository instance.
      */
     protected $users;
+    
+    /**
+     * @var Request
+     */
+    protected $request;
 
     /**
      * @param UserRepository $users
+     * @param Request        $request
      */
-    public function __construct(UserRepository $users)
+    public function __construct(UserRepository $users, Request $request)
     {
-        $this->users = $users;
+        $this->users   = $users;
+        $this->request = $request;
     }
     
     /**
-     * @param  Request  $request
-     *
      * @return Response
      */
-    public function store(Request $request): Response
+    public function store(): Response
     {
-        $user = $this->users->getById($request->id);
+        $user = $this->users->getById($this->request->id);
         
         // ...
     }
@@ -136,6 +143,8 @@ class UserController extends Controller
 Good:
 
 ```php
+<?php
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -164,6 +173,8 @@ You should never to use middleware constructor for `session`, `session.store`, `
 Bad:
 
 ```php
+<?php
+
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
 
@@ -204,6 +215,8 @@ class Middleware
 Good:
 
 ```php
+<?php
+
 use Illuminate\Http\Request;
 
 class Middleware
