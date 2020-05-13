@@ -1,6 +1,8 @@
 ---
 name: Feature request
 about: Suggest an idea for this package
+labels: type:enhancement
+assignees: tarampampam
 
 ---
 
