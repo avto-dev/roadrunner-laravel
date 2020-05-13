@@ -18,7 +18,7 @@ Easy way for connecting [RoadRunner][roadrunner] and [Laravel][laravel] applicat
 Require this package with composer using next command:
 
 ```shell script
-$ composer require avto-dev/roadrunner-laravel "^3.0"
+$ composer require avto-dev/roadrunner-laravel "^3.3"
 ```
 
 > Installed `composer` is required ([how to install composer][getcomposer]).
@@ -47,14 +47,15 @@ After that you can modify configuration files as you wish.
 
 After package installation you can use provided "binary" file as RoadRunner worker: `./vendor/bin/rr-worker`. This worker allows you to interact with incoming requests and outcoming responses using [laravel events system][laravel_events]. Also events contains:
 
-Event classname              | Application object | HTTP server request | HTTP request | HTTP response 
----------------------------- | :----------------: | :-----------------: | :----------: | :-----------:
-`BeforeLoopStartedEvent`     |          ✔         |                     |              |
-`BeforeLoopIterationEvent`   |          ✔         |          ✔          |              |
-`BeforeRequestHandlingEvent` |          ✔         |                     |       ✔      |
-`AfterRequestHandlingEvent`  |          ✔         |                     |       ✔      |       ✔
-`AfterLoopIterationEvent`    |          ✔         |                     |       ✔      |       ✔
-`AfterLoopStoppedEvent`      |          ✔         |                     |              |
+Event classname              | Application object | HTTP server request | HTTP request | HTTP response | Exception
+---------------------------- | :----------------: | :-----------------: | :----------: | :-----------: | :-------:
+`BeforeLoopStartedEvent`     |          ✔         |                     |              |               |
+`BeforeLoopIterationEvent`   |          ✔         |          ✔          |              |               |
+`BeforeRequestHandlingEvent` |          ✔         |                     |       ✔      |               |
+`AfterRequestHandlingEvent`  |          ✔         |                     |       ✔      |       ✔       |
+`AfterLoopIterationEvent`    |          ✔         |                     |       ✔      |       ✔       |
+`AfterLoopStoppedEvent`      |          ✔         |                     |              |               |
+`LoopErrorOccurredEvent`     |          ✔         |          ✔          |              |               |     ✔
 
 Simple `.rr.yaml` config example:
 

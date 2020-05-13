@@ -18,6 +18,7 @@ use AvtoDev\RoadRunnerLaravel\ServiceProvider;
 use AvtoDev\RoadRunnerLaravel\WorkerInterface;
 use Illuminate\Contracts\Foundation\Application;
 use Spiral\RoadRunner\Diactoros\ServerRequestFactory;
+use Illuminate\Contracts\Http\Kernel as HttpKernelContract;
 
 /**
  * Important note: when you catch mockery errors like `Method respond(<MultiArgumentClosure===true>) from ...`
@@ -202,30 +203,7 @@ class WorkerTest extends AbstractTestCase
             ->getMock()
             ->shouldReceive('preResolveApplicationAbstracts')
             ->withArgs($this->getAfterBootstrapClosure())
-            ->withArgs(static function (Application $app) use (&$fired_events): bool {
-                $app->instance(
-                    'events',
-                    m::mock($app->make('events'))
-                        ->shouldReceive('dispatch')
-                        ->withArgs(static function ($event) use (&$fired_events): bool {
-                            $event_class = \is_object($event)
-                                ? \get_class($event)
-                                : (string) $event;
-
-                            if (! isset($fired_events[$event_class])) {
-                                $fired_events[$event_class] = 1;
-                            } else {
-                                $fired_events[$event_class]++;
-                            }
-
-                            return true;
-                        })
-                        ->passthru()
-                        ->getMock()
-                );
-
-                return true;
-            })
+            ->withArgs($this->getMockEventsClosure($fired_events))
             ->passthru()
             ->getMock();
 
@@ -249,7 +227,16 @@ class WorkerTest extends AbstractTestCase
      */
     public function testWorkerErrorHandling(): void
     {
+        /** @var int[] $fired_events Key is event class, value - firing count */
+        $fired_events = [];
+
+        $expected_events = [
+            Events\LoopErrorOccurredEvent::class,
+        ];
+
         $psr_worker = (new PSR7Client($this->rr_worker))->getWorker();
+
+        $mock_event_closure = $this->getMockEventsClosure($fired_events);
 
         /** @var m\MockInterface|Worker $worker */
         $worker = m::mock(Worker::class, [$this->base_dir])
@@ -282,11 +269,147 @@ class WorkerTest extends AbstractTestCase
             )
             ->getMock()
             ->shouldReceive('preResolveApplicationAbstracts')
-            ->withArgs($this->getAfterBootstrapClosure())
+            ->withArgs(static function (Application $app) use ($mock_event_closure): bool {
+                $mock_event_closure($app);
+
+                $config = $app->make('config');
+
+                $config->set('app.debug', true);
+
+                return true;
+            })
             ->passthru()
             ->getMock();
 
         $worker->start();
+
+        foreach ($expected_events as $expected_event) {
+            if (! isset($fired_events[$expected_event])) {
+                $this->fail("Event [{$expected_event}] was not fired");
+            } else {
+                $this->assertSame(
+                    1,
+                    $fired_events[$expected_event],
+                    "Event [{$expected_event}] was fired {$fired_events[$expected_event]} times (instead once)"
+                );
+            }
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testWorkerErrorHandlingWithMaskedException(): void
+    {
+        /** @var int[] $fired_events Key is event class, value - firing count */
+        $fired_events = [];
+
+        $psr_worker = (new PSR7Client($this->rr_worker))->getWorker();
+
+        /** @var m\MockInterface|Worker $worker */
+        $worker = m::mock(Worker::class, [$this->base_dir])
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods()
+            ->expects('createPsr7Client')
+            ->andReturn(
+                m::mock(PSR7Client::class, [$this->rr_worker])
+                    ->makePartial()
+                    ->shouldReceive('acceptRequest')
+                    ->andReturnUsing($this->getOnceRequestGenerationClosure())
+                    ->getMock()
+                    ->shouldReceive('respond')
+                    ->andThrow(new RuntimeException('all is ok ' . Str::random()))
+                    ->getMock()
+                    ->shouldReceive('getWorker')
+                    ->andReturn(
+                        m::mock($psr_worker)
+                            ->makePartial()
+                            ->shouldReceive('error')
+                            ->once()
+                            ->withArgs(function ($error_text): bool {
+                                $this->assertContains('Internal server error', $error_text);
+
+                                return true;
+                            })
+                            ->getMock()
+                    )
+                    ->getMock()
+            )
+            ->getMock()
+            ->shouldReceive('isDebugModeEnabled')
+            ->andReturnFalse()
+            ->getMock()
+            ->shouldReceive('preResolveApplicationAbstracts')
+            ->withArgs($this->getMockEventsClosure($fired_events))
+            ->passthru()
+            ->getMock();
+
+        $worker->start();
+    }
+
+    public function testWorkerErrorHandlingAfterRespond(): void
+    {
+        /** @var int[] $fired_events Key is event class, value - firing count */
+        $fired_events = [];
+
+        $expected_events = [
+            Events\LoopErrorOccurredEvent::class,
+        ];
+
+        $event_closure = $this->getMockEventsClosure($fired_events);
+
+        /** @var m\MockInterface|Worker $worker */
+        $worker = m::mock(Worker::class, [$this->base_dir])
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods()
+            ->expects('createPsr7Client')
+            ->andReturn(
+                m::mock(PSR7Client::class, [$this->rr_worker])
+                    ->makePartial()
+                    ->shouldReceive('acceptRequest')
+                    ->twice()
+                    ->andReturnUsing($this->getOnceRequestGenerationClosure())
+                    ->getMock()
+                    ->shouldReceive('respond')
+                    ->once()
+                    ->withArgs($this->getHtmlResponseValidationClosure())
+                    ->getMock()
+                    ->shouldReceive('getWorker')
+                    ->andReturn(
+                        m::mock()
+                            ->shouldNotReceive('error') // <-- important
+                            ->getMock()
+                    )
+                    ->getMock()
+            )
+            ->getMock()
+            ->shouldReceive('preResolveApplicationAbstracts')
+            ->withArgs(static function (Application $app) use ($event_closure): bool {
+                $event_closure($app);
+                $app->instance(HttpKernelContract::class, m::mock($app->make(HttpKernelContract::class))
+                    ->makePartial()
+                    ->shouldReceive('terminate')
+                    ->once()
+                    ->andThrow(new \RuntimeException('Muted exception'))
+                    ->getMock());
+
+                return true;
+            })
+            ->getMock();
+
+        $worker->start();
+
+        foreach ($expected_events as $expected_event) {
+            if (! isset($fired_events[$expected_event])) {
+                $this->fail("Event [{$expected_event}] was not fired");
+            } else {
+                $this->assertSame(
+                    1,
+                    $fired_events[$expected_event],
+                    "Event [{$expected_event}] was fired {$fired_events[$expected_event]} times (instead once)"
+                );
+            }
+        }
     }
 
     /**
@@ -380,6 +503,40 @@ class WorkerTest extends AbstractTestCase
             $this->assertSame(200, $response->getStatusCode());
             $this->assertNotEmpty($response->getHeaders());
             $this->assertContains('<html', Str::lower((string) $response->getBody()));
+
+            return true;
+        };
+    }
+
+    /**
+     * Use this closure if you want to mute any fired events.
+     *
+     * @param $fired_events
+     *
+     * @return \Closure
+     */
+    private function getMockEventsClosure(&$fired_events): callable
+    {
+        return static function (Application $app) use (&$fired_events): bool {
+            $app->instance(
+                'events',
+                m::mock($app->make('events'))
+                    ->shouldReceive('dispatch')
+                    ->withArgs(static function ($event) use (&$fired_events): bool {
+                        $event_class = \is_object($event)
+                            ? \get_class($event)
+                            : (string) $event;
+
+                        if (! isset($fired_events[$event_class])) {
+                            $fired_events[$event_class] = 1;
+                        } else {
+                            $fired_events[$event_class]++;
+                        }
+
+                        return true;
+                    })
+                    ->getMock()
+            );
 
             return true;
         };
