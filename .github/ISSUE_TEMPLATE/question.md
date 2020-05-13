@@ -1,6 +1,8 @@
 ---
 name: Question
 about: Ask anything
+labels: type:question
+assignees: tarampampam
 
 ---
 
