@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="https://hsto.org/webt/xl/pr/89/xlpr891cyv9ux3gm7dtzwjse_5a.png" alt="logo" width="420" />
+    <sub><img src="https://github.githubassets.com/images/icons/emoji/unicode/26a0.png" width="22"></sub> <strong>This package is abandoned and no longer maintained</strong> <sub><img src="https://github.githubassets.com/images/icons/emoji/unicode/26a0.png" width="22"></sub><br />
+    We suggests using the <a href="https://github.com/spiral/roadrunner-laravel">spiral/roadrunner-laravel</a> package instead<br />
 </p>
 
 # [RoadRunner][roadrunner] ⇆ Laravel bridge
